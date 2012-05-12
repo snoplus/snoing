@@ -3,6 +3,7 @@
 # SNO+ package manager
 import PackageManager
 import os
+import inspect
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -13,8 +14,9 @@ class snoing( PackageManager.PackageManager ):
             if module == 'snoing.py' or module[-3:] != '.py':
                 continue
             packageSet = __import__( module[:-3], locals(), globals() )
-            for key, package in packageSet.PackageDict.items():
-                self.RegisterPackage( package( cachePath, installPath ) )
+            for name, obj in inspect.getmembers( packageSet ):
+                if inspect.isclass( obj ):
+                    self.RegisterPackage( obj( cachePath, installPath ) )
         # Now choose
 
                 

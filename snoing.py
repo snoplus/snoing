@@ -4,6 +4,8 @@
 import PackageManager
 import os
 import inspect
+import LocalPackage
+import SystemPackage
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -15,10 +17,19 @@ class snoing( PackageManager.PackageManager ):
                 continue
             packageSet = __import__( module[:-3], locals(), globals() )
             for name, obj in inspect.getmembers( packageSet ):
-                if inspect.isclass( obj ):
-                    self.RegisterPackage( obj( cachePath, installPath ) )
-        # Now choose
+                if inspect.isclass( obj ): 
+                    if issubclass( obj, LocalPackage.LocalPackage ):
+                        self.RegisterPackage( obj( cachePath, installPath ) )
+                    elif issubclass( obj, SystemPackage.SystemPackage ):
+                        self.RegisterPackage( obj() )
 
-                
-installer = snoing()
-installer.InstallPackage( "root-5.32.03" )
+if __name__ == "__main__":
+    import optparse
+    parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
+    (options, args) = parser.parse_args()
+    installer = snoing()
+    if len(args) == 0:
+        #Install all
+        print "Installing all"
+    else:
+        installer.InstallPackage( args[0] )

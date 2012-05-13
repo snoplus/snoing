@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
-# The ROOT packages (versions)
+# Author P G Jones - 13/05/2012 <p.g.jones@qmul.ac.uk> : Added 5.32, 5.28, 5.24 versions (rat v3, v2, v1)
+# The ROOT packages base class
 import LocalPackage
 import os
 import shutil
 
-class ROOT53203( LocalPackage.LocalPackage ):
-    """ Root 5.32.03, install package."""
-    def __init__( self, cachePath, installPath ):
-        """ Initiliase the root 5.32.00 package."""
-        super( ROOT53203, self ).__init__( "root-5.32.03", cachePath, installPath )
-        self._InstallPath = os.path.join( self._InstallPath, "root-5.32.03" )
-        self._TarName = "root_v5.32.03.source.tar.gz"
+class Root( LocalPackage.LocalPackage ):
+    """ Base root installer, different versions only have different names."""
+    def __init__( self, name, cachePath, installPath, tarName ):
+        """ Initialise the root package."""
+        super( Root, self ).__init__( name, cachePath, installPath )
+        self._InstallPath = os.path.join( self._InstallPath, name )
+        self._TarName = tarName
         return
     # Functions to override
     def CheckState( self ):
@@ -23,17 +24,9 @@ class ROOT53203( LocalPackage.LocalPackage ):
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return []
-    def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
-        print "Downloading"
-        return True
-        self._DownloadFile( "ftp://root.cern.ch/root/root_v5.32.03.source.tar.gz" )
-        return True
+        return [ "make", "g++", "gcc" ]
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        print "installing"
-        return True
         # Root is annoying must untar to somewhere then move and rename the subdirectory, grrr
         self._UnTarFile( self._TarName, "root-temp" )
         # If install path exists then clear (maybe this should be part of package?
@@ -44,5 +37,3 @@ class ROOT53203( LocalPackage.LocalPackage ):
         self._ExecuteCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
         self._ExecuteCommand( 'make', [], None, self.GetInstallPath() )
         return True
-
-PackageDict = { 'root-5.32.03': ROOT53203 }

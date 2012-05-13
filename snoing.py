@@ -9,8 +9,15 @@ import SystemPackage
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
-    def __init__( self, cachePath = ".", installPath = "." ):
+    def __init__( self, options ):
+        """ Initialise the snoing package manager."""
         super( snoing, self ).__init__()
+        if options.cachePath[0] == '/':
+            self._CachePath = options.cachePath
+        else:
+            self._CachePath = os.path.join( os.getcwd(), options.cachePath )
+        if not os.path.exists( self._CachePath ):
+            os.makedirs( self._CachePath )
         # First import all register all packages in this folder
         for module in os.listdir( os.path.dirname( __file__ ) ):
             if module == 'snoing.py' or module[-3:] != '.py':
@@ -19,15 +26,17 @@ class snoing( PackageManager.PackageManager ):
             for name, obj in inspect.getmembers( packageSet ):
                 if inspect.isclass( obj ): 
                     if issubclass( obj, LocalPackage.LocalPackage ):
-                        self.RegisterPackage( obj( cachePath, installPath ) )
+                        self.RegisterPackage( obj( self._CachePath, options.installPath ) )
                     elif issubclass( obj, SystemPackage.SystemPackage ):
                         self.RegisterPackage( obj() )
 
 if __name__ == "__main__":
     import optparse
     parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
+    parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default="cache" )
+    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="." )
     (options, args) = parser.parse_args()
-    installer = snoing()
+    installer = snoing( options )
     if len(args) == 0:
         #Install all
         print "Installing all"

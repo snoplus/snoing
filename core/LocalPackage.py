@@ -89,11 +89,11 @@ class LocalPackage( Package.Package ):
         """ Blocking execute command. Returns True on success"""
         shellCommand = [ command ] + args
         print shellCommand
-        process = subprocess.Popen( args = shellCommand, shell = True, env = env, cwd = cwd )
+        process = subprocess.Popen( args = shellCommand, shell = True, env = env, cwd = cwd, executable = "/bin/bash" ) # Ensure bash shell is used
         return process.wait() == 0 # Blocks and waits for command to finish
     def _UnTarFile( self, tarFileName, path ):
         """ Untar the file tarFile to path."""
-        tarFile = tarfile.open( tarFileName )
+        tarFile = tarfile.open( os.path.join( self._CachePath, tarFileName ) )
         tarFile.extractall( path )
         tarFile.close()
         return

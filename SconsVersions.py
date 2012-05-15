@@ -5,7 +5,7 @@ import Scons
 
 class SCONS210( Scons.Scons ):
     """ Scons 2.1.0, install package."""
-    def __init__( self, cachePath, installPath ):
+    def __init__( self, cachePath, installPath, graphical ):
         """ Initiliase the scons 2.1.0 package."""
         super( SCONS210, self ).__init__( "scons-2.1.0", cachePath, installPath, "scons-2.1.0.tar.gz" )
         return
@@ -16,7 +16,7 @@ class SCONS210( Scons.Scons ):
 
 class SCONS120( Scons.Scons ):
     """ Scons 1.2.0, install package."""
-    def __init__( self, cachePath, installPath ):
+    def __init__( self, cachePath, installPath, graphical ):
         """ Initiliase the scons 1.2.0 package."""
         super( SCONS120, self ).__init__( "scons-1.2.0", cachePath, installPath, "scons-1.2.0.tar.gz" )
         return

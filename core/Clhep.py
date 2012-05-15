@@ -9,7 +9,7 @@ class Clhep( LocalPackage.LocalPackage ):
     """ Base clhep installer, different versions only have different names."""
     def __init__( self, name, cachePath, installPath, tarName ):
         """ Initialise the clhep package."""
-        super( Clhep, self ).__init__( name, cachePath, installPath )
+        super( Clhep, self ).__init__( name, cachePath, installPath, False )
         self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return

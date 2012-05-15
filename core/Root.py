@@ -10,7 +10,7 @@ class Root( LocalPackage.LocalPackage ):
     """ Base root installer, different versions only have different names."""
     def __init__( self, name, cachePath, installPath, tarName ):
         """ Initialise the root package."""
-        super( Root, self ).__init__( name, cachePath, installPath )
+        super( Root, self ).__init__( name, cachePath, installPath, False )
         self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return

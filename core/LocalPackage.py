@@ -2,11 +2,6 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Package installer base class
 import Package
-import subprocess
-import urllib2
-import subprocess
-import os
-import tarfile
 
 class LocalPackage( Package.Package ):
     """ Base class to install libraries."""

@@ -5,6 +5,7 @@
 import urllib2
 import subprocess
 import tarfile
+import os
 
 class Package( object ):
     """ Base class to install libraries."""

@@ -10,7 +10,7 @@ class Scons( LocalPackage.LocalPackage ):
     """ Base scons installer, different versions only have different names."""
     def __init__( self, name, cachePath, installPath, tarName ):
         """ Initialise the scons package."""
-        super( Scons, self ).__init__( name, cachePath, installPath )
+        super( Scons, self ).__init__( name, cachePath, installPath, False )
         self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return

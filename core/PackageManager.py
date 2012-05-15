@@ -32,7 +32,7 @@ class PackageManager( object ):
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 
             self.InstallPackage( dependency )
-            dependencyPaths[dependency.GetName()] = dependency.GetInstallPath()
+            dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
         # Now we can install this package
         package.SetDependencyPaths( dependencyPaths )
         package.Install()

@@ -25,6 +25,10 @@ class Root( LocalPackage.LocalPackage ):
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         return [ "make", "g++", "gcc" ]
+    def _Download( self ):
+        """ Derived classes should override this to download the package. Return True on success."""
+        self._DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )
+        return True
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         # Root is annoying must untar to somewhere then move and rename the subdirectory, grrr

@@ -10,9 +10,9 @@ class SCONS210( Scons.Scons ):
         super( SCONS210, self ).__init__( "scons-2.1.0", cachePath, installPath, "scons-2.1.0.tar.gz" )
         return
     def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
+        """ Derived classes should override this to download the package."""
         self._DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/2.1.0/scons-2.1.0.tar.gz" )
-        return True
+        return
 
 class SCONS120( Scons.Scons ):
     """ Scons 1.2.0, install package."""
@@ -21,6 +21,6 @@ class SCONS120( Scons.Scons ):
         super( SCONS120, self ).__init__( "scons-1.2.0", cachePath, installPath, "scons-1.2.0.tar.gz" )
         return
     def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
+        """ Derived classes should override this to download the package."""
         self._DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/1.2.0/scons-1.2.0.tar.gz" )
-        return True
+        return

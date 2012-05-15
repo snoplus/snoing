@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Base class package manager
-import SystemPackage
+import CommandPackage
 import LocalPackage
 
 class PackageManager( object ):
@@ -25,7 +25,7 @@ class PackageManager( object ):
         if package.IsInstalled():
             # Great
             return
-        if isinstance( package, SystemPackage.SystemPackage ):
+        if isinstance( package, CommandPackage.CommandPackage ):
             # Ah user must install this system wide...
             raise Exception( "Package %s must be installed manually." % package.GetName() )
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
@@ -36,4 +36,5 @@ class PackageManager( object ):
         # Now we can install this package
         package.SetDependencyPaths( dependencyPaths )
         package.Install()
+        print "Package: %s installed." % package.GetName()
         return

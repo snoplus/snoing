@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+# Author P G Jones - 15/05/2012 <p.g.jones@qmul.ac.uk> : Restructure packages
 # Package information base class, both local and system packages derive from this
+import urllib2
+import subprocess
+import tarfile
 
 class Package( object ):
     """ Base class to install libraries."""
@@ -21,4 +25,56 @@ class Package( object ):
         return
     def IsInstalled( self ):
         """ Check and return if package is installed."""
+        return False
+    # Useful functions (For Installing packages)
+    def _DownloadFile( self, url, username = None, password = None ): # Never hard code a password!
+        """ Download the file at url, and place into cache. Returns True on success"""
+        fileName = url.split('/')[-1]
+        urlRequest = urllib2.Request( url )
+        if username != None: # Add simple HTTP authorization
+            b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )
+            urlRequest.add_header( "Authorization", "Basic %s" % b64string )
+        remoteFile = urllib2.urlopen( urlRequest )
+        localFile = open( os.path.join( self._CachePath, fileName ), 'wb')
+        downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
+        print "Downloading: %s Bytes: %s" % ( fileName, downloadSize )
+
+        downloaded = 0 # Amount downloaded
+        blockSize = 8192 # Convenient block size
+        while True:
+            buffer = remoteFile.read( blockSize )
+            if not buffer: # Nothing left to download
+                break
+            downloaded += len( buffer )
+            localFile.write( buffer )
+            if downloaded != 0:
+                print downloaded, downloadSize
+        localFile.close()
+        return
+    def _ExecuteCommand( self, command, args, env, cwd ):
+        """ Blocking execute command. Returns True on success"""
+        shellCommand = [ command ] + args
+        print shellCommand
+        process = subprocess.Popen( args = shellCommand, shell = True, env = env, cwd = cwd, executable = "/bin/bash" ) # Ensure bash shell is used
+        return process.wait() == 0 # Blocks and waits for command to finish
+    def _UnTarFile( self, tarFileName, path ):
+        """ Untar the file tarFile to path."""
+        tarFile = tarfile.open( os.path.join( self._CachePath, tarFileName ) )
+        tarFile.extractall( path )
+        tarFile.close()
+        return
+    # Useful functions for ascertaining if packages exist
+    def _FindLibrary( self, libName ):
+        """ Check if the library exists in the standard library locations. Return location if it does if not return None."""
+        command = "whereis " + libName
+        process = subprocess.Popen( args = command, shell = True, stdout=subprocess.PIPE)
+        x, y = process.communicate()
+        location = x.split( ':' )
+        if location[1] == "\n":
+            return None
+        else:
+            return location[1]
+    def _TestLibrary( self, libName, header ):
+        """ Test if code can be compiled with header and linked to libName."""
+
         return False

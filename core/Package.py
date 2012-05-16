@@ -56,7 +56,7 @@ class Package( object ):
         """ Blocking execute command. Returns True on success"""
         shellCommand = [ command ] + args
         print shellCommand
-        process = subprocess.Popen( args = shellCommand, shell = True, env = env, cwd = cwd, executable = "/bin/bash" ) # Ensure bash shell is used
+        process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd )#, executable = "/bin/bash" ) # Ensure bash shell is used
         return process.wait() == 0 # Blocks and waits for command to finish
     def _UnTarFile( self, tarFileName, path ):
         """ Untar the file tarFile to path."""

@@ -35,6 +35,7 @@ class PackageManager( object ):
             dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
         # Now we can install this package
         package.SetDependencyPaths( dependencyPaths )
+        print "Installing %s" % package.GetName()
         package.Install()
         print "Package: %s installed." % package.GetName()
         return

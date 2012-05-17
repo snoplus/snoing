@@ -12,7 +12,7 @@ class SCONS210( Scons.Scons ):
     def _Download( self ):
         """ Derived classes should override this to download the package."""
         self._DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/2.1.0/scons-2.1.0.tar.gz" )
-        return
+        return True
 
 class SCONS120( Scons.Scons ):
     """ Scons 1.2.0, install package."""
@@ -23,4 +23,4 @@ class SCONS120( Scons.Scons ):
     def _Download( self ):
         """ Derived classes should override this to download the package."""
         self._DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/1.2.0/scons-1.2.0.tar.gz" )
-        return
+        return True

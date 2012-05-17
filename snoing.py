@@ -47,7 +47,6 @@ if __name__ == "__main__":
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="" )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     (options, args) = parser.parse_args()
-    print options
     installer = snoing( options )
     if len(args) == 0:
         #Install all

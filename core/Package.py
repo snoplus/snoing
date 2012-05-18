@@ -60,7 +60,7 @@ class Package( object ):
         commandFile = open( fileName, "w" )
         commandFile.write( command )
         commandFile.close()
-        self._ExecuteSimpleCommand( "source", [fileName], None, self._InstallPath )
+        self._ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, self._InstallPath )
         os.remove( fileName )
     def _ExecuteSimpleCommand( self, command, args, env, cwd ):
         """ Blocking execute command. Returns True on success"""

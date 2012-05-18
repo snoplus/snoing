@@ -10,7 +10,6 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     def __init__( self, name, cachePath, installPath, graphical, sourceTar, dataTars, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
         super( Geant4Pre5, self ).__init__( name, cachePath, installPath, graphical )
-        self._InstallPath = os.path.join( self._InstallPath, name )
         self._SourceTar = sourceTar
         self._DataTars = dataTars
         self._ClhepDependency = clhepDependency
@@ -36,22 +35,13 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         return True
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        # Geant4 is annoying must untar to somewhere then move and rename the subdirectory, grrr
-        geantTempDir = os.path.join( self._CachePath, "geant4-temp" )
-        self._UnTarFile( self._SourceTar, geantTempDir )
-        # If install path exists then clear (maybe this should be part of package?
-        if os.path.exists( self.GetInstallPath() ):
-            shutil.rmtree( self.GetInstallPath() )
-        geantFolderName = os.listdir( geantTempDir )
-        shutil.copytree( os.path.join( geantTempDir, geantFolderName[0] ), self.GetInstallPath() )
-        shutil.rmtree( geantTempDir )
-        # Now the data tars
+        self._UnTarFile( self._SourceTar, self.GetInstallPath(), 1 )
         for dataTar in self._DataTars:
-            self._UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ) )
+            self._UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
         self.WriteGeant4ConfigFile()
-        self._ExecuteCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        self._ExecuteCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        self._ExecuteCommand( './Configure', [], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         return True
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

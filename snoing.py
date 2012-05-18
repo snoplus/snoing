@@ -6,6 +6,8 @@ import os
 import inspect
 import LocalPackage
 import CommandPackage
+import Rat
+import getpass
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -36,7 +38,13 @@ class snoing( PackageManager.PackageManager ):
             for name, obj in inspect.getmembers( packageSet ):
                 if inspect.isclass( obj ): 
                     if issubclass( obj, LocalPackage.LocalPackage ):
-                        self.RegisterPackage( obj( self._CachePath, options.installPath, graphical ) )
+                        currentPackage = obj( self._CachePath, options.installPath, graphical )
+                        self.RegisterPackage( currentPackage )
+                        if issubclass( obj, Rat.RatReleasePre3 ):
+                            password = options.password
+                            if options.password == None:
+                                password = getpass.getpass()
+                            currentPackage.SetUsernamePassword( options.username, password )
                     elif issubclass( obj, CommandPackage.CommandPackage ):
                         self.RegisterPackage( obj() )
 
@@ -46,6 +54,8 @@ if __name__ == "__main__":
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default="cache" )
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="" )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
+    parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
+    parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
     installer = snoing( options )
     if len(args) == 0:

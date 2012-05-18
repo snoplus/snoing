@@ -4,14 +4,12 @@
 # The ROOT packages base class
 import LocalPackage
 import os
-import shutil
 
 class Root( LocalPackage.LocalPackage ):
     """ Base root installer, different versions only have different names."""
     def __init__( self, name, cachePath, installPath, tarName ):
         """ Initialise the root package."""
         super( Root, self ).__init__( name, cachePath, installPath, False )
-        self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return
     # Functions to override
@@ -31,14 +29,7 @@ class Root( LocalPackage.LocalPackage ):
         return True
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        # Root is annoying must untar to somewhere then move and rename the subdirectory, grrr
-        rootTempDir = os.path.join( self._CachePath, "root-temp" )
-        self._UnTarFile( self._TarName, rootTempDir )
-        # If install path exists then clear (maybe this should be part of package?
-        if os.path.exists( self.GetInstallPath() ):
-            shutil.rmtree( self.GetInstallPath() )
-        shutil.copytree( os.path.join( rootTempDir, "root" ), self.GetInstallPath() )
-        shutil.rmtree( rootTempDir )
-        self._ExecuteCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
-        self._ExecuteCommand( 'make', [], None, self.GetInstallPath() )
+        self._UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        self._ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
         return True

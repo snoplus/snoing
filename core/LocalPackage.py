@@ -2,6 +2,7 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Package installer base class
 import Package
+import os
 
 class LocalPackage( Package.Package ):
     """ Base class to install libraries."""
@@ -24,6 +25,9 @@ class LocalPackage( Package.Package ):
         """ Set the dependency path dictionary."""
         self._DependencyPaths = paths
         return
+    def GetInstallPath( self ):
+        """ Return a local package install path."""
+        return os.path.join( self._InstallPath, self._Name )
     def Install( self ):
         """ Full install process."""
         self.CheckState()

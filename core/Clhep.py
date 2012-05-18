@@ -10,7 +10,6 @@ class Clhep( LocalPackage.LocalPackage ):
     def __init__( self, name, cachePath, installPath, tarName ):
         """ Initialise the clhep package."""
         super( Clhep, self ).__init__( name, cachePath, installPath, False )
-        self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return
     # Functions to override
@@ -26,15 +25,8 @@ class Clhep( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc" ]
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        clhepTempDir = os.path.join( self._CachePath, "clhep-temp" )
-        self._UnTarFile( self._TarName, clhepTempDir )
-        # If install path exists then clear (maybe this should be part of package?
-        if os.path.exists( self.GetInstallPath() ):
-            shutil.rmtree( self.GetInstallPath() )
-        clhepFolderName = os.listdir( clhepTempDir )
-        shutil.copytree( os.path.join( clhepTempDir, clhepFolderName[0], "CLHEP" ), self.GetInstallPath() )
-        shutil.rmtree( clhepTempDir ) 
-        self._ExecuteCommand( './configure', ['--prefix=%s' % self.GetInstallPath() ], None, self.GetInstallPath() )
-        self._ExecuteCommand( 'make', [], None, self.GetInstallPath() )
-        self._ExecuteCommand( 'make', ["install"], None, self.GetInstallPath() )
+        self._UnTarFile( self._TarName, self.GetInstallPath(), 2 )
+        self._ExecuteSimpleCommand( './configure', ['--prefix=%s' % self.GetInstallPath() ], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
+        self._ExecuteSimpleCommand( 'make', ["install"], None, self.GetInstallPath() )
         return True

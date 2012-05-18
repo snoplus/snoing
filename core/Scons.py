@@ -28,12 +28,6 @@ class Scons( LocalPackage.LocalPackage ):
         return []
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        self._UnTarFile( self._TarName, "scons-temp" )
-        # If install path exists then clear (maybe this should be part of package?
-        if os.path.exists( self.GetInstallPath() ):
-            shutil.rmtree( self.GetInstallPath() )
-        sconsFolderName = os.listdir( "scons-temp" )
-        shutil.copytree( "scons-temp/" + sconsFolderName[0], self.GetInstallPath() )
-        shutil.rmtree( "scons-temp" )
+        self._UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0751 )
         return True

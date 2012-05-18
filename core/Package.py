@@ -6,6 +6,8 @@ import urllib2
 import subprocess
 import tarfile
 import os
+import shutil
+import base64
 
 class Package( object ):
     """ Base class to install libraries."""
@@ -52,18 +54,39 @@ class Package( object ):
                 print downloaded, downloadSize
         localFile.close()
         return
-    def _ExecuteCommand( self, command, args, env, cwd ):
+    def _ExecuteComplexCommand( self, command ):
+        """ Execute a multiple line command, writes to a temp file then executes it."""
+        fileName = os.path.join( self._InstallPath, "temp.sh" )
+        commandFile = open( fileName, "w" )
+        commandFile.write( command )
+        commandFile.close()
+        self._ExecuteSimpleCommand( "source", [fileName], None, self._InstallPath )
+        os.remove( fileName )
+    def _ExecuteSimpleCommand( self, command, args, env, cwd ):
         """ Blocking execute command. Returns True on success"""
         shellCommand = [ command ] + args
         print shellCommand
         process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd )#, executable = "/bin/bash" ) # Ensure bash shell is used
         return process.wait() == 0 # Blocks and waits for command to finish
-    def _UnTarFile( self, tarFileName, path ):
-        """ Untar the file tarFile to path."""
+    def _UnTarFile( self, tarFileName, targetPath, strip = 0 ):
+        """ Untar the file tarFile to targetPath."""
+        # First untar to a temp directory
+        tempDirectory = os.path.join( self._CachePath, "temp" )
         tarFile = tarfile.open( os.path.join( self._CachePath, tarFileName ) )
-        tarFile.extractall( path )
+        tarFile.extractall( tempDirectory )
         tarFile.close()
-        return
+        # Now choose how many components to strip
+        copyDirectory = tempDirectory
+        for iStrip in range( 0, strip ):
+            subFolders = os.listdir( copyDirectory )
+            copyDirectory = os.path.join( copyDirectory, subFolders[0] )
+        # Now can copy, first make sure the targetPath does not exist
+        if os.path.exists( targetPath ):
+            shutil.rmtree( targetPath )
+        # Now copy
+        shutil.copytree( copyDirectory, targetPath )
+        shutil.rmtree( tempDirectory )
+        return True
     # Useful functions for ascertaining if packages exist
     def _FindLibrary( self, libName ):
         """ Check if the library exists in the standard library locations. Return location if it does if not return None."""

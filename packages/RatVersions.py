@@ -3,6 +3,14 @@
 # The RAT packages (versions)
 import Rat
 
+class RAT3( Rat.RatReleasePost3 ):
+    """ Rat release-3.00, install package."""
+    def __init__( self, cachePath, installPath, graphical ):
+        """ Initiliase the rat 3.0 package."""
+        super( RAT3, self ).__init__( "rat-3", cachePath, installPath, "release-3.00", "clhep-2.1.0.1", \
+                                          "geant4.9.4.p02", "root-5.32.03", "scons-2.1.0", "avalanche", "zeromq-2.2.0", "xerces-c-3.1.1" )
+        return
+
 class RAT2( Rat.RatReleasePre3 ):
     """ Rat release-2.00, install package."""
     def __init__( self, cachePath, installPath, graphical ):

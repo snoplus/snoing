@@ -5,18 +5,13 @@ import LocalPackage
 import os
 import PackageUtil
 
-class RatReleasePre3( LocalPackage.LocalPackage ):
-    """ Base rat installer for releases pre 3.0."""
-    def __init__( self, name, cachePath, installPath, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
-        """ Initialise the rat package."""
-        super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False )
+class Rat( LocalPackage.LocalPackage ):
+    """ Base rat installer for rat."""
+    def __init__( self, name, cachePath, installPath, graphical, tarName ):
+        """ Initialise rat with the tarName."""
+        super( Rat, self ).__init__( name, cachePath, installPath, graphical )
         self._TarName = tarName
-        self._ClhepDependency = clhepDependency
-        self._GeantDependency = geantDependency
-        self._RootDependency = rootDependency
-        self._SconsDependency = sconsDependency
         return
-    # Functions to override
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( self._CachePath, self._TarName ) ):
@@ -24,9 +19,6 @@ class RatReleasePre3( LocalPackage.LocalPackage ):
         if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_exe" ) ):
             self._SetMode( 2 ) # Installed as well
         return
-    def GetDependencies( self ):
-        """ Return the dependency names as a list of names."""
-        return [ self._ClhepDependency, self._GeantDependency, self._RootDependency, self._SconsDependency ]
     def SetUsernamePassword( self, username, password ):
         """ Set the username password combination required for github downloads."""
         self._Username = username
@@ -47,6 +39,56 @@ cd %s
 source env.sh
 scons""" % ( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
         return PackageUtil.ExecuteComplexCommand( commandText )
+
+class RatReleasePost3( Rat ):
+    """ Base rat installer for releases post 3.0."""
+    def __init__( self, name, cachePath, installPath, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
+        """ Initialise the rat package."""
+        super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False, tarName )
+        self._ClhepDependency = clhepDep
+        self._GeantDependency = geantDep
+        self._RootDependency = rootDep
+        self._SconsDependency = sconsDep
+        self._AvalancheDependency = avalancheDep
+        self._ZeromqDependency = zeromqDep
+        self._XercescDependency = xercescDep
+        return
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        return [ self._ClhepDependency, self._GeantDependency, self._RootDependency, \
+                     self._SconsDependency, self._AvalancheDependency, self._ZeromqDependency, self._XercescDependency ]
+    def _WriteEnvFile( self ):
+        """ Write the environment file for rat."""
+        outText = """#!/bin/bash
+#ratcage environment
+source %(Geant)s/env.sh
+export ROOTSYS=%(Root)s
+export AVALANCHEROOT=%(Avalanche)s
+export ZEROMQROOT=%(Zeromq)s
+export XERCESCROOT=%(Xercesc)s
+export PATH=%(Root)s/bin:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
+export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
+export RAT_SCONS=%(Scons)s
+source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency] }
+        with open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
+            envFile.write( outText )
+        return
+
+class RatReleasePre3( Rat ):
+    """ Base rat installer for releases pre 3.0."""
+    def __init__( self, name, cachePath, installPath, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
+        """ Initialise the rat package."""
+        super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False, tarName )
+        self._ClhepDependency = clhepDependency
+        self._GeantDependency = geantDependency
+        self._RootDependency = rootDependency
+        self._SconsDependency = sconsDependency
+        return
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        return [ self._ClhepDependency, self._GeantDependency, self._RootDependency, self._SconsDependency ]
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash
@@ -59,7 +101,6 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath() }
-        envFile = open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" )
-        envFile.write( outText )
-        envFile.close()
-        
+        with open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
+            envFile.write( outText )
+        return

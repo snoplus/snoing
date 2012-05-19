@@ -4,6 +4,7 @@
 # The ROOT packages base class
 import LocalPackage
 import os
+import PackageUtil
 
 class Root( LocalPackage.LocalPackage ):
     """ Base root installer, different versions only have different names."""
@@ -25,11 +26,10 @@ class Root( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc" ]
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        self._DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )
-        return True
+        return PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        self._UnTarFile( self._TarName, self.GetInstallPath(), 1 )
-        self._ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
-        self._ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
-        return True
+        result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        result = result && PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
+        result = result && ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
+        return result

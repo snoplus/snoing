@@ -4,6 +4,7 @@
 import PackageManager
 import os
 import inspect
+import PackageUtil
 import LocalPackage
 import CommandPackage
 import Rat
@@ -26,12 +27,14 @@ class snoing( PackageManager.PackageManager ):
             self._InstallPath = os.path.join( os.getcwd(), options.installPath )
         if not os.path.exists( self._InstallPath ):
             os.makedirs( self._InstallPath )
+        PackageUtil.kCachePath = self._CachePath
+        PackageUtil.kInstallPath = self._InstallPath
         # Now check for graphical option
         graphical = False
         if options.graphical != None:
             graphical = options.graphical
         # First import all register all packages in this folder
-        for module in os.listdir( os.path.dirname( __file__ ) ):
+        for module in os.listdir( os.path.join( os.path.dirname( __file__ ), "packages" ) ):
             if module == 'snoing.py' or module[-3:] != '.py':
                 continue
             packageSet = __import__( module[:-3], locals(), globals() )

@@ -3,15 +3,14 @@
 # The RAT packages base class
 import LocalPackage
 import os
-import shutil
+import PackageUtil
 
 class RatReleasePre3( LocalPackage.LocalPackage ):
     """ Base rat installer for releases pre 3.0."""
-    def __init__( self, name, cachePath, installPath, tarName, releaseName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
+    def __init__( self, name, cachePath, installPath, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
         """ Initialise the rat package."""
         super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False )
         self._TarName = tarName
-        self._ReleaseName = releaseName
         self._ClhepDependency = clhepDependency
         self._GeantDependency = geantDependency
         self._RootDependency = rootDependency
@@ -35,11 +34,10 @@ class RatReleasePre3( LocalPackage.LocalPackage ):
         return 
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        self._DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._ReleaseName, self._Username, self._Password )
-        return True
+        return PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        self._UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
+        PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
         self._WriteEnvFile()
         # Write the command file and source it...
         commandText = """#!/bin/bash
@@ -48,8 +46,7 @@ cd %s
 ./configure
 source env.sh
 scons""" % ( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
-        self._ExecuteComplexCommand( commandText )
-        return True
+        return PackageUtil.ExecuteComplexCommand( commandText )
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash

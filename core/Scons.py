@@ -3,7 +3,7 @@
 # The SCONS packages base class
 import LocalPackage
 import os
-import shutil
+import PackageUtil
 import stat
 
 class Scons( LocalPackage.LocalPackage ):
@@ -28,6 +28,6 @@ class Scons( LocalPackage.LocalPackage ):
         return []
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        self._UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0751 )
-        return True
+        return result

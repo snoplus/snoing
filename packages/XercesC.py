@@ -3,6 +3,7 @@
 # The Xerces-c conditional package
 import ConditionalPackage
 import PackageUtil
+import os
 
 class XercesC( ConditionalPackage.ConditionalPackage ):
     """ XercesC install package."""
@@ -23,7 +24,7 @@ class XercesC( ConditionalPackage.ConditionalPackage ):
     def _Install( self ):
         """ Install the 3.1.1 version."""
         result = PackageUtil.UnTarFile( "xerces-c-3.1.1.tar.gz", self.GetInstallPath(), 1 )
-        result = result && PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
-        result = result && PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        result = result && PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % self.GetInstallPath()], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % self.GetInstallPath()], None, self.GetInstallPath() )
         return result

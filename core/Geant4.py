@@ -18,7 +18,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     # Functions to override
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._DataTars[-1] ) ):
+        if os.path.exists( os.path.join( self._CachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( self._CachePath, self._SourceTar ) ):
             self._SetMode( 1 ) # Downloaded 
         sys = os.uname()[0] + "-g++"
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.a" ) ):
@@ -31,7 +31,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         """ Derived classes should override this to download the package."""
         result = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
         for dataTar in self._DataTars:
-            result = result && PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + dataTar )
+            result = result and PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + dataTar )
         return result
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
@@ -40,8 +40,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
             PackageUtil.UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
         self.WriteGeant4ConfigFile()
         result = PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        result = result && PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        result = result && PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         return result
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

@@ -1,2 +1,2 @@
-export PYTHONPATH=$PWD:$PWD/core:$PYTHONPATH
+export PYTHONPATH=$PWD:$PWD/core:$PWD/packages:$PYTHONPATH
 echo "snoing setup"

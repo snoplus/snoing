@@ -3,10 +3,11 @@
 # The Avalanche package
 import LocalPackage
 import PackageUtil
+import os
 
 class Avalanche( LocalPackage.LocalPackage ):
     """ Avalanche install package."""
-    def __init__( self, cachePath, installPath ):
+    def __init__( self, cachePath, installPath, graphical ):
         """ Initlaise the ZMQ packages."""
         super( Avalanche, self ).__init__( "avalanche", cachePath, installPath, False )
         return
@@ -22,11 +23,12 @@ class Avalanche( LocalPackage.LocalPackage ):
         return ["zeromq-2.2.0", "root-5.32.03"]
     def _Download( self ):
         """ Download the ? version."""
-        result = PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git://github.com/mastbaum/avalanche.git", self.GetInstallPath()] )
-        return result && PackageUtil.ExecuteSimpleCommand( "make", ["clean"], None, self.GetInstallPath() )
+        result = PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git://github.com/mastbaum/avalanche.git", self.GetInstallPath()], None, os.getcwd() )
+        return result and PackageUtil.ExecuteSimpleCommand( "make", ["clean"], None, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
     def _Install( self ):
         """ Install the ? version."""
         env = os.environ
-        env['PATH'] = self._DependencyPaths['root-5.32.03'] + ":" + env['PATH']
-        result = PackageUtil.ExecuteSimpleCommand( "make", ['CXXFLAGS=-L%s/lib -I%s/include'], env, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
+        env['PATH'] = os.path.join( self._DependencyPaths['root-5.32.03'], "bin" ) + ":" + env['PATH']
+        env['ROOTSYS'] = self._DependencyPaths['root-5.32.03']
+        result = PackageUtil.ExecuteSimpleCommand( "make", ['CXXFLAGS=-L%s/lib -I%s/include' % (self._DependencyPaths["zeromq-2.2.0"], self._DependencyPaths["zeromq-2.2.0"]) ], env, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
         return result

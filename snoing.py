@@ -7,6 +7,7 @@ import inspect
 import PackageUtil
 import LocalPackage
 import CommandPackage
+import ConditionalPackage
 import Rat
 import getpass
 
@@ -34,20 +35,23 @@ class snoing( PackageManager.PackageManager ):
         if options.graphical != None:
             graphical = options.graphical
         # First import all register all packages in this folder
-        for module in os.listdir( os.path.join( os.path.dirname( __file__ ), "packages" ) ):
+        packagesDir = os.path.join( os.path.dirname( __file__ ), "packages" )
+        for module in os.listdir( packagesDir ):
             if module == 'snoing.py' or module[-3:] != '.py':
                 continue
             packageSet = __import__( module[:-3], locals(), globals() )
             for name, obj in inspect.getmembers( packageSet ):
                 if inspect.isclass( obj ): 
                     if issubclass( obj, LocalPackage.LocalPackage ):
-                        currentPackage = obj( self._CachePath, options.installPath, graphical )
+                        currentPackage = obj( self._CachePath, self._InstallPath, graphical )
                         self.RegisterPackage( currentPackage )
-                        if issubclass( obj, Rat.RatReleasePre3 ):
+                        if issubclass( obj, Rat.Rat ):
                             password = options.password
                             if options.password == None:
                                 password = getpass.getpass()
                             currentPackage.SetUsernamePassword( options.username, password )
+                    elif issubclass( obj, ConditionalPackage.ConditionalPackage ):
+                        self.RegisterPackage( obj( self._CachePath, self._InstallPath ) )
                     elif issubclass( obj, CommandPackage.CommandPackage ):
                         self.RegisterPackage( obj() )
 

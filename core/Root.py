@@ -30,6 +30,6 @@ class Root( LocalPackage.LocalPackage ):
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
-        result = result && PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
-        result = result && ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
         return result

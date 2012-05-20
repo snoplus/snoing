@@ -2,6 +2,7 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Base class package manager
 import CommandPackage
+import ConditionalPackage
 import LocalPackage
 
 class PackageManager( object ):
@@ -28,6 +29,11 @@ class PackageManager( object ):
         if isinstance( package, CommandPackage.CommandPackage ):
             # Ah user must install this system wide...
             raise Exception( "Package %s must be installed manually." % package.GetName() )
+        if isinstance( package, ConditionalPackage.ConditionalPackage ):
+            print "Installing %s" % package.GetName()
+            package.Install()
+            print "Package: %s installed." % package.GetName()
+            return
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 

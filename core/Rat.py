@@ -44,7 +44,7 @@ class RatReleasePost3( Rat ):
     """ Base rat installer for releases post 3.0."""
     def __init__( self, name, cachePath, installPath, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
         """ Initialise the rat package."""
-        super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False, tarName )
+        super( RatReleasePost3, self ).__init__( name, cachePath, installPath, False, tarName )
         self._ClhepDependency = clhepDep
         self._GeantDependency = geantDep
         self._RootDependency = rootDep

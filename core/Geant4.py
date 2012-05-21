@@ -1,21 +1,65 @@
 #!/usr/bin/env python
 # Author P G Jones - 15/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+# Author P G Jones - 21/05/2012 <p.g.jones@qmul.ac.uk> : Add Post 4.9.5 version
 # The GEANT4 packages base class
 import LocalPackage
 import os
 import PackageUtil
+
+class Geant4Post5( LocalPackage.LocalPackage ):
+    """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
+    def __init__( self, name, cachePath, installPath, graphical, sourceTar, clhepDependency, xercesDependency ):
+        """ Initialise the geant4 package."""
+        super( Geant4Post5, self ).__init__( name, cachePath, installPath, graphical )
+        self._SourceTar = sourceTar
+        self._XercesDependency = xercesDependency
+        self._ClhepDependency = clhepDependency
+        return
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        return [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
+    def CheckState( self ):
+        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
+        if os.path.exists( os.path.join( self._CachePath, self._SourceTar ) ):
+            self._SetMode( 1 ) # Downloaded 
+        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ):
+            self._SetMode( 2 ) # Installed as well
+        return
+    def _Download( self ):
+        """ Derived classes should override this to download the package."""
+        result = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
+        return result
+    def _Install( self ):
+        """ Install geant4, using cmake."""
+        sourcePath = os.path.join( self._CachePath, "geant4-source" )
+        PackageUtil.UnTarFile( self._SourceTar, sourcePath, 1 )
+        if not os.path.exists( self.GetInstallPath() ):
+            os.makedirs( self.GetInstallPath() )
+        cmakeOpts = [ "-DCMAKE_INSTALL_PREFIX=%s" % self.GetInstallPath(), "-DCLHEP_ROOT_DIR=%s" % self._DependencyPaths[self._ClhepDependency], \
+                          "-DXERCESC_ROOT_DIR=%s" % self._DependencyPaths[self._XercesDependency], "-DGEANT4_INSTALL_DATA=ON", \
+                          "-DCLHEP_CONFIG_EXECUTABLE=%s" % os.path.join( self._DependencyPaths[self._ClhepDependency], "clhep-config" ) ]
+        if self._Graphical:
+            cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
+        cmakeOpts.extend( [ sourcePath ] )
+        result = PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
+        return result
 
 class Geant4Pre5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for pre 4.9.5 geant versions."""
     def __init__( self, name, cachePath, installPath, graphical, sourceTar, dataTars, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
         super( Geant4Pre5, self ).__init__( name, cachePath, installPath, graphical )
-        self._SourceTar = sourceTar
-        self._DataTars = dataTars
         self._ClhepDependency = clhepDependency
+        self._DataTars = dataTars
+        self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         return
-    # Functions to override
+    # Specific pre 4.9.5 functions
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        return [ "make", "g++", "gcc", self._ClhepDependency ]
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( self._CachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( self._CachePath, self._SourceTar ) ):
@@ -24,9 +68,6 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.a" ) ):
             self._SetMode( 2 ) # Installed as well
         return
-    def GetDependencies( self ):
-        """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", self._ClhepDependency ]
     def _Download( self ):
         """ Derived classes should override this to download the package."""
         result = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )

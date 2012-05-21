@@ -3,6 +3,13 @@
 # The GEANT4 packages (versions)
 import Geant4
 
+class GEANT495( Geant4.Geant4Post5 ):
+    """ Geant4 4.9.5.p01, install package."""
+    def __init__( self, cachePath, installPath, graphical ):
+        """ Initiliase the geant4 4.9.5.p01 package."""
+        super( GEANT495, self ).__init__( "geant4.9.5.p01", cachePath, installPath, graphical, "geant4.9.5.p01.tar.gz", "clhep-2.1.0.1", "xerces-c-3.1.1" )
+        return
+
 class GEANT494( Geant4.Geant4Pre5 ):
     """ Geant4 4.9.4.p04, install package."""
     def __init__( self, cachePath, installPath, graphical ):

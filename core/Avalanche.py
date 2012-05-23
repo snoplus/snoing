@@ -1,15 +1,18 @@
 #!/usr/bin/env python
-# Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
-# The Avalanche package
+# Author P G Jones - 16/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+# The AVALANCHE packages base class
 import LocalPackage
-import PackageUtil
 import os
+import PackageUtil
 
 class Avalanche( LocalPackage.LocalPackage ):
-    """ Avalanche install package."""
-    def __init__( self, cachePath, installPath, graphical ):
-        """ Initlaise the ZMQ packages."""
-        super( Avalanche, self ).__init__( "avalanche", cachePath, installPath, False )
+    """ Base avalanche installer for avalanche."""
+    def __init__( self, name, cachePath, installPath, graphical, tarName, zmqDependency, rootDependency ):
+        """ Initialise avalanche with the tarName."""
+        super( Avalanche, self ).__init__( name, cachePath, installPath, graphical )
+        self._TarName = tarName
+        self._ZeromqDependency = zmqDependency
+        self._RootDependency = rootDependency
         return
     def CheckState( self ):
         """ Check if downloaded and installed."""
@@ -19,14 +22,14 @@ class Avalanche( LocalPackage.LocalPackage ):
             self._SetMode( 2 ) # Installed as well
         return
     def GetDependencies( self ):
-        """ Return the avalanche dependencies."""
-        return ["zeromq-2.2.0", "root-5.32.03"]
+        """ Return the required dependencies."""
+        return [self._ZeromqDependency, self._RootDependency]
     def _Download( self ):
-        """ Download the ? version."""
-        result = PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git://github.com/mastbaum/avalanche.git", self.GetInstallPath()], None, os.getcwd() )
-        return result and PackageUtil.ExecuteSimpleCommand( "make", ["clean"], None, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
+        """ Derived classes should override this to download the package. Return True on success."""
+        return PackageUtil.DownloadFile( "https://github.com/mastbaum/avalanche/tarball/" + self._TarName )
     def _Install( self ):
-        """ Install the ? version."""
+        """ Install the version."""
+        PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         env = os.environ
         env['PATH'] = os.path.join( self._DependencyPaths['root-5.32.03'], "bin" ) + ":" + env['PATH']
         env['ROOTSYS'] = self._DependencyPaths['root-5.32.03']

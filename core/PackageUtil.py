@@ -78,10 +78,10 @@ def FindLibrary( libName ):
     process = subprocess.Popen( args = command, shell = True, stdout=subprocess.PIPE)
     x, y = process.communicate()
     location = x.split( ':' )
-    if location[1] == "\n":
+    if location[0] == "\n" or location[0] == "":
         return None
     else:
-        return location[1]
+        return location[0]
 
 def TestLibrary( libName, header = None ):
     """ Test if code can be compiled with header and linked to libName."""

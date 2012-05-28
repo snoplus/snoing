@@ -22,7 +22,7 @@ class RATDev( Rat.Rat ):
         return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1" ]
     def _Download( self ):
         """ Git clone rat-dev."""
-        return PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git://github.com/snoplus/rat.git", self.GetInstallPath()], None, os.getcwd() )
+        return PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git", self.GetInstallPath()], None, os.getcwd() )
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash

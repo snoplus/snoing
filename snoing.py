@@ -44,7 +44,7 @@ class snoing( PackageManager.PackageManager ):
                     if issubclass( obj, LocalPackage.LocalPackage ):
                         currentPackage = obj( self._CachePath, self._InstallPath, graphical )
                         self.RegisterPackage( currentPackage )
-                        if issubclass( obj, Rat.Rat ):
+                        if issubclass( obj, Rat.RatRelease ):
                             currentPackage.SetUsernamePassword( options.username, options.password )
                     elif issubclass( obj, ConditionalPackage.ConditionalPackage ):
                         self.RegisterPackage( obj( self._CachePath, self._InstallPath ) )

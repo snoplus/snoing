@@ -9,7 +9,6 @@ import LocalPackage
 import CommandPackage
 import ConditionalPackage
 import Rat
-import getpass
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -45,11 +44,8 @@ class snoing( PackageManager.PackageManager ):
                     if issubclass( obj, LocalPackage.LocalPackage ):
                         currentPackage = obj( self._CachePath, self._InstallPath, graphical )
                         self.RegisterPackage( currentPackage )
-                        if issubclass( obj, Rat.Rat ):
-                            password = options.password
-                            if options.password == None:
-                                password = getpass.getpass()
-                            currentPackage.SetUsernamePassword( options.username, password )
+                        if issubclass( obj, Rat.RatRelease ):
+                            currentPackage.SetUsernamePassword( options.username, options.password )
                     elif issubclass( obj, ConditionalPackage.ConditionalPackage ):
                         self.RegisterPackage( obj( self._CachePath, self._InstallPath ) )
                     elif issubclass( obj, CommandPackage.CommandPackage ):

@@ -4,12 +4,31 @@
 import LocalPackage
 import os
 import PackageUtil
+import getpass
 
 class Rat( LocalPackage.LocalPackage ):
     """ Base rat installer for rat."""
+    def __init__( self, name, cachePath, installPath, graphical ):
+        super( Rat, self ).__init__( name, cachePath, installPath, graphical )
+        return
+    def _Install( self ):
+        """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
+        self._WriteEnvFile()
+        # Write the command file and source it...
+        commandText = """#!/bin/bash
+source %s
+cd %s
+./configure
+source env.sh
+scons""" % ( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
+        return PackageUtil.ExecuteComplexCommand( commandText )
+
+
+class RatRelease( Rat ):
+    """ Base rat installer for rat releases."""
     def __init__( self, name, cachePath, installPath, graphical, tarName ):
         """ Initialise rat with the tarName."""
-        super( Rat, self ).__init__( name, cachePath, installPath, graphical )
+        super( RatRelease, self ).__init__( name, cachePath, installPath, graphical )
         self._TarName = tarName
         return
     def CheckState( self ):
@@ -26,21 +45,15 @@ class Rat( LocalPackage.LocalPackage ):
         return 
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
+        if self._Password is None:
+            self._Password = getpass.getpass()
         return PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
     def _Install( self ):
-        """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
+        """ Release installs must untar first."""
         PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
-        self._WriteEnvFile()
-        # Write the command file and source it...
-        commandText = """#!/bin/bash
-source %s
-cd %s
-./configure
-source env.sh
-scons""" % ( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
-        return PackageUtil.ExecuteComplexCommand( commandText )
+        return super( RatRelease, self )._Install()
 
-class RatReleasePost3( Rat ):
+class RatReleasePost3( RatRelease ):
     """ Base rat installer for releases post 3.0."""
     def __init__( self, name, cachePath, installPath, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
         """ Initialise the rat package."""
@@ -76,7 +89,7 @@ source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependen
             envFile.write( outText )
         return
 
-class RatReleasePre3( Rat ):
+class RatReleasePre3( RatRelease ):
     """ Base rat installer for releases pre 3.0."""
     def __init__( self, name, cachePath, installPath, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
         """ Initialise the rat package."""

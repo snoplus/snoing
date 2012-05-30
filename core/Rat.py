@@ -8,8 +8,8 @@ import getpass
 
 class Rat( LocalPackage.LocalPackage ):
     """ Base rat installer for rat."""
-    def __init__( self, name, cachePath, installPath, graphical ):
-        super( Rat, self ).__init__( name, cachePath, installPath, graphical )
+    def __init__( self, name ):
+        super( Rat, self ).__init__( name )
         return
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
@@ -20,20 +20,20 @@ source %s
 cd %s
 ./configure
 source env.sh
-scons""" % ( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
+scons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
         return PackageUtil.ExecuteComplexCommand( commandText )
 
 
 class RatRelease( Rat ):
     """ Base rat installer for rat releases."""
-    def __init__( self, name, cachePath, installPath, graphical, tarName ):
+    def __init__( self, name, tarName ):
         """ Initialise rat with the tarName."""
-        super( RatRelease, self ).__init__( name, cachePath, installPath, graphical )
+        super( RatRelease, self ).__init__( name )
         self._TarName = tarName
         return
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._TarName ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
             self._SetMode( 1 ) # Downloaded 
         if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_exe" ) ):
             self._SetMode( 2 ) # Installed as well
@@ -55,9 +55,9 @@ class RatRelease( Rat ):
 
 class RatReleasePost3( RatRelease ):
     """ Base rat installer for releases post 3.0."""
-    def __init__( self, name, cachePath, installPath, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
+    def __init__( self, name, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
         """ Initialise the rat package."""
-        super( RatReleasePost3, self ).__init__( name, cachePath, installPath, False, tarName )
+        super( RatReleasePost3, self ).__init__( name, tarName )
         self._ClhepDependency = clhepDep
         self._GeantDependency = geantDep
         self._RootDependency = rootDep

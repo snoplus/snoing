@@ -8,15 +8,15 @@ import PackageUtil
 
 class Root( LocalPackage.LocalPackage ):
     """ Base root installer, different versions only have different names."""
-    def __init__( self, name, cachePath, installPath, tarName ):
+    def __init__( self, name, tarName ):
         """ Initialise the root package."""
-        super( Root, self ).__init__( name, cachePath, installPath, False )
+        super( Root, self ).__init__( name )
         self._TarName = tarName
         return
     # Functions to override
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._TarName ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
             self._SetMode( 1 ) # Downloaded 
         if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ):
             self._SetMode( 2 ) # Installed as well

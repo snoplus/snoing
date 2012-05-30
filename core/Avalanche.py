@@ -7,9 +7,9 @@ import PackageUtil
 
 class Avalanche( LocalPackage.LocalPackage ):
     """ Base avalanche installer for avalanche."""
-    def __init__( self, name, cachePath, installPath, graphical, tarName, zmqDependency, rootDependency ):
+    def __init__( self, name, tarName, zmqDependency, rootDependency ):
         """ Initialise avalanche with the tarName."""
-        super( Avalanche, self ).__init__( name, cachePath, installPath, graphical )
+        super( Avalanche, self ).__init__( name )
         self._TarName = tarName
         self._ZeromqDependency = zmqDependency
         self._RootDependency = rootDependency

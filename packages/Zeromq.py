@@ -8,13 +8,13 @@ import shutil
 
 class Zeromq( ConditionalPackage.ConditionalPackage ):
     """ Zeromq install package."""
-    def __init__( self, cachePath, installPath ):
+    def __init__( self ):
         """ Initlaise the ZMQ packages."""
-        super( Zeromq, self ).__init__( "zeromq-2.2.0", cachePath, installPath, "zmq", "zmq.h" )
+        super( Zeromq, self ).__init__( "zeromq-2.2.0", "zmq", "zmq.h" )
         return
     def _CheckState( self ):
         """ Check if downloaded and installed."""
-        if os.path.exists( os.path.join( self._CachePath, "zeromq-2.2.0.tar.gz" ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, "zeromq-2.2.0.tar.gz" ) ):
             self._SetMode( 1 ) # Downloaded
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/libzmq.a" ) ):
             self._SetMode( 2 ) # Installed as well

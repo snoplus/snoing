@@ -5,9 +5,6 @@ import PackageManager
 import os
 import inspect
 import PackageUtil
-import LocalPackage
-import CommandPackage
-import ConditionalPackage
 import Rat
 
 class snoing( PackageManager.PackageManager ):
@@ -16,46 +13,45 @@ class snoing( PackageManager.PackageManager ):
         """ Initialise the snoing package manager."""
         super( snoing, self ).__init__()
         if options.cachePath[0] == '/': # Global path
-            self._CachePath = options.cachePath
+            PackageUtil.kCachePath = options.cachePath
         else:
-            self._CachePath = os.path.join( os.getcwd(), options.cachePath )
-        if not os.path.exists( self._CachePath ):
-            os.makedirs( self._CachePath )
-        if len( options.installPath ) != 0 and options.installPath[0] == '/': # Global path
-            self._InstallPath = options.installPath
+            PackageUtil.kCachePath = os.path.join( os.getcwd(), options.cachePath )
+        if not os.path.exists( PackageUtil.kCachePath ):
+            os.makedirs( PackageUtil.kCachePath )
+        if options.installPath[0] == '/': # Global path
+            PackageUtil.kInstallPath = options.installPath
         else:
-            self._InstallPath = os.path.join( os.getcwd(), options.installPath )
-        if not os.path.exists( self._InstallPath ):
-            os.makedirs( self._InstallPath )
-        PackageUtil.kCachePath = self._CachePath
-        PackageUtil.kInstallPath = self._InstallPath
+            PackageUtil.kInstallPath = os.path.join( os.getcwd(), options.installPath )
+        if not os.path.exists( PackageUtil.kInstallPath ):
+            os.makedirs( PackageUtil.kInstallPath )
+            with open( os.path.join( PackageUtil.kInstallPath, "README.md" ), "w" ) as infoFile:
+                infoFile.write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
+        PackageUtil.kInstallPath = PackageUtil.kInstallPath
         # Now check for graphical option
-        graphical = False
-        if options.graphical != None:
-            graphical = options.graphical
+        snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
+        if os.path.exists( snoingSettingsPath ):
+            with open( snoingSettingsPath, "r" ) as settingsFile:
+                if options.graphical != pickle.load( settingsFile ):
+                    raise Exception( "Install path chosen is marked as graphical %s" % !options.graphical )
+                else:
+                    PackageUtil.kGraphical = options.graphical
+        else:
+            PackageUtil.kGraphical = options.graphical
+            with open( snoingSettingsPath, "w" ) as settingsFile:
+                pickle.dump( options.graphical, settingsFile )
         # First import all register all packages in this folder
-        packagesDir = os.path.join( os.path.dirname( __file__ ), "packages" )
-        for module in os.listdir( packagesDir ):
-            if module == 'snoing.py' or module[-3:] != '.py':
-                continue
-            packageSet = __import__( module[:-3], locals(), globals() )
-            for name, obj in inspect.getmembers( packageSet ):
-                if inspect.isclass( obj ): 
-                    if issubclass( obj, LocalPackage.LocalPackage ):
-                        currentPackage = obj( self._CachePath, self._InstallPath, graphical )
-                        self.RegisterPackage( currentPackage )
-                        if issubclass( obj, Rat.RatRelease ):
-                            currentPackage.SetUsernamePassword( options.username, options.password )
-                    elif issubclass( obj, ConditionalPackage.ConditionalPackage ):
-                        self.RegisterPackage( obj( self._CachePath, self._InstallPath ) )
-                    elif issubclass( obj, CommandPackage.CommandPackage ):
-                        self.RegisterPackage( obj() )
+        self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "packages" ) )
+        # Now set the username password for the rat packages
+        for package in self._Packages:
+            if issubclass( package, Rat.RatRelease ):
+                package.SetUsernamePassword( options.username, options.password )
+        
 
 if __name__ == "__main__":
     import optparse
     parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default="cache" )
-    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="" )
+    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="install" )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )

@@ -3,17 +3,15 @@
 # Package installer base class
 import Package
 import os
+import PackageUtil
 
 class LocalPackage( Package.Package ):
     """ Base class to install libraries."""
-    def __init__( self, name, cachePath, installPath, graphical ):
+    def __init__( self, name ):
         """ Initialise the package, grab a lock."""
         self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
         self._Name = name
-        self._CachePath = cachePath
-        self._InstallPath = installPath
         self._DependencyPaths = {}
-        self._Graphical = graphical
         return
     def IsDownloaded( self ):
         """ Return package is downloaded."""
@@ -27,7 +25,7 @@ class LocalPackage( Package.Package ):
         return
     def GetInstallPath( self ):
         """ Return a local package install path."""
-        return os.path.join( self._InstallPath, self._Name )
+        return os.path.join( PackageUtil.kInstallPath, self._Name )
     def Install( self ):
         """ Full install process."""
         self.CheckState()

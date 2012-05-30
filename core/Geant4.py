@@ -8,9 +8,9 @@ import PackageUtil
 
 class Geant4Post5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
-    def __init__( self, name, cachePath, installPath, graphical, sourceTar, clhepDependency, xercesDependency ):
+    def __init__( self, name, sourceTar, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
-        super( Geant4Post5, self ).__init__( name, cachePath, installPath, graphical )
+        super( Geant4Post5, self ).__init__( name )
         self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         self._ClhepDependency = clhepDependency
@@ -20,7 +20,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._SourceTar ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
             self._SetMode( 1 ) # Downloaded 
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ):
             self._SetMode( 2 ) # Installed as well
@@ -31,7 +31,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return result
     def _Install( self ):
         """ Install geant4, using cmake."""
-        sourcePath = os.path.join( self._CachePath, "geant4-source" )
+        sourcePath = os.path.join( PackageUtil.kCachePath, "geant4-source" )
         PackageUtil.UnTarFile( self._SourceTar, sourcePath, 1 )
         if not os.path.exists( self.GetInstallPath() ):
             os.makedirs( self.GetInstallPath() )
@@ -48,9 +48,9 @@ class Geant4Post5( LocalPackage.LocalPackage ):
 
 class Geant4Pre5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for pre 4.9.5 geant versions."""
-    def __init__( self, name, cachePath, installPath, graphical, sourceTar, dataTars, clhepDependency, xercesDependency ):
+    def __init__( self, name, sourceTar, dataTars, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
-        super( Geant4Pre5, self ).__init__( name, cachePath, installPath, graphical )
+        super( Geant4Pre5, self ).__init__( name )
         self._ClhepDependency = clhepDependency
         self._DataTars = dataTars
         self._SourceTar = sourceTar
@@ -62,7 +62,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc", self._ClhepDependency ]
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( self._CachePath, self._SourceTar ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
             self._SetMode( 1 ) # Downloaded 
         sys = os.uname()[0] + "-g++"
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.a" ) ):

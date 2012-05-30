@@ -8,16 +8,16 @@ import stat
 
 class Scons( LocalPackage.LocalPackage ):
     """ Base scons installer, different versions only have different names."""
-    def __init__( self, name, cachePath, installPath, tarName ):
+    def __init__( self, name, tarName ):
         """ Initialise the scons package."""
-        super( Scons, self ).__init__( name, cachePath, installPath, False )
+        super( Scons, self ).__init__( name )
         self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return
     # Functions to override
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self._CachePath, self._TarName ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
             self._SetMode( 1 ) # Downloaded 
         if os.path.exists( os.path.join( self.GetInstallPath(), "script/scons" ) ) and \
                 bool( os.stat( os.path.join( self.GetInstallPath(), "script/scons" ) ).st_mode & stat.S_IXUSR ):

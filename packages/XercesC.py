@@ -7,13 +7,13 @@ import os
 
 class XercesC( ConditionalPackage.ConditionalPackage ):
     """ XercesC install package."""
-    def __init__( self, cachePath, installPath ):
+    def __init__( self ):
         """ Initlaise the XercesC packages."""
-        super( XercesC, self ).__init__( "xerces-c-3.1.1", cachePath, installPath, "xerces-c" )
+        super( XercesC, self ).__init__( "xerces-c-3.1.1", "xerces-c" )
         return
     def _CheckState( self ):
         """ Check if downloaded and installed."""
-        if os.path.exists( os.path.join( self._CachePath, "xerces-c-3.1.1.tar.gz" ) ):
+        if os.path.exists( os.path.join( PackageUtil.kCachePath, "xerces-c-3.1.1.tar.gz" ) ):
             self._SetMode( 1 ) # Downloaded
         if os.path.exists( os.path.join( self.GetInstallPath(), "lib/libxerces-c.a" ) ):
             self._SetMode( 2 ) # Installed as well

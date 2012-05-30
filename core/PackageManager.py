@@ -11,6 +11,16 @@ class PackageManager( object ):
         """ Initialise the package manager."""
         self._Packages = {}
         return
+    def RegisterPackagesInDirectory( self, folderPath ):
+        """ Register all the packages in the folderPath. """
+        for module in os.listdir( folderPath ):
+            if module[-3:] != '.py':
+                continue
+            packageSet = __import__( module[:-3], locals(), globals() )
+            for name, obj in inspect.getmembers( packageSet ):
+                if inspect.isclass( obj ):
+                    self.RegisterPackage( obj() )
+        return
     def RegisterPackage( self, package ):
         """ Add the package to the list of known packages."""
         print "Registering package %s" % package.GetName()

@@ -11,6 +11,7 @@ from contextlib import closing
 
 kCachePath = ""
 kInstallPath = ""
+kGraphical = False
 
 def DownloadFile( url, username = None, password = None ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath."""

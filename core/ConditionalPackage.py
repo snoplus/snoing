@@ -7,12 +7,10 @@ import PackageUtil
 
 class ConditionalPackage( Package.Package ):
     """ Base class to install libraries."""
-    def __init__( self, name, cachePath, installPath, library, header = None ):
+    def __init__( self, name, library, header = None ):
         """ Initialise the package, grab a lock."""
         super( ConditionalPackage, self ).__init__( name )
         self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
-        self._CachePath = cachePath
-        self._InstallPath = installPath
         self._Library = library
         self._Header = header
         return
@@ -24,7 +22,7 @@ class ConditionalPackage( Package.Package ):
         return self._Mode > 1
     def GetInstallPath( self ):
         """ Return a local package install path."""
-        return os.path.join( self._InstallPath, self._Name )
+        return os.path.join( PackageUtil.kInstallPath, self._Name )
     def Install( self ):
         """ Full install process."""
         self.CheckState()

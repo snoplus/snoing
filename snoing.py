@@ -6,6 +6,7 @@ import os
 import inspect
 import PackageUtil
 import Rat
+import pickle
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -32,7 +33,7 @@ class snoing( PackageManager.PackageManager ):
         if os.path.exists( snoingSettingsPath ):
             with open( snoingSettingsPath, "r" ) as settingsFile:
                 if options.graphical != pickle.load( settingsFile ):
-                    raise Exception( "Install path chosen is marked as graphical %s" % !options.graphical )
+                    raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
                 else:
                     PackageUtil.kGraphical = options.graphical
         else:
@@ -43,8 +44,8 @@ class snoing( PackageManager.PackageManager ):
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "packages" ) )
         # Now set the username password for the rat packages
         for package in self._Packages:
-            if issubclass( package, Rat.RatRelease ):
-                package.SetUsernamePassword( options.username, options.password )
+            if isinstance( self._Packages[package], Rat.RatRelease ):
+                self._Packages[package].SetUsernamePassword( options.username, options.password )
         
 
 if __name__ == "__main__":
@@ -53,6 +54,7 @@ if __name__ == "__main__":
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default="cache" )
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="install" )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
+    parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
@@ -61,4 +63,7 @@ if __name__ == "__main__":
         #Install all
         print "Installing all"
     else:
-        installer.InstallPackage( args[0] )
+        if options.query == True:
+            print args[0], installer.CheckPackage( args[0] )
+        else:
+            installer.InstallPackage( args[0] )

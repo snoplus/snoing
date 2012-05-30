@@ -9,7 +9,7 @@ class Clhep( LocalPackage.LocalPackage ):
     """ Base clhep installer, different versions only have different names."""
     def __init__( self, name, tarName ):
         """ Initialise the clhep package."""
-        super( Clhep, self ).__init__( name, False )
+        super( Clhep, self ).__init__( name )
         self._TarName = tarName
         return
     # Functions to override

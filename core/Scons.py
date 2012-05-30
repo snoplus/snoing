@@ -11,7 +11,6 @@ class Scons( LocalPackage.LocalPackage ):
     def __init__( self, name, tarName ):
         """ Initialise the scons package."""
         super( Scons, self ).__init__( name )
-        self._InstallPath = os.path.join( self._InstallPath, name )
         self._TarName = tarName
         return
     # Functions to override

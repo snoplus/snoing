@@ -4,6 +4,8 @@
 import CommandPackage
 import ConditionalPackage
 import LocalPackage
+import os
+import inspect
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
@@ -26,16 +28,21 @@ class PackageManager( object ):
         print "Registering package %s" % package.GetName()
         self._Packages[package.GetName()] = package
         return
-    def InstallPackage( self, packageName ):
-        """ Install the package by package name."""
+    def CheckPackage( self, packageName ):
+        """ Check if the package called packageName is installed."""
         if not packageName in self._Packages.keys():
-            print "Package: %s not found" % packageName
-        # First check if the package is already installed
+            raise Exception( "Package %s not found" % packageName )
         package = self._Packages[packageName]
         package.CheckState()
         if package.IsInstalled():
-            # Great
+            return True
+        return False
+    def InstallPackage( self, packageName ):
+        """ Install the package by package name."""
+        if self.CheckPackage( packageName ):
             return
+        package = self._Packages[packageName]
+        package.CheckState()
         if isinstance( package, CommandPackage.CommandPackage ):
             # Ah user must install this system wide...
             raise Exception( "Package %s must be installed manually." % package.GetName() )
@@ -55,3 +62,4 @@ class PackageManager( object ):
         package.Install()
         print "Package: %s installed." % package.GetName()
         return
+    

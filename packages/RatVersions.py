@@ -14,7 +14,7 @@ class RATDev( Rat.Rat ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( self.GetInstallPath() ) ):
             self._SetMode( 1 ) # Downloaded
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_exe" ) ):
+        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ): # Temp test method
             self._SetMode( 2 ) # Installed as well
         return
     def GetDependencies( self ):

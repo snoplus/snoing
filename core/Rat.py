@@ -35,7 +35,7 @@ class RatRelease( Rat ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
             self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_exe" ) ):
+        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ): # TEMP test method
             self._SetMode( 2 ) # Installed as well
         return
     def SetUsernamePassword( self, username, password ):
@@ -91,9 +91,9 @@ source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependen
 
 class RatReleasePre3( RatRelease ):
     """ Base rat installer for releases pre 3.0."""
-    def __init__( self, name, cachePath, installPath, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
+    def __init__( self, name, tarName, clhepDependency, geantDependency, rootDependency, sconsDependency ):
         """ Initialise the rat package."""
-        super( RatReleasePre3, self ).__init__( name, cachePath, installPath, False, tarName )
+        super( RatReleasePre3, self ).__init__( name, tarName )
         self._ClhepDependency = clhepDependency
         self._GeantDependency = geantDependency
         self._RootDependency = rootDependency

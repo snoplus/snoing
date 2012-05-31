@@ -46,7 +46,7 @@ class RatRelease( Rat ):
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         if self._Username is None:
-            self._Username = input( "Github username:" )
+            self._Username = raw_input( "Github username:" )
         if self._Password is None:
             print "Github password:"
             self._Password = getpass.getpass()
@@ -88,7 +88,7 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanc
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency] }
-        with open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
+        with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return
 
@@ -117,6 +117,6 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath() }
-        with open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
+        with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return

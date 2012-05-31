@@ -45,7 +45,10 @@ class RatRelease( Rat ):
         return 
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
+        if self._Username is None:
+            self._Username = input( "Github username:" )
         if self._Password is None:
+            print "Github password:"
             self._Password = getpass.getpass()
         return PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
     def _Install( self ):

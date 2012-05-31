@@ -42,6 +42,21 @@ source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], 
             envFile.write( outText )
         return
 
+class RAT4( Rat.RatReleasePost3 ):
+""" Temporary Rat release-4.00, install package."""
+    def __init__( self ):
+        """ Initiliase the rat 4.0 package."""
+        super( RAT3, self ).__init__( "rat-4", "ProposedPhysicsList", "clhep-2.1.0.1", "geant4.9.5.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1" )
+        return
+    def _Download( self ):
+        """ Derived classes should override this to download the package. Return True on success."""
+        if self._Username is None:
+            self._Username = input( "Github username:" )
+        if self._Password is None:
+            print "Github password:"
+            self._Password = getpass.getpass()
+        return PackageUtil.DownloadFile( "https://github.com/pgjones/rat/tarball/ProposedPhysicsList", self._Username, self._Password )
+
 class RAT3( Rat.RatReleasePost3 ):
     """ Rat release-3.00, install package."""
     def __init__( self ):

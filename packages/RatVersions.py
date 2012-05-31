@@ -39,7 +39,7 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanc
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], "Root" : self._DependencyPaths["root-5.32.03"], "Clhep" : self._DependencyPaths["clhep-2.1.0.1"], "Scons" : self._DependencyPaths["scons-2.1.0"], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths["avalanche-1"], "Zeromq" : self._DependencyPaths["zeromq-2.2.0"], "Xercesc" : self._DependencyPaths["xerces-c-3.1.1"] }
-        with open( os.path.join( self._InstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
+        with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return
 

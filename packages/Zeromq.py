@@ -27,7 +27,7 @@ class Zeromq( ConditionalPackage.ConditionalPackage ):
         result = PackageUtil.UnTarFile( "zeromq-2.2.0.tar.gz", self.GetInstallPath(), 1 )
         result = result and PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
         result = result and PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        tempDirectory = os.path.join( self._CachePath, "zmq-temp" )
+        tempDirectory = os.path.join( PackageUtil.kCachePath, "zmq-temp" )
         result = result and PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % tempDirectory], None, self.GetInstallPath() )
         shutil.copytree( os.path.join( tempDirectory, "lib" ), os.path.join( self.GetInstallPath(), "lib" ) )
         shutil.rmtree( tempDirectory )

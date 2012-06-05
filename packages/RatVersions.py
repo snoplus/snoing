@@ -20,7 +20,7 @@ class RATDev( Rat.Rat ):
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1" ]
+        return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" ]
     def _Download( self ):
         """ Git clone rat-dev."""
         return PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git", self.GetInstallPath()], None, os.getcwd() )
@@ -33,12 +33,12 @@ export ROOTSYS=%(Root)s
 export AVALANCHEROOT=%(Avalanche)s
 export ZEROMQROOT=%(Zeromq)s
 export XERCESCROOT=%(Xercesc)s
-export PATH=%(Root)s/bin:$PATH
+export PATH=%(Root)s/bin::%(Curl)s/bin:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
-source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], "Root" : self._DependencyPaths["root-5.32.03"], "Clhep" : self._DependencyPaths["clhep-2.1.0.1"], "Scons" : self._DependencyPaths["scons-2.1.0"], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths["avalanche-1"], "Zeromq" : self._DependencyPaths["zeromq-2.2.0"], "Xercesc" : self._DependencyPaths["xerces-c-3.1.1"] }
+source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], "Root" : self._DependencyPaths["root-5.32.03"], "Clhep" : self._DependencyPaths["clhep-2.1.0.1"], "Scons" : self._DependencyPaths["scons-2.1.0"], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths["avalanche-1"], "Zeromq" : self._DependencyPaths["zeromq-2.2.0"], "Xercesc" : self._DependencyPaths["xerces-c-3.1.1"], "Curl" : self._DependencyPaths["curl-7.26.0"] }
         with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return
@@ -47,7 +47,7 @@ class RAT4( Rat.RatReleasePost3 ):
     """ Temporary Rat release-4.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
-        super( RAT4, self ).__init__( "rat-4", "ProposedPhysicsList", "clhep-2.1.0.1", "geant4.9.5.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1" )
+        super( RAT4, self ).__init__( "rat-4", "ProposedPhysicsList", "clhep-2.1.0.1", "geant4.9.5.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" )
         return
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
@@ -66,12 +66,12 @@ export ROOTSYS=%(Root)s
 export AVALANCHEROOT=%(Avalanche)s
 export ZEROMQROOT=%(Zeromq)s
 export XERCESCROOT=%(Xercesc)s
-export PATH=%(Root)s/bin:%(Geant)s/bin:$PATH
+export PATH=%(Root)s/bin:%(Geant)s/bin:%(Curl)s/bin:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
-source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency] }
+source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency], "Curl" : self._DependencyPaths["curl-7.26.0"] }
         with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return
@@ -80,7 +80,7 @@ class RAT3( Rat.RatReleasePost3 ):
     """ Rat release-3.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 3.0 package."""
-        super( RAT3, self ).__init__( "rat-3", "release-3.00", "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1" )
+        super( RAT3, self ).__init__( "rat-3", "release-3.00", "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" )
         return
 
 class RAT2( Rat.RatReleasePre3 ):

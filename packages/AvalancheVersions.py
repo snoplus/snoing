@@ -6,5 +6,5 @@ import Avalanche
 class AvalancheV1( Avalanche.Avalanche ):
     def __init__( self ):
         """ Initialise version 1."""
-        super( AvalancheV1, self ).__init__( "avalanche-1", "d400c35640413a1b017bcd93a926e354c7aaaaff", "zeromq-2.2.0", "root-5.32.03" )
+        super( AvalancheV1, self ).__init__( "avalanche-1", "d400c35640413a1b017bcd93a926e354c7aaaaff", "zeromq-2.2.0", "root-5.32.03", "curl-7.26.0" )
         return

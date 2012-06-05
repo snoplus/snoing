@@ -58,7 +58,7 @@ class RatRelease( Rat ):
 
 class RatReleasePost3( RatRelease ):
     """ Base rat installer for releases post 3.0."""
-    def __init__( self, name, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep ):
+    def __init__( self, name, tarName, clhepDep, geantDep, rootDep, sconsDep, avalancheDep, zeromqDep, xercescDep, curlDep ):
         """ Initialise the rat package."""
         super( RatReleasePost3, self ).__init__( name, tarName )
         self._ClhepDependency = clhepDep
@@ -68,11 +68,12 @@ class RatReleasePost3( RatRelease ):
         self._AvalancheDependency = avalancheDep
         self._ZeromqDependency = zeromqDep
         self._XercescDependency = xercescDep
+        self._CurlDependency = curlDep
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         return [ self._ClhepDependency, self._GeantDependency, self._RootDependency, \
-                     self._SconsDependency, self._AvalancheDependency, self._ZeromqDependency, self._XercescDependency ]
+                     self._SconsDependency, self._AvalancheDependency, self._ZeromqDependency, self._XercescDependency, self._CurlDependency ]
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash
@@ -82,12 +83,12 @@ export ROOTSYS=%(Root)s
 export AVALANCHEROOT=%(Avalanche)s
 export ZEROMQROOT=%(Zeromq)s
 export XERCESCROOT=%(Xercesc)s
-export PATH=%(Root)s/bin:$PATH
+export PATH=%(Root)s/bin:%(Curl)s/bin:$PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
-source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency] }
+source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency], "Curl" : self._DependencyPaths[self._CurlDependency] }
         with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return

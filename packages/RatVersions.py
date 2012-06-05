@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 18/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+#        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency to RAT-dev and rat-3
 # The RAT packages (versions)
 import Rat
 import os

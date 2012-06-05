@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# A
+# Author O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : First revision, new file.
 import Curl
 
 class Curl7260( Curl.Curl ):

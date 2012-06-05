@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Author O. Wasalski - 04/06/2012 <wasalski@berkeley.edu> : First revision 
+# Author O. Wasalski - 04/06/2012 <wasalski@berkeley.edu> : First revision, new file
 import os
 import PackageUtil
 import ConditionalPackage

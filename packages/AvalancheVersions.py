@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+#        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency
 # The Avalanche package
 import Avalanche
 

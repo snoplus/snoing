@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 16/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+#        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency
 # The AVALANCHE packages base class
 import LocalPackage
 import os

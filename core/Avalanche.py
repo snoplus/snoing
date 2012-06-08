@@ -26,7 +26,7 @@ class Avalanche( LocalPackage.LocalPackage ):
         return
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return [self._ZeromqDependency, self._RootDependency, "curl-7.26.0"]
+        return [self._ZeromqDependency, self._RootDependency, self._CurlDependency]
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         return PackageUtil.DownloadFile( "https://github.com/mastbaum/avalanche/tarball/" + self._TarName )

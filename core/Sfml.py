@@ -23,10 +23,10 @@ class Sfml( LocalPackage.LocalPackage ):
     def CheckState( self ):
         """ Check if downloaded and installed."""
         self._SetMode( 0 )
-        if( self._Downloaded() ):
-            self._SetMode( 1 )
-        if( self._Installed() ):
-            self._SetMode( 2 )
+        #if( self._Downloaded() ):
+        #    self._SetMode( 1 )
+        #if( self._Installed() ):
+        #    self._SetMode( 2 )
 
     def GetDependencies( self ):
         """ Return the required dependencies."""

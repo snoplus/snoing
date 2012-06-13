@@ -38,7 +38,6 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath
     shellCommand = [ command ] + args
-    print shellCommand
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
     output, error = process.communicate()
     return ( process.returncode, output )

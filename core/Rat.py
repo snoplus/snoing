@@ -36,7 +36,12 @@ class RatRelease( Rat ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
             self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ): # TEMP test method
+        # Check rat, root, RATLib and RATDSLib
+        sys = os.uname()[0]
+        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_%s-g++" % sys ) ) \
+                and os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ) \
+                and os.path.exists( os.path.join( self.GetInstallPath(), "lib/librat_%s-g++.a" % sys ) ) \
+                and os.path.exists( os.path.join( self.GetInstallPath(), "lib/libRATEvent_%s-g++.so" % sys ) ): 
             self._SetMode( 2 ) # Installed as well
         return
     def SetUsernamePassword( self, username, password ):

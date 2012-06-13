@@ -26,6 +26,7 @@ class PackageManager( object ):
     def RegisterPackage( self, package ):
         """ Add the package to the list of known packages."""
         print "Registering package %s" % package.GetName()
+        package.CheckState()
         self._Packages[package.GetName()] = package
         return
     def CheckPackage( self, packageName ):
@@ -33,7 +34,6 @@ class PackageManager( object ):
         if not packageName in self._Packages.keys():
             raise Exception( "Package %s not found" % packageName )
         package = self._Packages[packageName]
-        package.CheckState()
         if package.IsInstalled():
             return True
         return False
@@ -42,7 +42,6 @@ class PackageManager( object ):
         if self.CheckPackage( packageName ):
             return
         package = self._Packages[packageName]
-        package.CheckState()
         if isinstance( package, CommandPackage.CommandPackage ):
             # Ah user must install this system wide...
             raise Exception( "Package %s must be installed manually." % package.GetName() )
@@ -60,6 +59,10 @@ class PackageManager( object ):
         package.SetDependencyPaths( dependencyPaths )
         print "Installing %s" % package.GetName()
         package.Install()
+        package.CheckState()
+        if not package.IsIntalled():
+            print "Package: %s, errored during install." % package.GetName()
+            return
         print "Package: %s installed." % package.GetName()
         return
     

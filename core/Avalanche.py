@@ -8,8 +8,7 @@ import PackageUtil
 
 class Avalanche( LocalPackage.LocalPackage ):
     """ Base avalanche installer for avalanche."""
-    def __init__( self, name, tarName, zmqDependency, rootDependency, \
-                  curlDependency ):
+    def __init__( self, name, tarName, zmqDependency, rootDependency, curlDependency ):
         """ Initialise avalanche with the tarName."""
         super( Avalanche, self ).__init__( name )
         self._TarName = tarName
@@ -34,7 +33,7 @@ class Avalanche( LocalPackage.LocalPackage ):
         """ Install the version."""
         PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         env = os.environ
-        env['PATH'] = os.path.join( self._DependencyPaths['root-5.32.03'], "bin" ) + ":" + env['PATH']
-        env['ROOTSYS'] = self._DependencyPaths['root-5.32.03']
-        result = PackageUtil.ExecuteSimpleCommand( "make", ['CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include' % (self._DependencyPaths["zeromq-2.2.0"], self._DependencyPaths["zeromq-2.2.0"], self._DependencyPaths["curl-7.26.0"], self._DependencyPaths["curl-7.26.0"]) ], env, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
+        env['PATH'] = os.path.join( self._DependencyPaths[self._RootDependency], "bin" ) + ":" + env['PATH']
+        env['ROOTSYS'] = self._DependencyPaths[self._RootDependency]
+        result = PackageUtil.ExecuteSimpleCommand( "make", ['CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include' % (self._DependencyPaths[self._ZeromqDependency], self._DependencyPaths[self._ZeromqDependency], self._DependencyPaths[self._CurlDependency], self._DependencyPaths[self._CurlDependency]) ], env, os.path.join( self.GetInstallPath(), "lib/cpp" ) )
         return result

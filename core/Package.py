@@ -10,6 +10,8 @@ class Package( object ):
         """ Construct the package with name"""
         self._Name = name
         self._InstallPath = None # Location where the package is installed
+        self._InstallPipe = "" # Install output
+        self._DownloadPipe = "" # Download output
         return
     def GetName( self ):
         """ Return the package name."""

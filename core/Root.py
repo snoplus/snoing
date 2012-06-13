@@ -24,7 +24,7 @@ class Root( LocalPackage.LocalPackage ):
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc" ]
+        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext" ]
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         return PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )

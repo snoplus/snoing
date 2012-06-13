@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 13/05/2012 <p.g.jones@qmul.ac.uk> : Added 5.32, 5.28, 5.24 versions (rat v3, v2, v1)
+#        O Wasalski - 13/06/2012 <wasalski@berkeley.edu> : Building python module
 # The ROOT packages base class
 import LocalPackage
 import os
@@ -30,6 +31,6 @@ class Root( LocalPackage.LocalPackage ):
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
-        result = result and PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit'], None, self.GetInstallPath() )
+        result = result and PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit', '--enable-python'], None, self.GetInstallPath() )
         result = result and PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
         return result

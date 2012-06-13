@@ -60,7 +60,7 @@ class PackageManager( object ):
         print "Installing %s" % package.GetName()
         package.Install()
         package.CheckState()
-        if not package.IsIntalled():
+        if not package.IsInstalled():
             print "Package: %s, errored during install." % package.GetName()
             return
         print "Package: %s installed." % package.GetName()

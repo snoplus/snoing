@@ -39,8 +39,9 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     global kCachePath, kInstallPath
     shellCommand = [ command ] + args
     print shellCommand
-    process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd )
-    return process.wait() == 0 # Blocks and waits for command to finish
+    process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
+    output, error = process.communicate()
+    return ( process.returncode, output )
 
 def ExecuteComplexCommand( command ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""
@@ -48,9 +49,9 @@ def ExecuteComplexCommand( command ):
     fileName = os.path.join( kInstallPath, "temp.sh" )
     with open( fileName, "w" ) as commandFile:
         commandFile.write( command )
-    result = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
+    result, output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
     os.remove( fileName )
-    return result
+    return ( result, output )
 
 def UnTarFile( tarFileName, targetPath, strip = 0 ):
     """ Untar the file tarFile to targetPath take off the the first strip folders."""

@@ -4,11 +4,11 @@
 import Package
 import PackageUtil
 
-class CommandPackage( Package.Package ):
+class LibraryPackage( Package.Package ):
     """ For packages that are simple commands such as make."""
     def __init__( self, name, libName, header = None ):
         """ Initialise the package."""
-        super( CommandPackage, self ).__init__( name )
+        super( LibraryPackage, self ).__init__( name )
         self._Mode = 0 # 0 is initial, 1 is installed
         self._LibName = libName
         self._Header = header

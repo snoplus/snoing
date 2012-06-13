@@ -60,7 +60,7 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
     global kCachePath, kInstallPath
     if strip == 0: # Can untar directly into target
         with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
-        tarFile.extractall( targetPath )
+            tarFile.extractall( targetPath )
     else: # Must untar to temp then to target, note target cannot already exist!
         # First untar to a temp directory
         tempDirectory = os.path.join( kCachePath, "temp" )

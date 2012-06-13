@@ -56,21 +56,25 @@ def ExecuteComplexCommand( command ):
 def UnTarFile( tarFileName, targetPath, strip = 0 ):
     """ Untar the file tarFile to targetPath take off the the first strip folders."""
     global kCachePath, kInstallPath
-    # First untar to a temp directory
-    tempDirectory = os.path.join( kCachePath, "temp" )
-    with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
-        tarFile.extractall( tempDirectory )
-    # Now choose how many components to strip
-    copyDirectory = tempDirectory
-    for iStrip in range( 0, strip ):
-        subFolders = os.listdir( copyDirectory )
-        copyDirectory = os.path.join( copyDirectory, subFolders[0] )
-    # Now can copy, first make sure the targetPath does not exist
-    if os.path.exists( targetPath ):
-        shutil.rmtree( targetPath )
-    # Now copy
-    shutil.copytree( copyDirectory, targetPath )
-    shutil.rmtree( tempDirectory )
+    if strip == 0: # Can untar directly into target
+        with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
+        tarFile.extractall( targetPath )
+    else: # Must untar to temp then to target, note target cannot already exist!
+        # First untar to a temp directory
+        tempDirectory = os.path.join( kCachePath, "temp" )
+        with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
+            tarFile.extractall( tempDirectory )
+            # Now choose how many components to strip
+        copyDirectory = tempDirectory
+        for iStrip in range( 0, strip ):
+            subFolders = os.listdir( copyDirectory )
+            copyDirectory = os.path.join( copyDirectory, subFolders[0] )
+        # Now can copy, first make sure the targetPath does not exist
+        if os.path.exists( targetPath ):
+            shutil.rmtree( targetPath )
+        # Now copy
+        shutil.copytree( copyDirectory, targetPath )
+        shutil.rmtree( tempDirectory )
     return True
 
 def FindLibrary( libName ):

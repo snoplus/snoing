@@ -16,6 +16,7 @@ class Sfml( LocalPackage.LocalPackage ):
         if( revision == "" ):
             revision = "master"
         self._URL = "https://github.com/LaurentGomila/SFML/tarball/" + revision
+        self._TarName = self._Name + ".tar.gz"
         return
 
 ########### "Public" functions - overrides LocalPackage ################
@@ -23,10 +24,10 @@ class Sfml( LocalPackage.LocalPackage ):
     def CheckState( self ):
         """ Check if downloaded and installed."""
         self._SetMode( 0 )
-        #if( self._Downloaded() ):
-        #    self._SetMode( 1 )
-        #if( self._Installed() ):
-        #    self._SetMode( 2 )
+        if( self._Downloaded() ):
+            self._SetMode( 1 )
+        if( self._Installed() ):
+            self._SetMode( 2 )
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
@@ -37,14 +38,14 @@ class Sfml( LocalPackage.LocalPackage ):
     def _Download( self ):
         """ Derived classes should override this to download the package. 
         Return True on success.""" 
-        PackageUtil.DownloadFile( self._URL, fileName = self._Name )
-        PackageUtil.UnTarFile( self._Name, self.GetInstallPath(), 1 )
+        PackageUtil.DownloadFile( self._URL, fileName = self._TarName )
         return self._Downloaded()
 
     def _Install( self ):
         """ Install the version."""
         env = os.environ
         installPath = self.GetInstallPath()
+        PackageUtil.UnTarFile( self._TarName, installPath, 1 )
 
         PackageUtil.ExecuteSimpleCommand( \
             "cmake", [ "-DCMAKE_INSTALL_PREFIX:PATH=$PWD" ], env, installPath ) 
@@ -55,18 +56,14 @@ class Sfml( LocalPackage.LocalPackage ):
 ########### "Private" functions - helper for this class only ################
 
     def _Downloaded( self ):
-        installPath = self.GetInstallPath()
-        incfile = os.path.join( installPath, "include", "SFML", "System.hpp" )
-        return os.path.isfile( incfile )
+        tarball = os.path.join( PackageUtil.kCachePath, self._TarName )
+        return os.path.isfile( tarball )
 
     def _Installed( self ):
         libDir = os.path.join( self.GetInstallPath(), "lib" )
         libs = [ "audio", "graphics", "network", "system", "window" ]
-        result = True
-        for lib in libs:
-            libpath = os.path.join( libDir, "libsfml-" + lib + ".so" )
-            result = result and os.path.isfile( libpath )
-        return result
+        libPaths = [ libDir + "/libsfml-" + lib + ".so" for lib in libs ]
+        return all( [ os.path.isfile( libPath ) for libPath in libPaths ] )
 
 
 

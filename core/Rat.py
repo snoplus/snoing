@@ -12,6 +12,21 @@ class Rat( LocalPackage.LocalPackage ):
     def __init__( self, name ):
         super( Rat, self ).__init__( name )
         return
+    def CheckState( self ):
+        """ Check if rat is downloaded and installed."""
+        if self._IsDownloaded:
+            self._SetMode( 1 )
+        if self._IsInstalled:
+            self._SetMode( 2 )
+        return
+    def _IsInstalled( self ):
+        """ Rat releases and dev share a common install check."""
+        # Check rat, root, RATLib and RATDSLib
+        sys = os.uname()[0]
+        return os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_%s-g++" % sys ) ) \
+            and os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ) \
+            and os.path.exists( os.path.join( self.GetInstallPath(), "lib/librat_%s-g++.a" % sys ) ) \
+            and os.path.exists( os.path.join( self.GetInstallPath(), "lib/libRATEvent_%s-g++.so" % sys ) )
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         self._WriteEnvFile()
@@ -32,18 +47,9 @@ class RatRelease( Rat ):
         super( RatRelease, self ).__init__( name )
         self._TarName = tarName
         return
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
-            self._SetMode( 1 ) # Downloaded 
-        # Check rat, root, RATLib and RATDSLib
-        sys = os.uname()[0]
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_%s-g++" % sys ) ) \
-                and os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ) \
-                and os.path.exists( os.path.join( self.GetInstallPath(), "lib/librat_%s-g++.a" % sys ) ) \
-                and os.path.exists( os.path.join( self.GetInstallPath(), "lib/libRATEvent_%s-g++.so" % sys ) ): 
-            self._SetMode( 2 ) # Installed as well
-        return
+    def _IsDownloaded( self ):
+        """ Check if tarball has been downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def SetUsernamePassword( self, username, password ):
         """ Set the username password combination required for github downloads."""
         self._Username = username

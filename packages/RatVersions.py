@@ -12,13 +12,9 @@ class RATDev( Rat.Rat ):
     def __init__( self ):
         """ Initiliase the rat dev package."""
         super( RATDev, self ).__init__( "rat-dev" )
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( self.GetInstallPath() ) ):
-            self._SetMode( 1 ) # Downloaded
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ): # Temp test method
-            self._SetMode( 2 ) # Installed as well
-        return
+    def _IsDownloaded( self ):
+        """ Check if git clone has completed."""
+        return os.path.exists( os.path.join( self.GetInstallPath() )
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" ]

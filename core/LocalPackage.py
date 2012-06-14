@@ -31,18 +31,22 @@ class LocalPackage( Package.Package ):
         self.CheckState()
         self.Download()
         if not self.IsInstalled():
-            if self._Install():
+            try:
+                self._Install():
                 self._IncrementMode()
-            else:
-                raise Exception( "Install error" )        
+            except Exception:
+                Log.Error( "Install error for %s" % self._Name )
+                Log.Detail( self._InstallPipe )
     def Download( self ):
         """ Full download process."""
         self.CheckState()
         if not self.IsDownloaded():
-            if self._Download():
+            try: 
+                self._Download()
                 self._IncrementMode()
-            else:
-                raise Exception( "Download error" )
+            except Exception:
+                Log.Error( "Download error for %s" % self._Name )
+                Log.Detail( self._DownloadPipe )
         return
     # Functions to override
     def CheckState( self ):

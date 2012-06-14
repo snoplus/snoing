@@ -27,10 +27,11 @@ class Root( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext" ]
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        return PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )
+        self._DownloadPipe += PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )
+        return
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
-        result = result and PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit', '--enable-python'], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
-        return result
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit --enable-python'], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
+        return

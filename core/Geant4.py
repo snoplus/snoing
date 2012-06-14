@@ -27,8 +27,8 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return
     def _Download( self ):
         """ Derived classes should override this to download the package."""
-        result = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
-        return result
+        self._DownloadPipe = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
+        return
     def _Install( self ):
         """ Install geant4, using cmake."""
         sourcePath = os.path.join( PackageUtil.kCachePath, "geant4-source" )
@@ -41,10 +41,10 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         if PackageUtil.kGraphical:
             cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
         cmakeOpts.extend( [ sourcePath ] )
-        result = PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
-        return result
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
+        return
 
 class Geant4Pre5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for pre 4.9.5 geant versions."""
@@ -70,20 +70,23 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         return
     def _Download( self ):
         """ Derived classes should override this to download the package."""
-        result = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
+        self._DownloadPipe = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
         for dataTar in self._DataTars:
-            result = result and PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + dataTar )
-        return result
+            self._DownloadPipe += PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + dataTar )
+        return
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        PackageUtil.UnTarFile( self._SourceTar, self.GetInstallPath(), 1 )
+        self._InstallPipe += PackageUtil.UnTarFile( self._SourceTar, self.GetInstallPath(), 1 )
         for dataTar in self._DataTars:
-            PackageUtil.UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
+            self._InstallPipe += PackageUtil.UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
         self.WriteGeant4ConfigFile()
-        result = PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
-        return True#result Temp (Geant has issues...)
+        try:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        except Exception: # Geant4 configure always fails, it is annoying
+            pass
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
+        return 
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""
         clhepPath = self._DependencyPaths[self._ClhepDependency]

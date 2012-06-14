@@ -27,6 +27,6 @@ class Scons( LocalPackage.LocalPackage ):
         return []
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0751 )
-        return result
+        return

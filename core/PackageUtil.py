@@ -35,7 +35,9 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
                     break
                 downloaded += len( buffer )
                 localFile.write( buffer )
-    return downloaded >= downloadSize # Returns true if full download has occured
+    if downloaded < downloadSize: # Something has gone wrong
+        raise Exception( "Download error" )
+    return "Downloaded %i bytes" % downloadSize
     
 def ExecuteSimpleCommand( command, args, env, cwd ):
     """ Blocking execute command. Returns True on success"""
@@ -43,7 +45,9 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     shellCommand = [ command ] + args
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
     output, error = process.communicate()
-    return ( process.returncode, output )
+    if process.returncode <= 0:
+        raise Exception( "Command Error" )
+    return output
 
 def ExecuteComplexCommand( command ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""
@@ -51,9 +55,9 @@ def ExecuteComplexCommand( command ):
     fileName = os.path.join( kInstallPath, "temp.sh" )
     with open( fileName, "w" ) as commandFile:
         commandFile.write( command )
-    result, output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
+    output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
     os.remove( fileName )
-    return ( result, output )
+    return output
 
 def UnTarFile( tarFileName, targetPath, strip = 0 ):
     """ Untar the file tarFile to targetPath take off the the first strip folders."""
@@ -77,7 +81,7 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
         # Now copy
         shutil.copytree( copyDirectory, targetPath )
         shutil.rmtree( tempDirectory )
-    return True
+    return "Extracted %s" % tarFileName
 
 def FindLibrary( libName ):
     """ Check if the library exists in the standard library locations. Return location if it does if not return None."""
@@ -101,6 +105,6 @@ def TestLibrary( libName, header = None ):
     fileName = os.path.join( kInstallPath, "temp.cc" )
     with open( fileName, "w" ) as testFile:
         testFile.write( fileText )
-    result = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
+    output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
     os.remove( fileName )
-    return result
+    return output

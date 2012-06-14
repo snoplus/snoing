@@ -21,14 +21,15 @@ class Zeromq( ConditionalPackage.ConditionalPackage ):
         return
     def _Download( self ):
         """ Download the 2.2 version."""
-        return PackageUtil.DownloadFile( "http://download.zeromq.org/zeromq-2.2.0.tar.gz" )
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://download.zeromq.org/zeromq-2.2.0.tar.gz" )
+        return
     def _Install( self ):
         """ Install the 2.2 version."""
-        result = PackageUtil.UnTarFile( "zeromq-2.2.0.tar.gz", self.GetInstallPath(), 1 )
-        result = result and PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.UnTarFile( "zeromq-2.2.0.tar.gz", self.GetInstallPath(), 1 )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
         tempDirectory = os.path.join( PackageUtil.kCachePath, "zmq-temp" )
-        result = result and PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % tempDirectory], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % tempDirectory], None, self.GetInstallPath() )
         shutil.copytree( os.path.join( tempDirectory, "lib" ), os.path.join( self.GetInstallPath(), "lib" ) )
         shutil.rmtree( tempDirectory )
-        return result
+        return

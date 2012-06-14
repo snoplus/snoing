@@ -6,6 +6,7 @@ import ConditionalPackage
 import LocalPackage
 import os
 import inspect
+import Log
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
@@ -25,17 +26,20 @@ class PackageManager( object ):
         return
     def RegisterPackage( self, package ):
         """ Add the package to the list of known packages."""
-        print "Registering package %s" % package.GetName()
+        Log.Info( "Registering package %s" % package.GetName() )
         package.CheckState()
         self._Packages[package.GetName()] = package
         return
     def CheckPackage( self, packageName ):
         """ Check if the package called packageName is installed."""
         if not packageName in self._Packages.keys():
-            raise Exception( "Package %s not found" % packageName )
+            Log.Error( "Package %s not found" % packageName )
         package = self._Packages[packageName]
+        Log.Info( "Checking package %s install status" % packageName )
         if package.IsInstalled():
+            Log.Result( "Installed" )
             return True
+        Log.Warn( "Not Installed" )
         return False
     def InstallPackage( self, packageName ):
         """ Install the package by package name."""
@@ -44,11 +48,11 @@ class PackageManager( object ):
         package = self._Packages[packageName]
         if isinstance( package, CommandPackage.CommandPackage ):
             # Ah user must install this system wide...
-            raise Exception( "Package %s must be installed manually." % package.GetName() )
+            Log.Error( "Package %s must be installed manually." % package.GetName() )
         if isinstance( package, ConditionalPackage.ConditionalPackage ):
-            print "Installing %s" % package.GetName()
+            Log.Info( "Installing %s" % package.GetName() )
             package.Install()
-            print "Package: %s installed." % package.GetName()
+            Log.Result( "Package: %s installed." % package.GetName() )
             return
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
@@ -57,12 +61,12 @@ class PackageManager( object ):
             dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
         # Now we can install this package
         package.SetDependencyPaths( dependencyPaths )
-        print "Installing %s" % package.GetName()
+        Log.Info( "Installing %s" % package.GetName() )
         package.Install()
         package.CheckState()
         if not package.IsIntalled():
-            print "Package: %s, errored during install." % package.GetName()
+            Log.Error( "Package: %s, errored during install." % package.GetName() )
             return
-        print "Package: %s installed." % package.GetName()
+        Log.Result( "Package: %s installed." % package.GetName() )
         return
     

@@ -3,6 +3,7 @@
 # Takes care of packages that are system installed libraries e.g. X11
 import Package
 import PackageUtil
+import Log
 
 class LibraryPackage( Package.Package ):
     """ For packages that are simple commands such as make."""
@@ -18,8 +19,9 @@ class LibraryPackage( Package.Package ):
         return self._Mode > 0
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if PackageUtil.TestLibrary( self._LibName, self._Header ) == False:
-            print "%s is not installed." % self._Name
-        else:
+        try:
+            PackageUtil.TestLibrary( self._LibName, self._Header ) == False:
             self._Mode = 1
+        except Exception:
+            Log.Error( "%s is not installed" % self._Name
         return

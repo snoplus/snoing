@@ -12,7 +12,8 @@ class CLHEP2101( Clhep.Clhep ):
         return
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        return PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-2.1.0.1.tgz" )
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-2.1.0.1.tgz" )
+        return
 
 class CLHEP2042( Clhep.Clhep ):
     """ Clhep 2.0.4.2, install package."""
@@ -22,4 +23,5 @@ class CLHEP2042( Clhep.Clhep ):
         return
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        return PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/distributions/clhep-2.0.4.2.tgz" )
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/distributions/clhep-2.0.4.2.tgz" )
+        return

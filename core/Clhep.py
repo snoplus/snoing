@@ -25,8 +25,8 @@ class Clhep( LocalPackage.LocalPackage ):
         return [ "make", "g++", "gcc" ]
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        result = PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 2 )
-        result = result and PackageUtil.ExecuteSimpleCommand( './configure', ['--prefix=%s' % self.GetInstallPath() ], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
-        result = result and PackageUtil.ExecuteSimpleCommand( 'make', ["install"], None, self.GetInstallPath() )
-        return result
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 2 )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--prefix=%s' % self.GetInstallPath() ], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( 'make', ["install"], None, self.GetInstallPath() )
+        return 

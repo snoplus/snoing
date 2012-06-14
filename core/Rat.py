@@ -37,7 +37,8 @@ cd %s
 ./configure
 source env.sh
 scons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
-        return PackageUtil.ExecuteComplexCommand( commandText )
+        self._InstallPath += PackageUtil.ExecuteComplexCommand( commandText )
+        return
 
 
 class RatRelease( Rat ):
@@ -62,11 +63,13 @@ class RatRelease( Rat ):
         if self._Password is None:
             print "Github password:"
             self._Password = getpass.getpass()
-        return PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
+        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
+        return
     def _Install( self ):
         """ Release installs must untar first."""
-        PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
-        return super( RatRelease, self )._Install()
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
+        super( RatRelease, self )._Install()
+        return
 
 class RatReleasePost3( RatRelease ):
     """ Base rat installer for releases post 3.0."""

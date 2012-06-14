@@ -7,6 +7,7 @@ import inspect
 import PackageUtil
 import Rat
 import pickle
+import Log
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     installer = snoing( options )
     if len(args) == 0:
         #Install all
-        print "Installing all"
+        Log.Info( "Installing all - Currently not implemented" )
     else:
         if options.query == True:
             print args[0], installer.CheckPackage( args[0] )

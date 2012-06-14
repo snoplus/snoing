@@ -14,13 +14,14 @@ class RATDev( Rat.Rat ):
         super( RATDev, self ).__init__( "rat-dev" )
     def _IsDownloaded( self ):
         """ Check if git clone has completed."""
-        return os.path.exists( os.path.join( self.GetInstallPath() )
+        return os.path.exists( os.path.join( self.GetInstallPath() ) )
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" ]
     def _Download( self ):
         """ Git clone rat-dev."""
-        return PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git", self.GetInstallPath()], None, os.getcwd() )
+        self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd() )
+        return
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash
@@ -53,7 +54,8 @@ class RAT4( Rat.RatReleasePost3 ):
         if self._Password is None:
             print "Github password:"
             self._Password = getpass.getpass()
-        return PackageUtil.DownloadFile( "https://github.com/pgjones/rat/tarball/ProposedPhysicsList", self._Username, self._Password )
+        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/pgjones/rat/tarball/ProposedPhysicsList", self._Username, self._Password )
+        return
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
         outText = """#!/bin/bash

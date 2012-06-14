@@ -29,25 +29,21 @@ class Curl( ConditionalPackage.ConditionalPackage ):
         Should I be downloading dev version from github instead????
         """
         filename = "http://curl.haxx.se/download/%s.tar.gz" %( self._Name )
-        return PackageUtil.DownloadFile( filename )
+        result, self._DownloadPipe = PackageUtil.DownloadFile( filename )
+        return result
 
     def _Install( self ):
         """ Returns true on success. """
-        
         env = os.environ
         sourcePath = self._GetSourcePath()
         installPath = self.GetInstallPath()
 
-        PackageUtil.UnTarFile( "%s.tar.gz" %( self._Name ), sourcePath, 1 )
+        self._InstallPipe += PackageUtil.UnTarFile( "%s.tar.gz" %( self._Name ), sourcePath, 1 )
         os.mkdir( installPath )
-        PackageUtil.ExecuteSimpleCommand( \
-            "./configure", [ "--prefix=%s" %( installPath ) ], \
-            env, sourcePath )
-        PackageUtil.ExecuteSimpleCommand( "make", [], env, sourcePath )
-        PackageUtil.ExecuteSimpleCommand( "make", [ "install" ], \
-        env, sourcePath )
-         
-        return self._TestInstalled()
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [ "--prefix=%s" %( installPath ) ], env, sourcePath )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], env, sourcePath )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [ "install" ], env, sourcePath )
+        return True
 
     def _CheckState( self ):
         """ Ascertains the package status by checking for certain files. """

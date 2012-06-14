@@ -31,7 +31,8 @@ class ConditionalPackage( Package.Package ):
             if self._Install():
                 self._IncrementMode()
             else:
-                raise Exception( "Install error" )        
+                Log.Error( "Install error for %s" % self._Name )
+                Log.Detail( self._InstallPipe )
     def Download( self ):
         """ Full download process."""
         self.CheckState()
@@ -39,7 +40,8 @@ class ConditionalPackage( Package.Package ):
             if self._Download():
                 self._IncrementMode()
             else:
-                raise Exception( "Download error" )
+                Log.Error( "Download error for %s" % self._Name )
+                Log.Detail( self._DownloadPipe )
         return
     def CheckState( self ):
         """ Check if package is installed on the system first."""

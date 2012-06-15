@@ -4,13 +4,14 @@
 import Package
 import os
 import PackageUtil
+import Log
 
 class LocalPackage( Package.Package ):
     """ Base class to install libraries."""
     def __init__( self, name ):
         """ Initialise the package, grab a lock."""
+        super( LocalPackage, self ).__init__( name )
         self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
-        self._Name = name
         self._DependencyPaths = {}
         return
     def IsDownloaded( self ):
@@ -32,11 +33,12 @@ class LocalPackage( Package.Package ):
         self.Download()
         if not self.IsInstalled():
             try:
-                self._Install():
+                self._Install()
                 self._IncrementMode()
             except Exception:
                 Log.Error( "Install error for %s" % self._Name )
                 Log.Detail( self._InstallPipe )
+                raise
     def Download( self ):
         """ Full download process."""
         self.CheckState()
@@ -47,6 +49,7 @@ class LocalPackage( Package.Package ):
             except Exception:
                 Log.Error( "Download error for %s" % self._Name )
                 Log.Detail( self._DownloadPipe )
+                raise
         return
     # Functions to override
     def CheckState( self ):

@@ -20,8 +20,8 @@ class LibraryPackage( Package.Package ):
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         try:
-            PackageUtil.TestLibrary( self._LibName, self._Header ) == False:
+            PackageUtil.TestLibrary( self._LibName, self._Header )
             self._Mode = 1
         except Exception:
-            Log.Error( "%s is not installed" % self._Name
+            Log.Error( "%s is not installed" % self._Name )
         return

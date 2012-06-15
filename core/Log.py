@@ -12,11 +12,11 @@ kEnd = '\033[0m'
 
 def Info( text ):
     """ Output short and useful infomation to the screen."""
-    print [ kWarning, text, kEnd ]
+    print kHeader + text + kEnd
 
 def Result( text ):
     """ Output a result (usually success or it will warn)."""
-    print [ kOKBlue, text, kEnd ]
+    print kOKBlue + text + kEnd
 
 def Detail( text ):
     """ Output long information to the screen."""
@@ -24,9 +24,8 @@ def Detail( text ):
 
 def Warn( text ):
     """ Output a warning to the screen."""
-    print [ kWarning, text, kEnd ]
+    print kWarning + text + kEnd
 
 def Error( text ):
-    """ Ouput a error to the screen and exit."""
-    print [ kFail, text, kEnd ]
-    sys.exit(0)
+    """ Ouput a error to the screen."""
+    print kFail + text + kEnd

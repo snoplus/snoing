@@ -56,12 +56,12 @@ if __name__ == "__main__":
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="install" )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
-    parser.add_option( "-q", action="store_true", dest="verbose", help="Verbose Install?", default=False )
+    parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
     installer = snoing( options )
-    PackageUtil.kVerbose = option.verbose
+    PackageUtil.kVerbose = options.verbose
     if len(args) == 0:
         #Install all
         Log.Info( "Installing all - Currently not implemented" )

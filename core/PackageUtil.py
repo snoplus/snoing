@@ -36,7 +36,7 @@ def DownloadFile( url, username = None, password = None ): # Never hard code a p
                 localFile.write( buffer )
     if downloaded < downloadSize: # Something has gone wrong
         raise Exception( "Download error" )
-    return "Downloaded %i bytes" % downloadSize
+    return "Downloaded %i bytes\n" % downloadSize
     
 def ExecuteSimpleCommand( command, args, env, cwd ):
     """ Blocking execute command. Returns True on success"""
@@ -45,7 +45,7 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
     if kVerbose:
         for line in iter( process.stdout.readline, "" ):
-            sys.stdout.write( '\r' + line[:-1] )
+            sys.stdout.write( '\n' + line[:-1] )
             sys.stdout.flush()
     output, error = process.communicate()
     if process.returncode <= 0:
@@ -67,7 +67,7 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
     global kCachePath, kInstallPath
     if strip == 0: # Can untar directly into target
         with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
-        tarFile.extractall( targetPath )
+            tarFile.extractall( targetPath )
     else: # Must untar to temp then to target, note target cannot already exist!
         # First untar to a temp directory
         tempDirectory = os.path.join( kCachePath, "temp" )
@@ -84,7 +84,7 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
         # Now copy
         shutil.copytree( copyDirectory, targetPath )
         shutil.rmtree( tempDirectory )
-    return "Extracted %s" % tarFileName
+    return "Extracted %s\n" % tarFileName
 
 def FindLibrary( libName ):
     """ Check if the library exists in the standard library locations. Return location if it does if not return None."""
@@ -108,6 +108,10 @@ def TestLibrary( libName, header = None ):
     fileName = os.path.join( kInstallPath, "temp.cc" )
     with open( fileName, "w" ) as testFile:
         testFile.write( fileText )
-    output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
-    os.remove( fileName )
-    return output
+    try:
+        output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
+        os.remove( fileName )
+        return True
+    except Exception:
+        os.remove( fileName )
+        return False

@@ -17,7 +17,6 @@ kInstallPath = ""
 kGraphical = False
 kVerbose = False
 
-<<<<<<< HEAD
 def DownloadFile( url, username = None, password = None, fileName = "" ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath. Optional fileName parameter to manually name the file which gets stored in the cachePath"""
     global kCachePath, kInstallPath, kVerbose

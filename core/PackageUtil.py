@@ -42,12 +42,13 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
-    process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
+    process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     if kVerbose:
         for line in iter( process.stdout.readline, "" ):
             sys.stdout.write( '\n' + line[:-1] )
             sys.stdout.flush()
     output, error = process.communicate()
+    output += error
     if process.returncode <= 0:
         raise Exception( "Command Error" )
     return output

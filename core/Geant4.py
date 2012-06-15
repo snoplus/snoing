@@ -84,8 +84,14 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying
             pass
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
+        try:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        except Exception: # Geant4 configure always fails, it is annoying
+            pass
+        try:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
+        except Exception: # Geant4 configure always fails, it is annoying
+            pass
         return 
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

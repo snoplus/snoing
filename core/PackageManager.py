@@ -64,7 +64,7 @@ class PackageManager( object ):
         Log.Info( "Installing %s" % package.GetName() )
         package.Install()
         package.CheckState()
-        if not package.IsIntalled():
+        if not package.IsInstalled():
             Log.Error( "Package: %s, errored during install." % package.GetName() )
             return
         Log.Result( "Package: %s installed." % package.GetName() )

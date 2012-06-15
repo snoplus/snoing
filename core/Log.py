@@ -29,4 +29,3 @@ def Warn( text ):
 def Error( text ):
     """ Ouput a error to the screen and exit."""
     print [ kFail, text, kEnd ]
-    sys.exit(0)

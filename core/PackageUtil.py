@@ -7,15 +7,17 @@ import tarfile
 import os
 import shutil
 import base64
+import sys
 from contextlib import closing
 
 kCachePath = ""
 kInstallPath = ""
 kGraphical = False
+kVerbose = False
 
 def DownloadFile( url, username = None, password = None ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath."""
-    global kCachePath, kInstallPath
+    global kCachePath, kInstallPath, kVerbose
     fileName = url.split('/')[-1]
     urlRequest = urllib2.Request( url )
     if username != None: # Add simple HTTP authorization
@@ -38,9 +40,13 @@ def DownloadFile( url, username = None, password = None ): # Never hard code a p
     
 def ExecuteSimpleCommand( command, args, env, cwd ):
     """ Blocking execute command. Returns True on success"""
-    global kCachePath, kInstallPath
+    global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE )
+    if kVerbose:
+        for line in iter( process.stdout.readline, "" ):
+            sys.stdout.write( '\r' + line[:-1] )
+            sys.stdout.flush()
     output, error = process.communicate()
     if process.returncode <= 0:
         raise Exception( "Command Error" )

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+#        OW - 07/06/2012 <wasalski@berkeley.edu> : 
+#           Added optional filename to DownloadedFile function
 # Package utility module, has many useful functions
 import urllib2
 import subprocess
@@ -15,10 +17,11 @@ kInstallPath = ""
 kGraphical = False
 kVerbose = False
 
-def DownloadFile( url, username = None, password = None ): # Never hard code a password!
-    """ Download a file at url, using the username and password if provided and save into the cachePath."""
+def DownloadFile( url, username = None, password = None, fileName = "" ): # Never hard code a password!
+    """ Download a file at url, using the username and password if provided and save into the cachePath. Optional fileName parameter to manually name the file which gets stored in the cachePath"""
     global kCachePath, kInstallPath, kVerbose
-    fileName = url.split('/')[-1]
+    if( fileName == "" ): # OW 07/06/2012
+        fileName = url.split('/')[-1]
     urlRequest = urllib2.Request( url )
     if username != None: # Add simple HTTP authorization
         b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )

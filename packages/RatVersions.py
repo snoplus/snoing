@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Author P G Jones - 18/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 #        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency to RAT-dev and rat-3
+#        O Wasalski - 13/06/2012 <waslski@berkeley.edu> : Added bzip2 dependency to rat-dev
 # The RAT packages (versions)
 import Rat
 import os
@@ -17,7 +18,7 @@ class RATDev( Rat.Rat ):
         return os.path.exists( os.path.join( self.GetInstallPath() ) )
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0" ]
+        return [ "clhep-2.1.0.1", "geant4.9.4.p01", "root-5.32.03", "scons-2.1.0", "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "curl-7.26.0", "bzip2-1.0.6" ]
     def _Download( self ):
         """ Git clone rat-dev."""
         self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd() )
@@ -31,12 +32,13 @@ export ROOTSYS=%(Root)s
 export AVALANCHEROOT=%(Avalanche)s
 export ZEROMQROOT=%(Zeromq)s
 export XERCESCROOT=%(Xercesc)s
-export PATH=%(Root)s/bin::%(Curl)s/bin:$PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib
+export BZ2ROOT=%(Bzip2)s
+export PATH=%(Root)s/bin:%(Curl)s/bin:$BZ2ROOT/bin:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib:$BZ2ROOT/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanche)s/lib/cpp:%(Zeromq)s/lib:%(Xercesc)s/lib:$BZ2ROOT/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
-source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], "Root" : self._DependencyPaths["root-5.32.03"], "Clhep" : self._DependencyPaths["clhep-2.1.0.1"], "Scons" : self._DependencyPaths["scons-2.1.0"], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths["avalanche-1"], "Zeromq" : self._DependencyPaths["zeromq-2.2.0"], "Xercesc" : self._DependencyPaths["xerces-c-3.1.1"], "Curl" : self._DependencyPaths["curl-7.26.0"] }
+source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths["geant4.9.4.p01"], "Root" : self._DependencyPaths["root-5.32.03"], "Clhep" : self._DependencyPaths["clhep-2.1.0.1"], "Scons" : self._DependencyPaths["scons-2.1.0"], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths["avalanche-1"], "Zeromq" : self._DependencyPaths["zeromq-2.2.0"], "Xercesc" : self._DependencyPaths["xerces-c-3.1.1"], "Curl" : self._DependencyPaths["curl-7.26.0"], "Bzip2" : self._DependencyPaths["bzip2-1.0.6"] }
         with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
             envFile.write( outText )
         return

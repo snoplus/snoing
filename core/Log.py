@@ -10,13 +10,17 @@ kWarning = '\033[93m'
 kFail = '\033[91m'
 kEnd = '\033[0m'
 
+def Header( text ):
+    """ Output summery of what is to happen next."""
+    print kHeader + text + kEnd
+
 def Info( text ):
     """ Output short and useful infomation to the screen."""
-    print kHeader + text + kEnd
+    print kOKBlue + text + kEnd
 
 def Result( text ):
     """ Output a result (usually success or it will warn)."""
-    print kOKBlue + text + kEnd
+    print kOKGreen + text + kEnd
 
 def Detail( text ):
     """ Output long information to the screen."""

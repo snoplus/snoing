@@ -60,18 +60,23 @@ if __name__ == "__main__":
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
+    Log.Header( "Registering Packages" )
     installer = snoing( options )
     PackageUtil.kVerbose = options.verbose
     if len(args) == 0:
         #Do something to all packages
         if options.query == True:
+            Log.Header( "Checking all packages" )
             for packageName in installer.PackageNameGenerator():
                 installer.CheckPackage( packageName )
         else:
+            Log.Header( "Installing all packages" )
             for packageName in installer.PackageNameGenerator():
                 installer.InstallPackage( packageName )
     else:
         if options.query == True:
+            Log.Header( "Checking %s package" % args[0] )
             installer.CheckPackage( args[0] )
-        else:
+        else: 
+            Log.Header( "Installing %s package" % args[0] )
             installer.InstallPackage( args[0] )

@@ -28,7 +28,7 @@ class Avalanche( LocalPackage.LocalPackage ):
         return [self._ZeromqDependency, self._RootDependency, self._CurlDependency]
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        self._DowloadPipe += PackageUtil.DownloadFile( "https://github.com/mastbaum/avalanche/tarball/" + self._TarName )
+        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/mastbaum/avalanche/tarball/" + self._TarName )
         return
     def _Install( self ):
         """ Install the version."""

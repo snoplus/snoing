@@ -52,7 +52,8 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
             sys.stdout.flush()
     output, error = process.communicate()
     output += error
-    if process.returncode <= 0:
+    print process.returncode
+    if process.returncode != 0:
         raise Exception( "Command Error" )
     return output
 

@@ -14,6 +14,9 @@ class PackageManager( object ):
         """ Initialise the package manager."""
         self._Packages = {}
         return
+    def PackageNameGenerator( self ):
+        for packageName in self._Packages:
+            yield packageName
     def RegisterPackagesInDirectory( self, folderPath ):
         """ Register all the packages in the folderPath. """
         for module in os.listdir( folderPath ):

@@ -63,10 +63,15 @@ if __name__ == "__main__":
     installer = snoing( options )
     PackageUtil.kVerbose = options.verbose
     if len(args) == 0:
-        #Install all
-        Log.Info( "Installing all - Currently not implemented" )
+        #Do something to all packages
+        if options.query == True:
+            for packageName in installer.PackageNameGenerator():
+                installer.CheckPackage( packageName )
+        else:
+            for packageName in installer.PackageNameGenerator():
+                installer.InstallPackage( packageName )
     else:
         if options.query == True:
-            print args[0], installer.CheckPackage( args[0] )
+            installer.CheckPackage( args[0] )
         else:
             installer.InstallPackage( args[0] )

@@ -27,20 +27,24 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     if username != None: # Add simple HTTP authorization
         b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )
         urlRequest.add_header( "Authorization", "Basic %s" % b64string )
-    with closing( urllib2.urlopen( urlRequest ) ) as remoteFile:
-        with open( tempFile, 'wb') as localFile:
-            downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
-            downloaded = 0 # Amount downloaded
-            blockSize = 8192 # Convenient block size
-            while True:
-                buffer = remoteFile.read( blockSize )
-                if not buffer: # Nothing left to download
-                    break
-                downloaded += len( buffer )
-                localFile.write( buffer )
+    try:
+        with closing( urllib2.urlopen( urlRequest ) ) as remoteFile:
+            with open( tempFile, 'wb') as localFile:
+                downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
+                downloaded = 0 # Amount downloaded
+                blockSize = 8192 # Convenient block size
+                while True:
+                    buffer = remoteFile.read( blockSize )
+                    if not buffer: # Nothing left to download
+                        break
+                    downloaded += len( buffer )
+                    localFile.write( buffer )
+    except (KeyboardInterrupt, SystemExit):
+        os.remove( tempFile )
+        raise
     if downloaded < downloadSize: # Something has gone wrong
         raise Exception( "Download error" )
-    shutil.copyfile( tempFile, os.path.join( kCachePath, fileName ) )
+    os.rename( tempFile, os.path.join( kCachePath, fileName ) )
     os.remove( tempFile )
     return "Downloaded %i bytes\n" % downloadSize
     

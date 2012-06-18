@@ -14,9 +14,9 @@ class Rat( LocalPackage.LocalPackage ):
         return
     def CheckState( self ):
         """ Check if rat is downloaded and installed."""
-        if self._IsDownloaded:
+        if self._IsDownloaded():
             self._SetMode( 1 )
-        if self._IsInstalled:
+        if self._IsInstalled():
             self._SetMode( 2 )
         return
     def _IsInstalled( self ):

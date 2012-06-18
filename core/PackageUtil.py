@@ -22,12 +22,13 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     global kCachePath, kInstallPath, kVerbose
     if( fileName == "" ): # OW 07/06/2012
         fileName = url.split('/')[-1]
+    tempFile = os.path.join( kCachePath, "download-temp" )
     urlRequest = urllib2.Request( url )
     if username != None: # Add simple HTTP authorization
         b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )
         urlRequest.add_header( "Authorization", "Basic %s" % b64string )
     with closing( urllib2.urlopen( urlRequest ) ) as remoteFile:
-        with open( os.path.join( kCachePath, fileName ), 'wb') as localFile:
+        with open( tempFile, 'wb') as localFile:
             downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
             downloaded = 0 # Amount downloaded
             blockSize = 8192 # Convenient block size
@@ -39,6 +40,8 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
                 localFile.write( buffer )
     if downloaded < downloadSize: # Something has gone wrong
         raise Exception( "Download error" )
+    shutil.copyfile( tempFile, os.path.join( kCachePath, fileName ) )
+    os.remove( tempFile )
     return "Downloaded %i bytes\n" % downloadSize
     
 def ExecuteSimpleCommand( command, args, env, cwd ):

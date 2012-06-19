@@ -9,7 +9,6 @@ import os
 import shutil
 import base64
 import sys
-from contextlib import closing
 
 kCachePath = ""
 kInstallPath = ""

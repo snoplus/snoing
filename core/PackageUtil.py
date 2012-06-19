@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
-#        OW - 07/06/2012 <wasalski@berkeley.edu> : 
-#           Added optional filename to DownloadedFile function
+#        OW - 07/06/2012 <wasalski@berkeley.edu> : Added optional filename to DownloadedFile function
 # Package utility module, has many useful functions
 import urllib2
 import subprocess
@@ -22,23 +21,37 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     global kCachePath, kInstallPath, kVerbose
     if( fileName == "" ): # OW 07/06/2012
         fileName = url.split('/')[-1]
+    tempFile = os.path.join( kCachePath, "download-temp" )
     urlRequest = urllib2.Request( url )
     if username != None: # Add simple HTTP authorization
         b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )
         urlRequest.add_header( "Authorization", "Basic %s" % b64string )
-    with closing( urllib2.urlopen( urlRequest ) ) as remoteFile:
-        with open( os.path.join( kCachePath, fileName ), 'wb') as localFile:
-            downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
-            downloaded = 0 # Amount downloaded
-            blockSize = 8192 # Convenient block size
-            while True:
-                buffer = remoteFile.read( blockSize )
-                if not buffer: # Nothing left to download
-                    break
-                downloaded += len( buffer )
-                localFile.write( buffer )
+    try:
+        remoteFile = urllib2.urlopen( urlRequest )
+    except urllib2.URLError: # Server not available
+        raise Exception( "Server not available." )
+    localFile = open( tempFile, 'wb')
+    try:
+        downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
+        downloaded = 0 # Amount downloaded
+        blockSize = 8192 # Convenient block size
+        while True:
+            buffer = remoteFile.read( blockSize )
+            if not buffer: # Nothing left to download
+                break
+            downloaded += len( buffer )
+            localFile.write( buffer )
+        remoteFile.close()
+        localFile.close()
+    except (KeyboardInterrupt, SystemExit):
+        localFile.close()
+        remoteFile.close()
+        os.remove( tempFile )
+        raise
     if downloaded < downloadSize: # Something has gone wrong
         raise Exception( "Download error" )
+    os.rename( tempFile, os.path.join( kCachePath, fileName ) )
+    os.remove( tempFile )
     return "Downloaded %i bytes\n" % downloadSize
     
 def ExecuteSimpleCommand( command, args, env, cwd ):
@@ -60,8 +73,9 @@ def ExecuteComplexCommand( command ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""
     global kCachePath, kInstallPath
     fileName = os.path.join( kInstallPath, "temp.sh" )
-    with open( fileName, "w" ) as commandFile:
-        commandFile.write( command )
+    commandFile = open( fileName, "w" )
+    commandFile.write( command )
+    commandFile.close()
     output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
     os.remove( fileName )
     return output
@@ -70,14 +84,16 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
     """ Untar the file tarFile to targetPath take off the the first strip folders."""
     global kCachePath, kInstallPath
     if strip == 0: # Can untar directly into target
-        with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
-            tarFile.extractall( targetPath )
+        tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
+        tarFile.extractall( targetPath )
+        tarFile.close()
     else: # Must untar to temp then to target, note target cannot already exist!
         # First untar to a temp directory
         tempDirectory = os.path.join( kCachePath, "temp" )
-        with closing( tarfile.open( os.path.join( kCachePath, tarFileName ) ) ) as tarFile:
-            tarFile.extractall( tempDirectory )
-            # Now choose how many components to strip
+        tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
+        tarFile.extractall( tempDirectory )
+        tarFile.close()
+        # Now choose how many components to strip
         copyDirectory = tempDirectory
         for iStrip in range( 0, strip ):
             subFolders = os.listdir( copyDirectory )
@@ -110,8 +126,9 @@ def TestLibrary( libName, header = None ):
         fileText = "#include <%s>\n" % header
     fileText += "int main( int a, char* b[] ) { }"
     fileName = os.path.join( kInstallPath, "temp.cc" )
-    with open( fileName, "w" ) as testFile:
-        testFile.write( fileText )
+    testFile = open( fileName, "w" )
+    testFile.write( fileText )
+    testFile.close()
     try:
         output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
         os.remove( fileName )

@@ -58,9 +58,11 @@ class Snogoggles( LocalPackage.LocalPackage ):
             d[k] = self._DependencyPaths[v]
 
         for fName in [ "env.sh", "env.csh" ]:
-            with open( os.path.join( configPath, fName ), "r" ) as fIn:
-                with open( os.path.join( installPath, fName ), "w" ) as fOut:
-                    fOut.write( fIn.read() % d )
+            fIn = open( os.path.join( configPath, fName ), "r" )
+            fOut = open( os.path.join( installPath, fName ), "w" )
+            fOut.write( fIn.read() % d )
+            fIn.close()
+            fOut.close()
 
         PackageUtil.ExecuteComplexCommand( "cd %s && source env.sh && scons" %installPath )
         

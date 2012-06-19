@@ -4,6 +4,7 @@
 import Package
 import os
 import PackageUtil
+import Log
 
 class ConditionalPackage( Package.Package ):
     """ Base class to install libraries."""

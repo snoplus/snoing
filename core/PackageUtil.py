@@ -51,7 +51,6 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     if downloaded < downloadSize: # Something has gone wrong
         raise Exception( "Download error" )
     os.rename( tempFile, os.path.join( kCachePath, fileName ) )
-    os.remove( tempFile )
     return "Downloaded %i bytes\n" % downloadSize
     
 def ExecuteSimpleCommand( command, args, env, cwd ):

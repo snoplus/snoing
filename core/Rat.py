@@ -37,7 +37,7 @@ cd %s
 ./configure
 source env.sh
 scons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
-        self._InstallPath += PackageUtil.ExecuteComplexCommand( commandText )
+        self._InstallPipe += PackageUtil.ExecuteComplexCommand( commandText )
         return
 
 

@@ -7,11 +7,14 @@ import LocalPackage
 import PackageUtil
 
 class Snogoggles( LocalPackage.LocalPackage ):
-    """ """
+    """ Snogoggles local package. 
+        Installs development version.
+    """
 
     def __init__( self ):
-        """ """
+        """ Initializes snogoggles package. """
         super( Snogoggles, self ).__init__( "snogoggles-dev" )
+        self._DownloadPath = os.path.join( PackageUtil.kCachePath, self._Name )
         self._Dependencies = { "Scons": "scons-2.1.0",
                                "Geant4": "geant4.9.4.p01",
                                "Rat": "rat-dev",
@@ -21,16 +24,18 @@ class Snogoggles( LocalPackage.LocalPackage ):
                                "Avalanche": "avalanche-1",
                                "Zeromq": "zeromq-2.2.0"
                              }
-        return
+
 
 ########### "Public" functions - overrides LocalPackage ################
 
     def CheckState( self ):
         """ Check if downloaded and installed."""
         self._SetMode( 0 )
-        if( self._Downloaded() ):
+        mainfile = os.path.join( self._DownloadPath, "SNOGoggles.cc" )
+        binary = os.path.join( self.GetInstallPath(), "bin", "snogoggles" )
+        if( os.path.isfile( mainfile ) ):
             self._SetMode( 1 )
-        if( self._Installed() ):
+        if( os.path.isfile( binary ) ):
             self._SetMode( 2 )
 
     def GetDependencies( self ):
@@ -42,40 +47,40 @@ class Snogoggles( LocalPackage.LocalPackage ):
     def _Download( self ):
         """ Derived classes should override this to download the package. 
         Return True on success.""" 
-        PackageUtil.ExecuteSimpleCommand( "git", 
-            [ "clone", "git@github.com:snoplus/snogoggles.git", 
-            self.GetInstallPath() ], None, os.getcwd() )
-        return self._Downloaded()
+        # Downloads into the cache path
+        return PackageUtil.ExecuteComplexCommand( """
+            git clone git@github.com:/snoplus/snogoggles.git %s """
+            % self._DownloadPath )
 
     def _Install( self ):
         """ Install the version."""
         import copy
-        installPath = self.GetInstallPath()
-        configPath = os.path.join( installPath, "config" )
+        import shutil
 
+        # Create dependency dictionary with install paths
         d = copy.deepcopy( self._Dependencies )
         for k, v in zip( d.keys(), d.values() ):
             d[k] = self._DependencyPaths[v]
+        d["InstallPath"] = self.GetInstallPath()
+ 
+        # Copy directory from cache to install path
+        if( not os.path.exists( self.GetInstallPath() ) ):
+            shutil.copytree( self._DownloadPath, self.GetInstallPath() )
 
-        for fName in [ "env.sh", "env.csh" ]:
-            fIn = open( os.path.join( configPath, fName ), "r" )
-            fOut = open( os.path.join( installPath, fName ), "w" )
-            fOut.write( fIn.read() % d )
-            fIn.close()
-            fOut.close()
-
-        PackageUtil.ExecuteComplexCommand( "cd %s && source env.sh && scons" %installPath )
-        
-        return self._Installed()
-
-########### "Private" functions - helper for this class only ################
-
-    def _Downloaded( self ):
-        mainFile = os.path.join( self.GetInstallPath(), "SNOGoggles.cc" )
-        return os.path.isfile( mainFile )
-
-    def _Installed( self ):
-        return False
-
+        # Compile snogoggles
+        return PackageUtil.ExecuteComplexCommand( """
+            cd %(InstallPath)s
+            export RAT_SCONS=%(Scons)s
+            export GEANT4_BASE=%(Geant4)s
+            export RATROOT=%(Rat)s
+            export ROOTSYS=%(Root)s
+            export SFMLROOT=%(Sfml)s
+            export XERCESCROOT=%(Xercesc)s
+            export AVALANCHEROOT=%(Avalanche)s
+            export ZEROMQROOT=%(Zeromq)s
+            ./autoconfigure
+            source env.sh
+            scons
+            """ % d )
 
 

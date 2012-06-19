@@ -26,21 +26,24 @@ class snoing( PackageManager.PackageManager ):
             PackageUtil.kInstallPath = os.path.join( os.getcwd(), options.installPath )
         if not os.path.exists( PackageUtil.kInstallPath ):
             os.makedirs( PackageUtil.kInstallPath )
-            with open( os.path.join( PackageUtil.kInstallPath, "README.md" ), "w" ) as infoFile:
-                infoFile.write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
+            infoFile = open( os.path.join( PackageUtil.kInstallPath, "README.md" ), "w" )
+            infoFile.write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
+            infoFile.close()
         PackageUtil.kInstallPath = PackageUtil.kInstallPath
         # Now check for graphical option
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
         if os.path.exists( snoingSettingsPath ):
-            with open( snoingSettingsPath, "r" ) as settingsFile:
-                if options.graphical != pickle.load( settingsFile ):
-                    raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
-                else:
-                    PackageUtil.kGraphical = options.graphical
+            settingsFile = open( snoingSettingsPath, "r" )
+            if options.graphical != pickle.load( settingsFile ):
+                raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
+            else:
+                PackageUtil.kGraphical = options.graphical
+            settingsFile.close()
         else:
             PackageUtil.kGraphical = options.graphical
-            with open( snoingSettingsPath, "w" ) as settingsFile:
-                pickle.dump( options.graphical, settingsFile )
+            settingsFile = open( snoingSettingsPath, "w" )
+            pickle.dump( options.graphical, settingsFile )
+            settingsFile.close()
         # First import all register all packages in this folder
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "packages" ) )
         # Now set the username password for the rat packages

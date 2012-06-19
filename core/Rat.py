@@ -104,8 +104,9 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib:%(Avalanc
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath(), "Avalanche" : self._DependencyPaths[self._AvalancheDependency], "Zeromq" : self._DependencyPaths[self._ZeromqDependency], "Xercesc" : self._DependencyPaths[self._XercescDependency], "Curl" : self._DependencyPaths[self._CurlDependency] }
-        with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
-            envFile.write( outText )
+        envFile = open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" )
+        envFile.write( outText )
+        envFile.close()    
         return
 
 class RatReleasePre3( RatRelease ):
@@ -133,6 +134,7 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:%(Clhep)s/lib:%(Root)s/lib
 export PYTHONPATH=%(Root)s/lib:$PYTHONPATH
 export RAT_SCONS=%(Scons)s
 source %(Rat)s/env.sh""" % { "Geant" : self._DependencyPaths[self._GeantDependency], "Root" : self._DependencyPaths[self._RootDependency], "Clhep" : self._DependencyPaths[self._ClhepDependency], "Scons" : self._DependencyPaths[self._SconsDependency], "Rat" : self.GetInstallPath() }
-        with open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" ) as envFile:
-            envFile.write( outText )
+        envFile = open( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), "w" )
+        envFile.write( outText )
+        envFile.close()
         return

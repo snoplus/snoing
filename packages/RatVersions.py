@@ -57,7 +57,7 @@ class RATDev( Rat.Rat ):
             externalsFile.close()
         return
 
-class RAT4( Rat.RatReleasePost3 ):
+class RAT4( RatReleases.RatReleasePost3 ):
     """ Temporary Rat release-4.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
@@ -74,7 +74,7 @@ class RAT4( Rat.RatReleasePost3 ):
         self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/pgjones/rat/tarball/ProposedPhysicsList", self._Username, self._Password )
         return
 
-class RAT3( Rat.RatReleasePre4 ):
+class RAT3( RatReleases.RatReleasePre4 ):
     """ Rat release-3.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 3.0 package."""
@@ -82,21 +82,21 @@ class RAT3( Rat.RatReleasePre4 ):
                                           "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "release-3.00" )
         return
 
-class RAT2( Rat.RatReleasePre3 ):
+class RAT2( RatReleases.RatReleasePre3 ):
     """ Rat release-2.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 2.0 package."""
         super( RAT2, self ).__init__( "rat-2", "root-5.28.00", "scons-2.1.0", "geant4.9.4.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", "release-2.00" )
         return
 
-class RAT1( Rat.RatReleasePre2 ):
+class RAT1( RatReleases.RatReleasePre2 ):
     """ Rat release-1.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 1.0 package."""
         super( RAT1, self ).__init__( "rat-1", "root-5.24.00", "scons-1.2.0", "geant4.9.2.p02", "clhep-2.0.4.2", "release-1.00" )
         return
 
-class RAT0( Rat.RatReleasePre2 ):
+class RAT0( RatReleases.RatReleasePre2 ):
     """ Rat release-0.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 0.0 package."""

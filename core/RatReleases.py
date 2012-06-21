@@ -12,7 +12,7 @@ class RatReleasePost3( Rat.RatRelease ):
     def __init__( self, name,  rootDependency, sconsDependency, geantDependency, clhepDependency, curlDependency, bzipDependency, \
                       avalancheDependency, zeromqDependency, xercescDependency, tarName ):
         """ Initlaise, take extra dependencies."""
-        super( RatReleasePre4, self ).__init__( name,  rootDependency, sconsDependency, tarName )
+        super( RatReleasePost3, self ).__init__( name,  rootDependency, sconsDependency, tarName )
         self._GeantDependency = geantDependency
         self._ClhepDependency = clhepDependency
         self._CurlDependency = curlDependency

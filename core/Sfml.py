@@ -7,6 +7,13 @@ import LocalPackage
 import os
 import PackageUtil
 
+def Snoingall(iterable):
+    """ New in python 2.5, we target 2.4-tis annoying."""
+    for element in iterable:
+        if not element:
+            return False
+    return True
+
 class Sfml( LocalPackage.LocalPackage ):
     """ Base sfml installer package."""
 
@@ -63,7 +70,7 @@ class Sfml( LocalPackage.LocalPackage ):
         libDir = os.path.join( self.GetInstallPath(), "lib" )
         libs = [ "audio", "graphics", "network", "system", "window" ]
         libPaths = [ libDir + "/libsfml-" + lib + ".so" for lib in libs ]
-        return all( [ os.path.isfile( libPath ) for libPath in libPaths ] )
+        return Snoingall( [ os.path.isfile( libPath ) for libPath in libPaths ] )
 
 
 

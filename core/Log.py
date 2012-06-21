@@ -3,6 +3,7 @@
 #        P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : Second revision, file usage
 # Logs text to the screen
 import sys
+import os
 
 class LogFile( object ):
     """ Opens and manages a log file."""
@@ -25,7 +26,7 @@ class LogFile( object ):
         if self._File is not None:
             self._File.close()
 
-kDetialsFile = LogFile() # Empty default file
+kDetailsFile = LogFile() # Empty default file
 kLogFile = LogFile()     # Empty default file
 
 kHeader = '\033[95m'
@@ -37,7 +38,7 @@ kEnd = '\033[0m'
 
 def Header( text ):
     """ Output summery of what is to happen next."""
-    kDetailsFile.Write( "## %s" % text )
+    kDetailsFile.Write( text )
     print kHeader + text + kEnd
 
 def Info( text ):

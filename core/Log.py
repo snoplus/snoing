@@ -14,7 +14,10 @@ class LogFile( object ):
             return
         if not append and os.path.exists( filePath ):
             os.remove( filePath )
-        self._File = open( filePath, "a" )
+        if append:
+            self._File = open( filePath, "a" )
+        else:
+            self._File = open( filePath, "w" )
         return
     def Write( self, text ):
         """ Write the text to the file."""

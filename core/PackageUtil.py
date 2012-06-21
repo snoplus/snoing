@@ -89,6 +89,8 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
     else: # Must untar to temp then to target, note target cannot already exist!
         # First untar to a temp directory
         tempDirectory = os.path.join( kCachePath, "temp" )
+        if os.path.exists( tempDirectory ): # Must be an empty temp directory
+            shutil.rmtree( tempDirectory )
         tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
         tarFile.extractall( tempDirectory )
         tarFile.close()

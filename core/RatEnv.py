@@ -52,11 +52,11 @@ class EnvFileBuilder( object ):
         # Next add the libraries (Harder for cshell)
         self._BashEnv += "export LD_LIBRARY_PATH=%s:$LD_LIBRARY_PATH\n" % self._LibraryPath
         self._BashEnv += "export DYLD_LIBRARY_PATH=%s:$DYLD_LIBRARY_PATH\n" % self._LibraryPath
-        self._CshEnv += "if(${?LD_LIBRARY_PATH}) then\nsetenv LD_LIBRARY_PATH %s:${LD_LIBRARY_PATH}\nelse\nsetenv LD_LIBRARY_PATH %s\n" % self._LibraryPath * 2
-        self._CshEnv += "if(${?DYLD_LIBRARY_PATH}) then\nsetenv DYLD_LIBRARY_PATH %s:${DYLD_LIBRARY_PATH}\nelse\nsetenv DYLD_LIBRARY_PATH %s\n" % self._LibraryPath * 2
+        self._CshEnv += "if(${?LD_LIBRARY_PATH}) then\nsetenv LD_LIBRARY_PATH %s:${LD_LIBRARY_PATH}\nelse\nsetenv LD_LIBRARY_PATH %s\n" % ( self._LibraryPath, self._LibraryPath )
+        self._CshEnv += "if(${?DYLD_LIBRARY_PATH}) then\nsetenv DYLD_LIBRARY_PATH %s:${DYLD_LIBRARY_PATH}\nelse\nsetenv DYLD_LIBRARY_PATH %s\n" % (self._LibraryPath, self._LibraryPath )
         # Finnally add the rat
-        self._BashEnv += "source $s/env.sh" % self._RatEnv
-        self._CshEnv += "source $s/env.csh" % self._RatEnv
+        self._BashEnv += "source %s/env.sh" % self._RatEnv
+        self._CshEnv += "source %s/env.csh" % self._RatEnv
         # Now write the files
         bashFile = open( os.path.join( directory, "env_%s.sh" % name ), "w" )
         bashFile.write( self._BashEnv )

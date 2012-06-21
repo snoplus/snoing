@@ -50,8 +50,10 @@ class RATDev( Rat.Rat ):
             self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
             self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._BzipDependency], "lib" ) )
             # Must patch the rat config/EXTERNALS file.
-            externalsFile = open( self.GetInstallPath(), "config/EXTERNALS.py", "w" )
+            externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "r" )
             text = externalsFile.read()
+            externalsFile.close()
+            externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
             text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
             externalsFile.write( text )
             externalsFile.close()

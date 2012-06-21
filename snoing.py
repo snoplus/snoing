@@ -26,8 +26,8 @@ class snoing( PackageManager.PackageManager ):
             PackageUtil.kInstallPath = os.path.join( os.getcwd(), options.installPath )
         if not os.path.exists( PackageUtil.kInstallPath ):
             os.makedirs( PackageUtil.kInstallPath )
-            Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
-            Log.kInfoFile.Write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
+        Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
+        Log.kInfoFile.Write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
         PackageUtil.kInstallPath = PackageUtil.kInstallPath
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )

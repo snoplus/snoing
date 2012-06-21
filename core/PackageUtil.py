@@ -2,6 +2,7 @@
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 #        OW - 07/06/2012 <wasalski@berkeley.edu> : Added optional filename to DownloadedFile function
 # Package utility module, has many useful functions
+import PackageException
 import urllib2
 import subprocess
 import tarfile
@@ -28,7 +29,7 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     try:
         remoteFile = urllib2.urlopen( urlRequest )
     except urllib2.URLError: # Server not available
-        raise Exception( "Server not available." )
+        raise PackageException.PackageException( "Server not available." )
     localFile = open( tempFile, 'wb')
     try:
         downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
@@ -48,7 +49,7 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
         os.remove( tempFile )
         raise
     if downloaded < downloadSize: # Something has gone wrong
-        raise Exception( "Download error" )
+        raise PackageException.PackageException( "Download error", "$i" % downloadSize )
     os.rename( tempFile, os.path.join( kCachePath, fileName ) )
     return "Downloaded %i bytes\n" % downloadSize
     
@@ -64,7 +65,7 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     output, error = process.communicate()
     output += error
     if process.returncode != 0:
-        raise Exception( "Command Error" )
+        raise PackageException.PackageException( "Command Error", output )
     return output
 
 def ExecuteComplexCommand( command ):
@@ -131,6 +132,6 @@ def TestLibrary( libName, header = None ):
         output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
         os.remove( fileName )
         return True
-    except Exception:
+    except PackageException.PackageException:
         os.remove( fileName )
         return False

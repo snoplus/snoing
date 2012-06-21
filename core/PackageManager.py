@@ -7,6 +7,7 @@ import LocalPackage
 import os
 import inspect
 import Log
+import PackageException
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
@@ -65,11 +66,15 @@ class PackageManager( object ):
         # Now we can install this package
         package.SetDependencyPaths( dependencyPaths )
         Log.Info( "Installing %s" % package.GetName() )
-        package.Install()
+        try:
+            package.Install()
+        except PackageException.PackageException, e:
+            Log.Warn( e.Pipe )
         package.CheckState()
         if not package.IsInstalled():
             Log.Error( "Package: %s, errored during install." % package.GetName() )
             return
+        Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
         Log.Result( "Package: %s installed." % package.GetName() )
         return
     

@@ -48,7 +48,6 @@ def Info( text ):
 
 def Result( text ):
     """ Output a result (usually success or it will warn)."""
-    kLogFile.Write( text )
     kDetailsFile.Write( text )
     print kOKGreen + text + kEnd
 

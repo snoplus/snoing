@@ -8,11 +8,12 @@ import Log
 
 class LocalPackage( Package.Package ):
     """ Base class to install libraries."""
-    def __init__( self, name ):
+    def __init__( self, name, graphicalOnly = False ):
         """ Initialise the package, grab a lock."""
         super( LocalPackage, self ).__init__( name )
         self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
         self._DependencyPaths = {}
+        self._Graphical = graphicalOnly
         return
     def IsDownloaded( self ):
         """ Return package is downloaded."""
@@ -31,6 +32,8 @@ class LocalPackage( Package.Package ):
         """ Full install process."""
         self.CheckState()
         self.Download()
+        if self._Graphical and not PackageUtil.kGraphical:
+            raise PackageException( "Install Error", "Must be a graphical install." )
         if not self.IsInstalled():
             try:
                 self._Install()

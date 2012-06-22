@@ -31,7 +31,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return
     def _Install( self ):
         """ Install geant4, using cmake."""
-        sourcePath = os.path.join( PackageUtil.kCachePath, "geant4-source" )
+        sourcePath = os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
         PackageUtil.UnTarFile( self._SourceTar, sourcePath, 1 )
         if not os.path.exists( self.GetInstallPath() ):
             os.makedirs( self.GetInstallPath() )

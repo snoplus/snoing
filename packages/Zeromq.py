@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # The ZMQ conditional package
-import ConditionalPackage
+import ConditionalLibraryPackage
 import PackageUtil
 import os
 import shutil
 
-class Zeromq( ConditionalPackage.ConditionalPackage ):
+class Zeromq( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     """ Zeromq install package."""
     def __init__( self ):
         """ Initlaise the ZMQ packages."""

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # The Xerces-c conditional package
-import ConditionalPackage
+import ConditionalLibraryPackage
 import PackageUtil
 import os
 
-class XercesC( ConditionalPackage.ConditionalPackage ):
+class XercesC( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     """ XercesC install package."""
     def __init__( self ):
         """ Initlaise the XercesC packages."""

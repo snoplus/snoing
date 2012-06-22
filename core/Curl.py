@@ -2,9 +2,9 @@
 # Author O. Wasalski - 04/06/2012 <wasalski@berkeley.edu> : First revision, new file
 import os
 import PackageUtil
-import ConditionalPackage
+import ConditionalLibraryPackage
 
-class Curl( ConditionalPackage.ConditionalPackage ):
+class Curl( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     """ 
     Base curl installer package.
     Because of problems with curl's makefile, the package is
@@ -14,7 +14,7 @@ class Curl( ConditionalPackage.ConditionalPackage ):
     def __init__( self, name ):
         super( Curl, self ).__init__( name, "curl", "curl/curl.h" )
 
-########### "Private" functions - overrides ConditionalPackage ############
+########### "Private" functions - overrides ConditionalLibraryPackage ############
     def _Download( self ):
         """ 
         Downloads a curl tarball from the curl website.

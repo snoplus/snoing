@@ -25,7 +25,7 @@ class Cmake( ConditionalPackage.ConditionalPackage ):
         # If here then must manually install
         if os.path.exists( os.path.join( PackageUtil.kCachePath, "cmake-2.8.8.tar.gz" ) ):
             self._SetMode( 1 ) # Downloaded
-        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/libzmq.a" ) ):
+        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/cmake" ) ):
             self._SetMode( 2 ) # Installed as well
         return
     def _Download( self ):
@@ -35,7 +35,7 @@ class Cmake( ConditionalPackage.ConditionalPackage ):
     def _Install( self ):
         """ Install the 2.8 version."""
         self._InstallPipe += PackageUtil.UnTarFile( "cmake-2.8.8.tar.gz", self.GetInstallPath(), 1 )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./bootstrap", [], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./bootstrap", ["--prefix=%s" % self.GetInstallPath()], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install", "--prefix=%s" % self.GetInstallPath()], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install"], None, self.GetInstallPath() )
         return

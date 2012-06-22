@@ -3,21 +3,21 @@
 # The bzip2 conditional package
 import os
 import PackageUtil
-import ConditionalPackage
+import ConditionalLibraryPackage
 
-class Bzip2(ConditionalPackage.ConditionalPackage):
+class Bzip2(ConditionalLibraryPackage.ConditionalLibraryPackage):
     """ bzip2 install package."""
 
     def __init__(self):
         """ Initialize the bzip2 package."""
         super(Bzip2, self).__init__("bzip2-1.0.6", "bz2", "bzlib.h")
-        installPath = self.GetInstallPath()
+        installPath = os.path.join( PackageUtil.kInstallPath, self._Name )
         self._TarName = self._Name + ".tar.gz"
 
         files = [os.path.join("bin", "bzip2"),
                  os.path.join("lib", "lib%s.a" %self._Library),
                  os.path.join("include", self._Header)]
-        self._Files = [os.path.join(self.GetInstallPath(), f) for f in files]
+        self._Files = [os.path.join(installPath, f) for f in files]
         return
 
     def _CheckState(self):

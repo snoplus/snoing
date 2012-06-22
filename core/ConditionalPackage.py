@@ -8,12 +8,11 @@ import Log
 
 class ConditionalPackage( Package.Package ):
     """ Base class to install libraries."""
-    def __init__( self, name, library, header = None ):
+    def __init__( self, name ):
         """ Initialise the package, grab a lock."""
         super( ConditionalPackage, self ).__init__( name )
         self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
-        self._Library = library
-        self._Header = header
+        self._InstallPath = None
         return
     def IsDownloaded( self ):
         """ Return package is downloaded."""
@@ -23,7 +22,7 @@ class ConditionalPackage( Package.Package ):
         return self._Mode > 1
     def GetInstallPath( self ):
         """ Return a local package install path."""
-        return os.path.join( PackageUtil.kInstallPath, self._Name )
+        return self._InstallPath
     def Install( self ):
         """ Full install process."""
         self.CheckState()
@@ -48,15 +47,8 @@ class ConditionalPackage( Package.Package ):
                 Log.Detail( self._DownloadPipe )
                 raise
         return
-    def CheckState( self ):
-        """ Check if package is installed on the system first."""
-        if PackageUtil.TestLibrary( self._Library, self._Header ):
-            self._SetMode( 2 )
-        else:
-            self._CheckState()
-        return
     # Functions to override
-    def _CheckState( self ):
+    def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         return
     def _Download( self ):

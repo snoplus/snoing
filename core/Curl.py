@@ -14,14 +14,6 @@ class Curl( ConditionalPackage.ConditionalPackage ):
     def __init__( self, name ):
         super( Curl, self ).__init__( name, "curl", "curl/curl.h" )
 
-############ "Public" functions - overrides ConditionalPackage ############
-    def GetInstallPath( self ):
-        """ 
-        Overrides the get install path function from the ConditionalPackage 
-        class to facilitate curl being installed in a subdirectory.  
-        """
-        return os.path.join( self._GetSourcePath(), "install" )
-
 ########### "Private" functions - overrides ConditionalPackage ############
     def _Download( self ):
         """ 
@@ -58,7 +50,7 @@ class Curl( ConditionalPackage.ConditionalPackage ):
 ############ "Private" functions - helper for this class only #############
     def _GetSourcePath( self ):
         """ Returns the path of the source code. """
-        return os.path.join( PackageUtil.kInstallPath, self._Name )
+        return os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
 
     def _TestDownloaded( self ):
         """ Returns true if the curl.h file is in the proper directory. """

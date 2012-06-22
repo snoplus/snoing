@@ -23,8 +23,9 @@ class XercesC( ConditionalPackage.ConditionalPackage ):
         self._DownloadPipe += PackageUtil.DownloadFile( "http://mirror.ox.ac.uk/sites/rsync.apache.org//xerces/c/3/sources/xerces-c-3.1.1.tar.gz" )
     def _Install( self ):
         """ Install the 3.1.1 version."""
-        self._InstallPipe += PackageUtil.UnTarFile( "xerces-c-3.1.1.tar.gz", self.GetInstallPath(), 1 )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [], None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % self.GetInstallPath()], None, self.GetInstallPath() )
+        sourcePath = os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
+        self._InstallPipe += PackageUtil.UnTarFile( "xerces-c-3.1.1.tar.gz", sourcePath, 1 )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [], None, sourcePath )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, sourcePath )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % self.GetInstallPath()], None, sourcePath )
         return 

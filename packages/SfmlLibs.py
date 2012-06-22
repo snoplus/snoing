@@ -13,7 +13,7 @@ class Pthread( LibraryPackage.LibraryPackage ):
 class OpenGL( LibraryPackage.LibraryPackage ):
     """ Package for the pthread library."""
     def __init__( self ):
-        super( OpenGL, self ).__init__( "opengl", "gl", "GL/gl.h" )
+        super( OpenGL, self ).__init__( "opengl", "GL", "GL/gl.h" )
         return
 
 class Xlib( LibraryPackage.LibraryPackage ):

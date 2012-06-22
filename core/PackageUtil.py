@@ -64,9 +64,10 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
             sys.stdout.flush()
     output, error = process.communicate()
     output += error
+    logText = command + output
     if process.returncode != 0:
-        raise PackageException.PackageException( "Command Error", output )
-    return output
+        raise PackageException.PackageException( "Command Error", logText )
+    return logText
 
 def ExecuteComplexCommand( command ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""

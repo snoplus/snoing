@@ -66,8 +66,8 @@ if __name__ == "__main__":
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
     Log.Header( "Registering Packages" )
-    installer = snoing( options )
     PackageUtil.kVerbose = options.verbose
+    installer = snoing( options )
     if len(args) == 0:
         #Do something to all packages
         if options.query == True:

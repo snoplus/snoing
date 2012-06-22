@@ -17,7 +17,10 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
+        dependencies = [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
+        if PackageUtil.kGraphical:
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+        return dependencies
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
@@ -63,7 +66,10 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     # Specific pre 4.9.5 functions
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", self._ClhepDependency, self._XercesDependency ]
+        dependencies = [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
+        if PackageUtil.kGraphical:
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+        return dependencies
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( PackageUtil.kCachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):

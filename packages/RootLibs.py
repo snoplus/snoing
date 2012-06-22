@@ -36,23 +36,23 @@ class Ld( CommandPackage.CommandPackage ):
 class X11( LibraryPackage.LibraryPackage ):
     """ Package for the x11-dev library."""
     def __init__( self ):
-        super( X11, self ).__init__( "X11", "X11", "Xlib.h" )
+        super( X11, self ).__init__( "X11", "X11", "X11/Xlib.h" )
         return
 
 class Xpm( LibraryPackage.LibraryPackage ):
     """ Package for the xpm-dev library."""
     def __init__( self ):
-        super( Xpm, self ).__init__( "Xpm", "Xpm", "Xpm.h" )
+        super( Xpm, self ).__init__( "Xpm", "Xpm", "X11/xpm.h" )
         return
 
 class Xft( LibraryPackage.LibraryPackage ):
     """ Package for the xft-dev library."""
     def __init__( self ):
-        super( Xft, self ).__init__( "Xft", "Xft", "Xft.h" )
+        super( Xft, self ).__init__( "Xft", "Xft")#, "X11/Xft/Xft.h" )
         return
 
 class Xext( LibraryPackage.LibraryPackage ):
     """ Package for the xext-dev library."""
     def __init__( self ):
-        super( Xext, self ).__init__( "Xext", "Xext", "shape.h" )
+        super( Xext, self ).__init__( "Xext", "Xext", "X11/extensions/shape.h" )
         return

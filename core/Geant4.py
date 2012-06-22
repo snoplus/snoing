@@ -17,12 +17,13 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
+        return [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
     def CheckState( self ):
         """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
         if os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
             self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ):
+        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ) or \
+               os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event.so" ) ):
             self._SetMode( 2 ) # Installed as well
         return
     def _Download( self ):
@@ -41,7 +42,10 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         if PackageUtil.kGraphical:
             cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
         cmakeOpts.extend( [ sourcePath ] )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
+        if self._DependencyPaths["cmake"] is not None: # Special cmake installed
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "%s/bin/cmake" % self._DependencyPaths["cmake"], cmakeOpts, None, self.GetInstallPath() )
+        else:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
         return

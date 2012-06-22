@@ -38,7 +38,7 @@ class Sfml( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return []
+        return ["cmake"]
 
 ########### "Private" functions - overrides LocalPackage ################
 
@@ -54,9 +54,10 @@ class Sfml( LocalPackage.LocalPackage ):
         installPath = self.GetInstallPath()
         PackageUtil.UnTarFile( self._TarName, installPath, 1 )
 
-        PackageUtil.ExecuteSimpleCommand( \
-            "cmake", [ "-DCMAKE_INSTALL_PREFIX:PATH=$PWD" ], env, installPath ) 
-
+        if self._DependencyPaths["cmake"] is not None: # Special cmake installed
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "%s/bin/cmake" % self._DependencyPaths["cmake"], [ "-DCMAKE_INSTALL_PREFIX:PATH=$PWD" ], env, installPath ) 
+        else:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "cmake", [ "-DCMAKE_INSTALL_PREFIX:PATH=$PWD" ], env, installPath ) 
         PackageUtil.ExecuteSimpleCommand( "make", [], env, installPath )
         return self._Installed()
 

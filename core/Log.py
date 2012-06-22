@@ -9,25 +9,22 @@ class LogFile( object ):
     """ Opens and manages a log file."""
     def __init__( self, filePath = None, append = False ):
         """ Open the correct file."""
-        if filePath is None:
-            self._File = None
-            return
-        if not append and os.path.exists( filePath ):
+        self._FilePath = filePath
+        self._Append = append
+        if filePath is not None and not append and os.path.exists( filePath ):
             os.remove( filePath )
-        if append:
-            self._File = open( filePath, "a" )
-        else:
-            self._File = open( filePath, "w" )
         return
     def Write( self, text ):
         """ Write the text to the file."""
-        if self._File is not None:
-            self._File.write( "%s\n" % text )
+        if self._FilePath is None:
+            return
+        if self._Append:
+            file = open( self._FilePath, "a" )
+        else:
+            file = open( self._FilePath, "w" )
+        file.write( "%s\n" % text )
+        file.close()
         return
-    def __del__( self ):
-        """ Closes the file."""
-        if self._File is not None:
-            self._File.close()
 
 kDetailsFile = LogFile() # Empty default file
 kLogFile = LogFile()     # Empty default file

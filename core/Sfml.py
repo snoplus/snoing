@@ -38,7 +38,7 @@ class Sfml( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return ["cmake"]
+        return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "jpeg", "sndfile", "openal"]
 
 ########### "Private" functions - overrides LocalPackage ################
 

@@ -45,6 +45,12 @@ class PackageManager( object ):
             return True
         Log.Warn( "Not Installed" )
         return False
+    def InstallPackageDependencies( self, packageName ):
+        """ Install the package dependencies and not the package."""
+        package = self._Packages[packageName]
+        for dependency in package.GetDependencies():
+            self.InstallPackage( dependency )
+        return
     def InstallPackage( self, packageName ):
         """ Install the package by package name."""
         if self.CheckPackage( packageName ):

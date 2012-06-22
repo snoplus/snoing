@@ -98,6 +98,8 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
         copyDirectory = tempDirectory
         for iStrip in range( 0, strip ):
             subFolders = os.listdir( copyDirectory )
+            if 'pax_global_header' in subFolders:
+                subFolders.remove( 'pax_global_header' )
             copyDirectory = os.path.join( copyDirectory, subFolders[0] )
         # Now can copy, first make sure the targetPath does not exist
         if os.path.exists( targetPath ):

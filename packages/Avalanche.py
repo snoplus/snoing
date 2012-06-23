@@ -39,7 +39,7 @@ class Avalanche( LocalPackage.LocalPackage ):
         curl = self._DependencyPaths[self._CurlDependency] # Shorten the text
         zmq =  self._DependencyPaths[self._ZeromqDependency] # Shorten the text
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", 
-                                                               ['CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include' % (zmq, zmq, curl, curl),
+                                                               ['CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include' % (zmq, zmq, curl, curl) ],
                                                                env, 
                                                                os.path.join( self.GetInstallPath(), "lib/cpp" ) )
         return

@@ -25,7 +25,7 @@ class Bzip2( ConditionalLibraryPackage.ConditionalLibraryPackage ):
         files = [os.path.join("bin", "bzip2"),
                  os.path.join("lib", "lib%s.a" %self._Library),
                  os.path.join("include", self._Header)]
-        return PackageUtil.All( [os.path.isfile( os.path.join( self.GetInstallPath(), f ) ) for f in files]
+        return PackageUtil.All( [os.path.isfile( os.path.join( self.GetInstallPath(), f ) ) for f in files] )
     def _Download( self ):
         """ Download the tar file."""
         self._DownloadPipe += PackageUtil.DownloadFile( "http://www.bzip.org/1.0.6/" + self._TarName )

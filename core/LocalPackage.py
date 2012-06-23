@@ -63,19 +63,19 @@ class LocalPackage( Package.Package ):
         return
     def CheckState( self ):
         """ Check if the package is downloaded and/or installed."""
-        if _IsDownloaded():
+        if self._IsDownloaded():
             self._SetMode(1)
-        if _IsInstalled():
+        if self._IsInstalled():
             self._SetMode(2)
         return
     # Functions to override
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         pass
-    def _IsDownloaded():
+    def _IsDownloaded( self ):
         """ Check if package is downloaded."""
         return False
-    def _IsInstalled():
+    def _IsInstalled( self ):
         """ Check if package is installed."""
         return False
     def _Download( self ):

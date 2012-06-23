@@ -20,10 +20,10 @@ class ConditionalLibraryPackage( ConditionalPackage.ConditionalPackage ):
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         pass
-    def _IsDownloaded():
+    def _IsDownloaded( self ):
         """ Check if package is downloaded."""
         return False
-    def _IsInstalled():
+    def _IsInstalled( self ):
         """ Check if package is installed."""
         return False
     def _Download( self ):

@@ -11,8 +11,14 @@ class Git( CommandPackage.CommandPackage ):
         super( Git, self ).__init__( "git", "Install git on this system." )
         return
 
-class Python( LibraryPackage.LibraryPackage ):
+class PythonDev( LibraryPackage.LibraryPackage ):
     """ Package for the python development library."""
     def __init__( self ):
-        super( Python, self ).__init__( "python", "Install python dev on this system.", "python", "Python.h" )
+        super( PythonDev, self ).__init__( "python-dev", "Install python dev on this system.", "python", "Python.h" )
+        return
+
+class Python( CommandPackage.CommandPackage ):
+    """ Package for the python development library."""
+    def __init__( self ):
+        super( Python, self ).__init__( "python", "Install python on this system, how on earth is this possible? snoing is written in python")
         return

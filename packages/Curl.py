@@ -15,10 +15,10 @@ class Curl( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         return ["uuid"]
-    def _IsDownloaded():
+    def _IsDownloaded( self ):
         """ Check if package is downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
-    def _IsInstalled():
+    def _IsInstalled( self ):
         """ Returns true if the header, library and binary files are in the proper location."""
         header = os.path.isfile( os.path.join( self.GetInstallPath(), "include", "curl", "curl.h" ) )
         lib = os.path.isfile( os.path.join( self.GetInstallPath(), "lib", "libcurl.a" ) )

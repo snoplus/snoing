@@ -23,7 +23,7 @@ class Scons( LocalPackage.LocalPackage ):
     def _IsInstalled( self ):
         """ Check the script has been marked as executable."""
         return os.path.exists( os.path.join( self.GetInstallPath(), "script/scons" ) ) and \
-            bool( os.stat( os.path.join( self.GetInstallPath(), "script/scons" ) ).st_mode & stat.S_IXUSR ):
+            bool( os.stat( os.path.join( self.GetInstallPath(), "script/scons" ) ).st_mode & stat.S_IXUSR )
     def _Download( self ):
         """ Depends on the version."""
         pass

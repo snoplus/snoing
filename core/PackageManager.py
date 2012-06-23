@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Base class package manager
-import CommandPackage
-import ConditionalPackage
+import SystemPackage
 import LocalPackage
 import os
 import inspect
@@ -56,16 +55,18 @@ class PackageManager( object ):
         if self.CheckPackage( packageName ):
             return
         package = self._Packages[packageName]
-        # If here then not installed...
+        # If here then not installed :(
         if isinstance( package, SystemPackage.SystemPackage ):
-            # Ah user must install this system wide...
+            # Nothing else to do thus return...
             Log.Error( "Package %s must be installed manually." % package.GetName() )
             Log.Detail( package.GetHelpText() )
+            raise
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 
             self.InstallPackage( dependency )
-            dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
+            if not isinstance( self._Packages[dependency], SystemPackage.SystemPackage ):
+                dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
         # All dependencies installed, now we can install this package
         package.SetDependencyPaths( dependencyPaths )
         Log.Info( "Installing %s" % package.GetName() )
@@ -76,7 +77,7 @@ class PackageManager( object ):
         package.CheckState()
         if not package.IsInstalled():
             Log.Error( "Package: %s, errored during install." % package.GetName() )
-            return
+            raise
         Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
         Log.Result( "Package: %s installed." % package.GetName() )
         return

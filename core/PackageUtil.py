@@ -58,16 +58,21 @@ def ExecuteSimpleCommand( command, args, env, cwd ):
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
+    output = ""
+    error = ""
     if kVerbose:
         for line in iter( process.stdout.readline, "" ):
             sys.stdout.write( '\n' + line[:-1] )
             sys.stdout.flush()
-    output, error = process.communicate()
+            output += '\n' + line[:-1]
+        process.wait()
+    else:
+        output, error = process.communicate()
     output += error
     logText = command + output
     if process.returncode != 0:
         raise PackageException.PackageException( "Command Error", logText )
-    return logText
+    return output
 
 def ExecuteComplexCommand( command ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""

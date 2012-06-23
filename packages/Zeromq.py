@@ -8,25 +8,28 @@ import shutil
 
 class Zeromq( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     """ Zeromq install package."""
-    def __init__( self ):
+    def __init__( self, name, tarName ):
         """ Initlaise the ZMQ packages."""
-        super( Zeromq, self ).__init__( "zeromq-2.2.0", "zmq", "zmq.h" )
+        super( Zeromq, self ).__init__( name, "zmq", "zmq.h" )
+        self._TarName = tarName
         return
-    def _CheckState( self ):
-        """ Check if downloaded and installed."""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, "zeromq-2.2.0.tar.gz" ) ):
-            self._SetMode( 1 ) # Downloaded
-        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/libzmq.a" ) ):
-            self._SetMode( 2 ) # Installed as well
-        return
+    
+    def GetDependencies( self ):
+        """ Return the dependencies."""
+        return []
+    def _IsDownloaded( self ):
+        """ Check if tar ball is downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
+    def _IsInstalled( self ):
+        return os.path.exists( os.path.join( self.GetInstallPath(), "lib/libzmq.a" ) )
     def _Download( self ):
         """ Download the 2.2 version."""
-        self._DownloadPipe += PackageUtil.DownloadFile( "http://download.zeromq.org/zeromq-2.2.0.tar.gz" )
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://download.zeromq.org/" + self._TarName )
         return
     def _Install( self ):
         """ Install the 2.2 version."""
         sourcePath = os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
-        self._InstallPipe += PackageUtil.UnTarFile( "zeromq-2.2.0.tar.gz", sourcePath, 1 )
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, sourcePath, 1 )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [], None, sourcePath )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, sourcePath )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ["install", "prefix=%s" % self.GetInstallPath()], None, sourcePath )

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 22/06/2012 <p.g.jones@qmul.ac.uk> : First revision
-# The Cmake conditional package
+# The Cmake conditional package, currently special!
 import ConditionalPackage
 import PackageUtil
 import os

@@ -1,68 +1,48 @@
 #!/usr/bin/env python
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
-# Conditional package, checks if installed on the system. If not installs locally e.g. curl.
-import Package
+# Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Refactor of Package Structure
+# Conditional package, checks if installed on the system. If not installs locally e.g. cmake.
+import LocalPackage
 import os
 import PackageUtil
 import Log
 
-class ConditionalPackage( Package.Package ):
+class ConditionalPackage( LocalPackage.LocalPackage ):
     """ Base class to install libraries."""
     def __init__( self, name ):
         """ Initialise the package, grab a lock."""
-        super( ConditionalPackage, self ).__init__( name )
-        self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
-        self._InstallPath = None
+        super( ConditionalPackage, self ).__init__( name, False ) # Conditional Packages cannot be graphical
+        self._InstallPath = None # Override install path to be None unless locally installed.
         return
-    def IsDownloaded( self ):
-        """ Return package is downloaded."""
-        return self._Mode > 0
-    def IsInstalled( self ):
-        """ Check and return if package is installed."""
-        return self._Mode > 1
-    def GetInstallPath( self ):
-        """ Return a local package install path."""
-        return self._InstallPath
-    def Install( self ):
-        """ Full install process."""
-        self.CheckState()
-        self.Download()
-        if not self.IsInstalled():
-            try:
-                self._Install()
-                self._IncrementMode()
-            except Exception:
-                Log.Error( "Install error for %s" % self._Name )
-                Log.Detail( self._InstallPipe )
-                raise
-    def Download( self ):
-        """ Full download process."""
-        self.CheckState()
-        if not self.IsDownloaded():
-            try:
-                self._Download()
-                self._IncrementMode()
-            except Exception:
-                Log.Error( "Download error for %s" % self._Name )
-                Log.Detail( self._DownloadPipe )
-                raise
-        return
-    # Functions to override
     def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        return
+        """ Override the LocalPackage CheckState to check if package is system wide installed, 
+        if not check download and install state."""
+        if self._IsSystemInstalled():
+            self._SetMode(2)
+        else:
+            # First set the correct install path then check
+            self._InstallPath = os.path.join( PackageUtil.kInstallPath, self._Name )
+            if self._IsDownloaded():
+                self._SetMode(1)
+            if self._IsInstalled():
+                self._SetMode(2)
+        return        
+    # Functions to override
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        pass
+    def _IsSystemInstalled():
+        """ Check if package is installed on the system."""
+        return False
+    def _IsDownloaded():
+        """ Check if package is downloaded."""
+        return False
+    def _IsInstalled():
+        """ Check if package is installed."""
+        return False
     def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
-        return False
+        """ Derived classes should override this to download the package.."""
+        pass
     def _Install( self ):
-        """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        return False
-    # Useful functions
-    def _IncrementMode( self ):
-        """ Function to safely update the mode."""
-        self._Mode += 1
-        return
-    def _SetMode( self, mode ):
-        """ Function to safely set the mode."""
-        self._Mode = mode
-        return
+        """ Derived classes should override this to install the package, should install only when finished."""
+        pass

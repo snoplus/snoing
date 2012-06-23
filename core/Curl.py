@@ -21,8 +21,8 @@ class Curl( ConditionalLibraryPackage.ConditionalLibraryPackage ):
         Should I be downloading dev version from github instead????
         """
         filename = "http://curl.haxx.se/download/%s.tar.gz" %( self._Name )
-        result, self._DownloadPipe = PackageUtil.DownloadFile( filename )
-        return result
+        self._DownloadPipe = PackageUtil.DownloadFile( filename )
+        return
 
     def _Install( self ):
         """ Returns true on success. """

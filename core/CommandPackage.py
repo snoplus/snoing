@@ -1,23 +1,18 @@
 #!/usr/bin/env python
 # Author P G Jones - 13/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+# Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Refactor of Package Structure
 # Takes care of packages that are simple commands such as make, assumes name is the command
-import Package
+import SystemPackage
 import PackageUtil
 
-class CommandPackage( Package.Package ):
+class CommandPackage( SystemPackage.SystemPackage ):
     """ For packages that are simple commands such as make."""
-    def __init__( self, name ):
+    def __init__( self, name, helpText ):
         """ Initialise the package."""
-        super( CommandPackage, self ).__init__( name )
-        self._Mode = 0 # 0 is initial, 1 is installed
+        super( CommandPackage, self ).__init__( name, helpText )
         return
-    def IsInstalled( self ):
-        """ Check and return if package is installed."""
-        return self._Mode > 0
     def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if PackageUtil.FindLibrary( self._Name ) == None:
-            print "%s is not installed." % self._Name
-        else:
-            self._Mode = 1
+        """ For a command package, merely need to test if the command exists."""
+        if PackageUtil.FindLibrary( self._Name ) is not None:
+            self._Installed = True
         return

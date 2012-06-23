@@ -46,7 +46,7 @@ class snoing( PackageManager.PackageManager ):
             pickle.dump( options.graphical, settingsFile )
             settingsFile.close()
         # First import all register all packages in this folder
-        self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "packages" ) )
+        self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "versions" ) )
         # Now set the username password for the rat packages
         for package in self._Packages:
             if isinstance( self._Packages[package], Rat.RatRelease ):

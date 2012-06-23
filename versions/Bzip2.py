@@ -5,7 +5,7 @@ import os
 import PackageUtil
 import ConditionalLibraryPackage
 
-class Bzip2(ConditionalLibraryPackage.ConditionalLibraryPackage):
+class Bzip2( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     """ bzip2 install package."""
 
     def __init__(self):

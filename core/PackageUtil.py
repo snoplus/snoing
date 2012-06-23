@@ -140,3 +140,10 @@ def TestLibrary( libName, header = None ):
     except PackageException.PackageException:
         os.remove( fileName )
         return False
+
+def All(iterable):
+    """ New in python 2.5, we target 2.4-tis annoying."""
+    for element in iterable:
+        if not element:
+            return False
+    return True

@@ -56,15 +56,17 @@ class PackageManager( object ):
         if self.CheckPackage( packageName ):
             return
         package = self._Packages[packageName]
-        if isinstance( package, CommandPackage.CommandPackage ):
+        # If here then not installed...
+        if isinstance( package, SystemPackage.SystemPackage ):
             # Ah user must install this system wide...
             Log.Error( "Package %s must be installed manually." % package.GetName() )
-        # Not installed and a LocalPackage or ConditionalPackage, thus can install. Start with dependencies, and build dependency dict
+            Log.Detail( package.GetHelpText() )
+        # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 
             self.InstallPackage( dependency )
             dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
-        # Now we can install this package
+        # All dependencies installed, now we can install this package
         package.SetDependencyPaths( dependencyPaths )
         Log.Info( "Installing %s" % package.GetName() )
         try:

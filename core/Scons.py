@@ -14,19 +14,21 @@ class Scons( LocalPackage.LocalPackage ):
         self._TarName = tarName
         return
     # Functions to override
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
-            self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "script/scons" ) ) and \
-                bool( os.stat( os.path.join( self.GetInstallPath(), "script/scons" ) ).st_mode & stat.S_IXUSR ):
-            self._SetMode( 2 ) # Installed as well
-        return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return []
+        return ["python"]
+    def _IsDownloaded( self ):
+        """ Check the tar ball has been downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
+    def _IsInstalled( self ):
+        """ Check the script has been marked as executable."""
+        return os.path.exists( os.path.join( self.GetInstallPath(), "script/scons" ) ) and \
+            bool( os.stat( os.path.join( self.GetInstallPath(), "script/scons" ) ).st_mode & stat.S_IXUSR ):
+    def _Download( self ):
+        """ Depends on the version."""
+        pass
     def _Install( self ):
-        """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
+        """ Mark the script as executable."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0751 )
         return

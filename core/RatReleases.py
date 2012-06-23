@@ -21,6 +21,7 @@ class RatReleasePost3( Rat.RatRelease ):
         self._ZeromqDependency = zeromqDependency
         self._XercescDependency = xercescDependency
         return
+
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
         return [ self._GeantDependency, self._ClhepDependency, self._CurlDependency, self._BzipDependency, self._AvalancheDependency, \
@@ -56,6 +57,7 @@ class RatReleasePre4( Rat.RatRelease ):
         self._ZeromqDependency = zeromqDependency
         self._XercescDependency = xercescDependency
         return
+
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
         return [ self._GeantDependency, self._ClhepDependency, self._CurlDependency, self._BzipDependency, self._AvalancheDependency, \
@@ -95,6 +97,7 @@ class RatReleasePre3( Rat.RatRelease ):
         self._CurlDependency = curlDependency
         self._BzipDependency = bzipDependency
         return
+
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
         return [ self._GeantDependency, self._ClhepDependency, self._CurlDependency, self._BzipDependency ]
@@ -125,6 +128,7 @@ class RatReleasePre2( Rat.RatRelease ):
         self._GeantDependency = geantDependency
         self._ClhepDependency = clhepDependency
         return
+
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
         return [ self._GeantDependency, self._ClhepDependency ]

@@ -1,74 +1,40 @@
 #!/usr/bin/env python
 # Author O. Wasalski - 04/06/2012 <wasalski@berkeley.edu> : First revision, new file
+# Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Refactor of Package Structure
+import ConditionalLibraryPackage
 import os
 import PackageUtil
-import ConditionalLibraryPackage
 
 class Curl( ConditionalLibraryPackage.ConditionalLibraryPackage ):
-    """ 
-    Base curl installer package.
-    Because of problems with curl's makefile, the package is
-    installed in a sub-directory of the untarred package
-    in the install/curl-$VERSION/install directory.
-    """
-    def __init__( self, name ):
+    """ Base curl installer package. """
+    def __init__( self, name, tarName ):
         super( Curl, self ).__init__( name, "curl", "curl/curl.h" )
-
-########### "Private" functions - overrides ConditionalLibraryPackage ############
-    def _Download( self ):
-        """ 
-        Downloads a curl tarball from the curl website.
-        Should I be downloading dev version from github instead????
-        """
-        filename = "http://curl.haxx.se/download/%s.tar.gz" %( self._Name )
-        self._DownloadPipe = PackageUtil.DownloadFile( filename )
+        self._TarName = tarName
         return
-
+########### "Private" functions - overrides ConditionalLibraryPackage ############
+    def GetDependencies( self ):
+        """ Return the dependency names as a list of names."""
+        return ["uuid"]
+    def _IsDownloaded():
+        """ Check if package is downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
+    def _IsInstalled():
+        """ Returns true if the header, library and binary files are in the proper location."""
+        header = os.path.isfile( os.path.join( self.GetInstallPath(), "include", "curl", "curl.h" ) )
+        lib = os.path.isfile( os.path.join( self.GetInstallPath(), "lib", "libcurl.a" ) )
+        bin = os.path.isfile( os.path.join( self.GetInstallPath(), "bin", "curl" ) )
+        config = os.path.isfile( os.path.join( self.GetInstallPath(), "bin", "curl-config" ) )
+        return header and lib and bin and config
+    def _Download( self ):
+        """ Downloads a curl tarball from the curl website."""
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://curl.haxx.se/download/" + self._TarName )
+        return
     def _Install( self ):
-        """ Returns true on success. """
+        """ Derived classes should override this to install the package, should install only when finished."""
         env = os.environ
-        sourcePath = self._GetSourcePath()
-        installPath = self.GetInstallPath()
-
-        self._InstallPipe += PackageUtil.UnTarFile( "%s.tar.gz" %( self._Name ), sourcePath, 1 )
-        os.mkdir( installPath )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [ "--prefix=%s" %( installPath ) ], env, sourcePath )
+        sourcePath = os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, sourcePath, 1 )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./configure", [ "--prefix=%s" %( self.GetInstallPath() ) ], env, sourcePath )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], env, sourcePath )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [ "install" ], env, sourcePath )
-        return True
-
-    def _CheckState( self ):
-        """ Ascertains the package status by checking for certain files. """
-        if self._TestDownloaded():
-            if self._TestInstalled():
-                self._SetMode( 2 )
-            else:
-                self._SetMode( 1 )
-        else:
-            self._SetMode( 0 )
-
-############ "Private" functions - helper for this class only #############
-    def _GetSourcePath( self ):
-        """ Returns the path of the source code. """
-        return os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
-
-    def _TestDownloaded( self ):
-        """ Returns true if the curl.h file is in the proper directory. """
-        return os.path.isfile( \
-            os.path.join( \
-                self._GetSourcePath(), "include", "curl", "curl.h" ) )
-
-    def _TestInstalled( self ):
-        """ 
-        Returns true if the header, library and binary files are
-        in the proper location.
-        """
-        installPath = self.GetInstallPath()
-        header = os.path.isfile( \
-            os.path.join( installPath, "include", "curl", "curl.h" ) )
-        lib = os.path.isfile( os.path.join( installPath, "lib", "libcurl.a" ) )
-        bin = os.path.isfile( os.path.join( installPath, "bin", "curl" ) )
-        config = os.path.isfile( \
-            os.path.join( installPath, "bin", "curl-config" ) )
-        return header and lib and bin and config
-        
+        return

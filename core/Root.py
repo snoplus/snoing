@@ -15,16 +15,15 @@ class Root( LocalPackage.LocalPackage ):
         self._TarName = tarName
         return
     # Functions to override
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) ):
-            self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ):
-            self._SetMode( 2 ) # Installed as well
-        return
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext" ]
+        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python" ]
+    def _IsDownloaded( self ):
+        """ Check the tar ball has been downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
+    def _IsInstalled( self ):
+        """ Check if root is installed."""
+        return os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) )
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         self._DownloadPipe += PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )

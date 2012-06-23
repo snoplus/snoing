@@ -11,8 +11,8 @@ class SystemPackage( Package.Package ):
         self._HelpText = ""
         self._Installed = False
         return
-    def GetHelp( self ):
-        """ Return the package name."""
+    def GetHelpText( self ):
+        """ Return the package help text."""
         return self._HelpText
     def IsInstalled( self ):
         """ Check and return if package is installed."""

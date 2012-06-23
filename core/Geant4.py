@@ -10,25 +10,29 @@ class Geant4Post5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
     def __init__( self, name, sourceTar, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
-        super( Geant4Post5, self ).__init__( name )
+        super( Geant4Post5, self ).__init__( name, False ) # Not graphical only
         self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         self._ClhepDependency = clhepDependency
         return
+
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
             dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
         return dependencies
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
-            self._SetMode( 1 ) # Downloaded 
-        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ) or \
-               os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event.so" ) ):
-            self._SetMode( 2 ) # Installed as well
-        return
+    def _IsDownloaded( self ):
+        """ Check if the tar file has been downloaded."""
+        return os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) )
+    def _IsInstalled( self ):
+        """ Check if the package has been installed."""
+        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.a" ) ) or \
+            os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event.a" ) )
+        if PackageUtil.kGraphical:
+            installed = installed and os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4UIbasic.a" ) ) or \
+                os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4UIbasic.a" ) )
+        return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""
         self._DownloadPipe = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
@@ -39,16 +43,18 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         PackageUtil.UnTarFile( self._SourceTar, sourcePath, 1 )
         if not os.path.exists( self.GetInstallPath() ):
             os.makedirs( self.GetInstallPath() )
-        cmakeOpts = [ "-DCMAKE_INSTALL_PREFIX=%s" % self.GetInstallPath(), "-DCLHEP_ROOT_DIR=%s" % self._DependencyPaths[self._ClhepDependency], \
-                          "-DXERCESC_ROOT_DIR=%s" % self._DependencyPaths[self._XercesDependency], "-DGEANT4_INSTALL_DATA=ON", \
+        cmakeOpts = [ "-DCMAKE_INSTALL_PREFIX=%s" % self.GetInstallPath(), \
+                          "-DCLHEP_ROOT_DIR=%s" % self._DependencyPaths[self._ClhepDependency], \
+                          "-DXERCESC_ROOT_DIR=%s" % self._DependencyPaths[self._XercesDependency], \
+                          "-DGEANT4_INSTALL_DATA=ON", \
                           "-DCLHEP_CONFIG_EXECUTABLE=%s" % os.path.join( self._DependencyPaths[self._ClhepDependency], "clhep-config" ) ]
         if PackageUtil.kGraphical:
             cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
         cmakeOpts.extend( [ sourcePath ] )
+        cmakeCommand = "cmake"
         if self._DependencyPaths["cmake"] is not None: # Special cmake installed
-            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "%s/bin/cmake" % self._DependencyPaths["cmake"], cmakeOpts, None, self.GetInstallPath() )
-        else:
-            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "cmake", cmakeOpts, None, self.GetInstallPath() )
+            cmakeCommand = "%s/bin/cmake" % self._DependencyPaths["cmake"]
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( cmakeCommand, cmakeOpts, None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
         return
@@ -57,27 +63,30 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for pre 4.9.5 geant versions."""
     def __init__( self, name, sourceTar, dataTars, clhepDependency, xercesDependency ):
         """ Initialise the geant4 package."""
-        super( Geant4Pre5, self ).__init__( name )
+        super( Geant4Pre5, self ).__init__( name, False ) # Not graphical only
         self._ClhepDependency = clhepDependency
         self._DataTars = dataTars
         self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         return
-    # Specific pre 4.9.5 functions
+
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
             dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
         return dependencies
-    def CheckState( self ):
-        """ Derived classes should override this to ascertain the package status, downloaded? installed?"""
-        if os.path.exists( os.path.join( PackageUtil.kCachePath, self._DataTars[-1] ) ) and os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) ):
-            self._SetMode( 1 ) # Downloaded 
+    def _IsDownloaded( self ):
+        """ Check tar files have been downloaded."""
+        downloaded = PackageUtil.All( [ os.path.isfile( os.path.join( PackageUtil.kCachePath, tar ) ) for tar in self._DataTars ] )
+        downloaded = downloaded and os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) )
+        return downloaded
+    def _IsInstalled( self ):
+        """ Check geant has been installed."""
         sys = os.uname()[0] + "-g++"
-        if os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.a" ) ):
-            self._SetMode( 2 ) # Installed as well
-        return
+        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.a" ) ) and \
+            os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic.a" ) )
+        return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""
         self._DownloadPipe = PackageUtil.DownloadFile( "http://geant4.web.cern.ch/geant4/support/source/" + self._SourceTar )
@@ -90,14 +99,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         for dataTar in self._DataTars:
             self._InstallPipe += PackageUtil.UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
         self.WriteGeant4ConfigFile()
-        try:
-            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        except Exception: # Geant4 configure always fails, it is annoying
-            pass
-        try:
-            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
-        except Exception: # Geant4 configure always fails, it is annoying
-            pass
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
         try:
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying

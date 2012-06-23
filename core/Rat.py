@@ -13,23 +13,20 @@ class Rat( LocalPackage.LocalPackage ):
     """ Base rat installer for rat."""
     def __init__( self, name, rootDependency, sconsDependency ):
         """ All Rat installs have the same root and scons dependence."""
-        super( Rat, self ).__init__( name )
+        super( Rat, self ).__init__( name, False ) # Not graphical only
         self._EnvFile = RatEnv.EnvFileBuilder()
         self._RootDependency = rootDependency
         self._SconsDependency = sconsDependency
         return
-    def CheckState( self ):
-        """ Check if rat is downloaded and installed."""
-        if self._IsDownloaded():
-            self._SetMode( 1 )
-        if self._IsInstalled():
-            self._SetMode( 2 )
-        return
+
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         dependencies = [ self._SconsDependency, self._RootDependency ]
         dependencies.extend( self._GetDependencies() )
         return dependencies
+    def _IsDownloaded( self ):
+        """ Check if downloaded, git-cloned or tar file downloaded."""
+        pass
     def _IsInstalled( self ):
         """ Rat releases and dev share a common install check."""
         # Check rat, root, RATLib and RATDSLib
@@ -38,6 +35,9 @@ class Rat( LocalPackage.LocalPackage ):
             and os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ) \
             and os.path.exists( os.path.join( self.GetInstallPath(), "lib/librat_%s-g++.a" % sys ) ) \
             and os.path.exists( os.path.join( self.GetInstallPath(), "lib/libRATEvent_%s-g++.so" % sys ) )
+    def _Download( self ):
+        """ Dependends on rat type."""
+        pass
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         self.WriteEnvFile()
@@ -70,14 +70,10 @@ class RatRelease( Rat ):
         super( RatRelease, self ).__init__( name, rootDependency, sconsDependency )
         self._TarName = tarName
         return
+
     def _IsDownloaded( self ):
         """ Check if tarball has been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
-    def SetUsernamePassword( self, username, password ):
-        """ Set the username password combination required for github downloads."""
-        self._Username = username
-        self._Password = password
-        return 
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         if self._Username is None:
@@ -85,10 +81,16 @@ class RatRelease( Rat ):
         if self._Password is None:
             print "Github password:"
             self._Password = getpass.getpass()
-        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, self._Username, self._Password )
+        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, \
+                                                            self._Username, self._Password )
         return
     def _Install( self ):
         """ Release installs must untar first."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
         super( RatRelease, self )._Install()
         return
+    def SetUsernamePassword( self, username, password ):
+        """ Set the username password combination required for github downloads."""
+        self._Username = username
+        self._Password = password
+        return 

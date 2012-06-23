@@ -136,10 +136,10 @@ def TestLibrary( libName, header = None ):
     try:
         output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
         os.remove( fileName )
-        return True
-    except PackageException.PackageException:
+        return True, output
+    except PackageException.PackageException, e:
         os.remove( fileName )
-        return False
+        return False, e.Pipe
 
 def All(iterable):
     """ New in python 2.5, we target 2.4-tis annoying."""

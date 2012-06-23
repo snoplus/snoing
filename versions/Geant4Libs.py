@@ -7,17 +7,17 @@ import LibraryPackage
 class Xm( LibraryPackage.LibraryPackage ):
     """ Package for the Open Motif/Xm library."""
     def __init__( self ):
-        super( Xm, self ).__init__( "Xm", "Xm", "Xm/Xm.h" )
+        super( Xm, self ).__init__( "Xm", "Install Xm-dev (OpenMotif) on this system.", "Xm", "Xm/Xm.h" )
         return
 
 class Xt( LibraryPackage.LibraryPackage ):
     """ Package for the Xt library."""
     def __init__( self ):
-        super( Xt, self ).__init__( "Xt", "Xt", "X11/Intrinsic.h" )
+        super( Xt, self ).__init__( "Xt", "Install Xt-dev on this system.", "Xt", "X11/Intrinsic.h" )
         return
 
 class Xmu( LibraryPackage.LibraryPackage ):
     """ Package for the Xmu library."""
     def __init__( self ):
-        super( Xmu, self ).__init__( "Xmu", "Xmu", "X11/Xmu/Xmu.h" )
+        super( Xmu, self ).__init__( "Xmu", "Install Xmu-dev on this system.", "Xmu", "X11/Xmu/Xmu.h" )
         return

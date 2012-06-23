@@ -15,6 +15,7 @@ class LibraryPackage( SystemPackage.SystemPackage ):
         return
     def CheckState( self ):
         """ Need to test the library linking and inclusion of the header."""
-        if PackageUtil.TestLibrary( self._LibName, self._Header ):
+        installed, self._CheckPipe = PackageUtil.TestLibrary( self._LibName, self._Header )
+        if installed:
             self._Installed = True
         return

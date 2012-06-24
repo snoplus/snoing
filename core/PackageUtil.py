@@ -53,14 +53,14 @@ def DownloadFile( url, username = None, password = None, fileName = "" ): # Neve
     os.rename( tempFile, os.path.join( kCachePath, fileName ) )
     return "Downloaded %i bytes\n" % downloadSize
     
-def ExecuteSimpleCommand( command, args, env, cwd ):
+def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
     process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     output = ""
     error = ""
-    if kVerbose:
+    if kVerbose or verbose:
         for line in iter( process.stdout.readline, "" ):
             sys.stdout.write( '\n' + line[:-1] )
             sys.stdout.flush()

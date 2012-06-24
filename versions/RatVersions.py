@@ -32,7 +32,7 @@ class RATDev( Rat.Rat ):
         return os.path.exists( os.path.join( self.GetInstallPath() ) )
     def _Download( self ):
         """ Git clone rat-dev."""
-        self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd() )
+        self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd(), True ) # Force verbose
         return
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""

@@ -50,7 +50,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
         # Downloads into the cache path
         return PackageUtil.ExecuteComplexCommand( """
             git clone git@github.com:/snoplus/snogoggles.git %s """
-            % self._DownloadPath )
+            % self._DownloadPath, True ) # Force verbose
 
     def _Install( self ):
         """ Install the version."""

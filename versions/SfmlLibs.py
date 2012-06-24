@@ -17,9 +17,10 @@ class OpenGL( LibraryPackage.LibraryPackage ):
         return
 
 class Xlib( LibraryPackage.LibraryPackage ):
-    """ Package for the pthread library."""
+    """ Package for the pthread library. 
+    I'm not sure this is a real thing, just a X11 header file?"""
     def __init__( self ):
-        super( Xlib, self ).__init__( "xlib", "Install xlib on this system.", "xlib" )
+        super( Xlib, self ).__init__( "xlib", "Install xlib on this system.", "X11", "X11/Xlib.h" )
         return
 
 class XRandR( LibraryPackage.LibraryPackage ):
@@ -31,7 +32,7 @@ class XRandR( LibraryPackage.LibraryPackage ):
 class Freetype( LibraryPackage.LibraryPackage ):
     """ Package for the freetype library."""
     def __init__( self ):
-        super( Freetype, self ).__init__( "freetype", "Install freetype dev on this system.", "freetype", "freetype.h" )
+        super( Freetype, self ).__init__( "freetype", "Install freetype dev on this system.", "freetype" )#, "freetype.h" )
         return
 
 class Glew( LibraryPackage.LibraryPackage ):
@@ -43,7 +44,7 @@ class Glew( LibraryPackage.LibraryPackage ):
 class JPEG( LibraryPackage.LibraryPackage ):
     """ Package for the pthread library."""
     def __init__( self ):
-        super( JPEG, self ).__init__( "jpeg", "Install jpeg dev on this system.", "jpeg", "jpeglib.h" )
+        super( JPEG, self ).__init__( "jpeg", "Install jpeg dev on this system.", "jpeg")#, "jpeglib.h" )
         return
 
 class SndFile( LibraryPackage.LibraryPackage ):

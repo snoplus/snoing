@@ -11,6 +11,9 @@ class Cmake( ConditionalPackage.ConditionalPackage ):
         """ Initlaise the Cmake package."""
         super( Cmake, self ).__init__( "cmake" )
         return
+    def GetDependencies( self ):
+        """ Return the dependencies."""
+        return []
     def CheckState( self ):
         """ Check if downloaded and installed."""
         # First test if globally installed

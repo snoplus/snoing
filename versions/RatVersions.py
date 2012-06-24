@@ -14,7 +14,7 @@ class RATDev( Rat.Rat ):
     """ Rat dev install package."""
     def __init__( self ):
         """ Initiliase the rat dev package."""
-        self._GeantDependency = "geant4.9.4.p04"
+        self._GeantDependency = "geant4.9.4.p01"
         self._ClhepDependency = "clhep-2.1.0.1"
         self._CurlDependency = "curl-7.26.0"
         self._BzipDependency = "bzip2-1.0.6"
@@ -80,7 +80,7 @@ class RAT3( RatReleases.RatReleasePre4 ):
     """ Rat release-3.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 3.0 package."""
-        super( RAT3, self ).__init__( "rat-3", "root-5.32.03", "scons-2.1.0", "geant4.9.4.p04", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
+        super( RAT3, self ).__init__( "rat-3", "root-5.32.03", "scons-2.1.0", "geant4.9.4.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
                                           "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "release-3.00" )
         return
 
@@ -88,7 +88,7 @@ class RAT2( RatReleases.RatReleasePre3 ):
     """ Rat release-2.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 2.0 package."""
-        super( RAT2, self ).__init__( "rat-2", "root-5.28.00", "scons-2.1.0", "geant4.9.4.p04", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", "release-2.00" )
+        super( RAT2, self ).__init__( "rat-2", "root-5.28.00", "scons-2.1.0", "geant4.9.4.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", "release-2.00" )
         return
 
 class RAT1( RatReleases.RatReleasePre2 ):

@@ -16,7 +16,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
         super( Snogoggles, self ).__init__( "snogoggles-dev" )
         self._DownloadPath = os.path.join( PackageUtil.kCachePath, self._Name )
         self._Dependencies = { "Scons": "scons-2.1.0",
-                               "Geant4": "geant4.9.4.p04",
+                               "Geant4": "geant4.9.4.p01",
                                "Rat": "rat-dev",
                                "Root": "root-5.32.03",
                                "Sfml": "sfml-2.0",

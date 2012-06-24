@@ -80,7 +80,7 @@ class RatReleasePre4( Rat.RatRelease ):
             # Must patch the rat config/EXTERNALS file.
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "r" )
             text = externalsFile.read()
-            exterbalsFile.close()
+            externalsFile.close()
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
             text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
             externalsFile.write( text )

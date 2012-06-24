@@ -28,7 +28,7 @@ class RatReleasePost3( Rat.RatRelease ):
                      self._ZeromqDependency, self._XercescDependency ]
     def _WriteEnvFile( self ):
         """ Diff geant env file and no need to patch rat."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "geant4" )
+        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "/bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )

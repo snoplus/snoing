@@ -15,7 +15,9 @@ class ConditionalLibraryPackage( ConditionalPackage.ConditionalPackage ):
         return
     def _IsSytemInstalled( self ):
         """ Check if package is installed on the system first."""
-        return PackageUtil.TestLibrary( self._Library, self._Header )
+        installed, output = PackageUtil.TestLibrary( self._Library, self._Header )
+        self._CheckPipe += output
+        return installed
     # Functions to override
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""

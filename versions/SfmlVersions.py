@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Author O Wasalski - 07/06/2012 <wasalski@berkeley.edu> : First revision, new file.
+# Author P G Jones - 24/06/2012 <p.g.jones@qmul.ac.uk> : Refactor for new package types.
 import Sfml
 
 class Sfml20( Sfml.Sfml ):

@@ -15,7 +15,7 @@ class XercesC( ConditionalLibraryPackage.ConditionalLibraryPackage ):
 
     def GetDependencies( self ):
         """ Return the dependencies."""
-        return ["curl"]
+        return ["curl-7.26.0"]
     def _IsDownloaded( self ):
         """ Check if the tar ball has been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )

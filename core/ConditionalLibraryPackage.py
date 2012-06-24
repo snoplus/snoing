@@ -13,7 +13,7 @@ class ConditionalLibraryPackage( ConditionalPackage.ConditionalPackage ):
         self._Library = library
         self._Header = header
         return
-    def _IsSytemInstalled( self ):
+    def _IsSystemInstalled( self ):
         """ Check if package is installed on the system first."""
         installed, output = PackageUtil.TestLibrary( self._Library, self._Header )
         self._CheckPipe += output

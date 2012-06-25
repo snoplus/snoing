@@ -8,7 +8,7 @@ class SystemPackage( Package.Package ):
     def __init__( self, name, helpText ):
         """ Construct the package with help text (which should be a hint to the user about what to install)."""
         super( SystemPackage, self ).__init__( name )
-        self._HelpText = ""
+        self._HelpText = helpText
         self._Installed = False
         return
     def GetHelpText( self ):

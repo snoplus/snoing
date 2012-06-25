@@ -82,7 +82,7 @@ class RatReleasePre4( Rat.RatRelease ):
             text = externalsFile.read()
             externalsFile.close()
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
-            text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
+            text = text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
             externalsFile.write( text )
             externalsFile.close()
         return
@@ -115,7 +115,7 @@ class RatReleasePre3( Rat.RatRelease ):
             text = externalsFile.read()
             exterbalsFile.close()
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
-            text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
+            text = text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
             externalsFile.write( text )
             externalsFile.close()
         return

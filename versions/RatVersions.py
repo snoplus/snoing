@@ -53,8 +53,9 @@ class RATDev( Rat.Rat ):
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "r" )
             text = externalsFile.read()
             externalsFile.close()
+            text = text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
+            print text
             externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
-            text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
             externalsFile.write( text )
             externalsFile.close()
         return

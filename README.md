@@ -17,3 +17,7 @@ This has the following options:
       -g              Graphical install?
       -u USERNAME     Github username (for rat releases)
       -p PASSWORD     Github password (for rat releases)
+
+### Adding packages
+If it is a new version of a package see first the packages folder. 
+If it is a completely new package note that installs that split the source and the install should preferably leave the install in the install path + package name folder.

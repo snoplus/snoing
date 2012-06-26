@@ -58,8 +58,9 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
     useEnv = os.environ # Default to current environment
-    for key in env:
-        useEnv[key] = env[key]
+    if env is not None:
+        for key in env:
+            useEnv[key] = env[key]
     process = subprocess.Popen( args = shellCommand, env = useEnv, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     output = ""
     error = ""

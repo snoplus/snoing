@@ -57,7 +57,10 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
-    process = subprocess.Popen( args = shellCommand, env = env, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
+    useEnv = os.environ # Default to current environment
+    for key in env:
+        useEnv[key] = env[key]
+    process = subprocess.Popen( args = shellCommand, env = useEnv, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     output = ""
     error = ""
     if kVerbose or verbose:

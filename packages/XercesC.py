@@ -21,7 +21,7 @@ class XercesC( ConditionalLibraryPackage.ConditionalLibraryPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _IsInstalled( self ):
         """ Check if xercesc installed."""
-        return os.path.exists( os.path.join( self.GetInstallPath(), "lib/libxerces-c.a" ) )
+        return PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libxerces-c" )
     def _Download( self ):
         """ Download the 3.1.1 version."""
         self._DownloadPipe += PackageUtil.DownloadFile( "http://mirror.ox.ac.uk/sites/rsync.apache.org//xerces/c/3/sources/" + self._TarName )

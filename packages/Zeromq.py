@@ -21,7 +21,7 @@ class Zeromq( ConditionalLibraryPackage.ConditionalLibraryPackage ):
         """ Check if tar ball is downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _IsInstalled( self ):
-        return os.path.exists( os.path.join( self.GetInstallPath(), "lib/libzmq.a" ) )
+        return PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libzmq" )
     def _Download( self ):
         """ Download the 2.2 version."""
         self._DownloadPipe += PackageUtil.DownloadFile( "http://download.zeromq.org/" + self._TarName )

@@ -33,8 +33,8 @@ class Rat( LocalPackage.LocalPackage ):
         sys = os.uname()[0]
         return os.path.exists( os.path.join( self.GetInstallPath(), "bin/rat_%s-g++" % sys ) ) \
             and os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) ) \
-            and os.path.exists( os.path.join( self.GetInstallPath(), "lib/librat_%s-g++.a" % sys ) ) \
-            and os.path.exists( os.path.join( self.GetInstallPath(), "lib/libRATEvent_%s-g++.so" % sys ) )
+            and PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "librat_%s-g++" % sys ) \
+            and PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libRATEvent_%s-g++" % sys )
     def _Download( self ):
         """ Dependends on rat type."""
         pass

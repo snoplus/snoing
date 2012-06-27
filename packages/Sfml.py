@@ -24,8 +24,7 @@ class Sfml( LocalPackage.LocalPackage ):
         """ Has sfml been installed."""
         libDir = os.path.join( self.GetInstallPath(), "lib" )
         libs = [ "audio", "graphics", "network", "system", "window" ]
-        libPaths = [ libDir + "/libsfml-" + lib + ".so" for lib in libs ]
-        return PackageUtil.All( [ os.path.isfile( libPath ) for libPath in libPaths ] )
+        return PackageUtil.All( [ PackageUtil.LibraryExists( libDir, "libsfml-%s" % lib ) for lib in libs ] )
     def _Download( self ):
         """ Download the tar file."""
         self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/LaurentGomila/SFML/tarball/" + self._TarName )

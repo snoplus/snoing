@@ -150,6 +150,12 @@ def TestLibrary( libName, header = None ):
         os.remove( fileName )
         return False, e.Pipe
 
+def LibraryExists( path, libName ):
+    """ Check if a library file exists, will check .a, .so and .dylib extensions."""
+    return os.path.exists( os.path.join( path, libName + ".a" ) ) or \
+        os.path.exists( os.path.join( path, libName + ".so" ) ) or \
+        os.path.exists( os.path.join( path, libName + ".dylib" ) )
+
 def All(iterable):
     """ New in python 2.5, we target 2.4-tis annoying."""
     for element in iterable:

@@ -21,10 +21,10 @@ class Curl( ConditionalLibraryPackage.ConditionalLibraryPackage ):
     def _IsInstalled( self ):
         """ Returns true if the header, library and binary files are in the proper location."""
         header = os.path.isfile( os.path.join( self.GetInstallPath(), "include", "curl", "curl.h" ) )
-        lib = os.path.isfile( os.path.join( self.GetInstallPath(), "lib", "libcurl.a" ) )
-        bin = os.path.isfile( os.path.join( self.GetInstallPath(), "bin", "curl" ) )
+        lib = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libcurl" )
+        exe = os.path.isfile( os.path.join( self.GetInstallPath(), "bin", "curl" ) )
         config = os.path.isfile( os.path.join( self.GetInstallPath(), "bin", "curl-config" ) )
-        return header and lib and bin and config
+        return header and lib and exe and config
     def _Download( self ):
         """ Downloads a curl tarball from the curl website."""
         self._DownloadPipe += PackageUtil.DownloadFile( "http://curl.haxx.se/download/" + self._TarName )

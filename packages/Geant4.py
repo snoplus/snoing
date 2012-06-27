@@ -27,11 +27,11 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) )
     def _IsInstalled( self ):
         """ Check if the package has been installed."""
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ) or \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event.so" ) )
+        installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib"), "libG4event" ) or \
+            PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4event" )
         if PackageUtil.kGraphical:
-            installed = installed and ( os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4UIbasic.so" ) ) or \
-                os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4UIbasic.so" ) ) )
+            installed = installed and ( PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libG4UIbasic" ) or \
+                PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4UIbasic" ) )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""
@@ -84,8 +84,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     def _IsInstalled( self ):
         """ Check geant has been installed."""
         sys = os.uname()[0] + "-g++"
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.so" ) ) and \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic.so" ) )
+        installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ), "libG4event" ) and \
+            PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ),  "libG4UIbasic" )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""

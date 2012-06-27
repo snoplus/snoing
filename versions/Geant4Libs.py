@@ -21,3 +21,8 @@ class Xmu( LibraryPackage.LibraryPackage ):
     def __init__( self ):
         super( Xmu, self ).__init__( "Xmu", "Install Xmu-dev on this system.", "Xmu", "X11/Xmu/Xmu.h" )
         return
+
+class Xi( LibraryPackage.LibraryPackage ):
+    """ Package for the Xi library. """
+    def __init__( self ):
+        super( Xi, self ).__init__( "Xi", "Install Xi-dev on this system.", "Xi", "X11/extensions/XI.h" )

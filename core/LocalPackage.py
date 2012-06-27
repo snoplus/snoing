@@ -39,8 +39,6 @@ class LocalPackage( Package.Package ):
         """ Full install process."""
         self.CheckState()
         self.Download()
-        if self._Graphical and not PackageUtil.kGraphical:
-            raise PackageException( "Install Error", "Must be a graphical install." )
         if not self.IsInstalled():
             try:
                 self._Install()

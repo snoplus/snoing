@@ -7,6 +7,7 @@ import os
 import inspect
 import Log
 import PackageException
+import PackageUtil
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
@@ -61,6 +62,13 @@ class PackageManager( object ):
             Log.Error( "Package %s must be installed manually." % package.GetName() )
             Log.Detail( package.GetHelpText() )
             raise
+        # Abort if package is a graphical only package and this is not a graphica install
+        # This should be done BEFORE we install the dependencies, not after.
+        # Very annoying if we go through the trouble of installing the dependencies and then realize that this is not a graphical install
+        if isinstance( package, LocalPackage.LocalPackage ):
+            if package.IsGraphicalOnly() and not PackageUtil.kGraphical:
+                Log.Error( "Package %s can only be installed in a graphical install." % package.GetName() )
+                raise
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 

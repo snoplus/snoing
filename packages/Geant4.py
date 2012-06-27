@@ -20,7 +20,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
-            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu", "Xi"] )
         return dependencies
     def _IsDownloaded( self ):
         """ Check if the tar file has been downloaded."""
@@ -74,7 +74,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
-            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu", "Xi"] )
         return dependencies
     def _IsDownloaded( self ):
         """ Check tar files have been downloaded."""

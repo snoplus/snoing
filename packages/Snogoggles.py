@@ -10,7 +10,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
     def __init__( self, name, sconsDependency, geant4Dependency, ratDependency, rootDependency, \
                       sfmlDependency, xercescDependency, avalancheDependency, zmqDependency ):
         """ Initialise snogoggles."""
-        super( Snogoggles, self ).__init__( name, False ) # Not graphical only
+        super( Snogoggles, self ).__init__( name, True ) # Graphical only
         self._SconsDependency = sconsDependency
         self._Geant4Dependency = geant4Dependency
         self._RatDependency = ratDependency

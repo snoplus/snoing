@@ -5,6 +5,7 @@
 import LocalPackage
 import os
 import PackageUtil
+import sys
 
 class Geant4Post5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
@@ -14,6 +15,8 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         self._ClhepDependency = clhepDependency
+        if sys.platform == 'darwin':
+            self._LibExt = 'dylib'
         return
 
     def GetDependencies( self ):
@@ -27,11 +30,11 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) )
     def _IsInstalled( self ):
         """ Check if the package has been installed."""
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event.so" ) ) or \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event.so" ) )
+        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event." + self._LibExt ) ) or \
+            os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event." + self._LibExt ) )
         if PackageUtil.kGraphical:
-            installed = installed and ( os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4UIbasic.so" ) ) or \
-                os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4UIbasic.so" ) ) )
+            installed = installed and ( os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4UIbasic." + self._LibExt ) ) or \
+                os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4UIbasic." + self._LibExt ) ) )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""
@@ -84,8 +87,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     def _IsInstalled( self ):
         """ Check geant has been installed."""
         sys = os.uname()[0] + "-g++"
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event.so" ) ) and \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic.so" ) )
+        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event." + self._LibExt ) ) and \
+            os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic." + self._LibExt ) )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""

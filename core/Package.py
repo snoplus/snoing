@@ -11,6 +11,7 @@ class Package( object ):
         """ Construct the package with name"""
         self._Name = name
         self._CheckPipe = "" # Checking output
+        self._LibExt = 'so' #override these when necessary
         return
     def GetName( self ):
         """ Return the package name."""

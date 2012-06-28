@@ -16,8 +16,8 @@ class snoing( PackageManager.PackageManager ):
         """ Initialise the snoing package manager."""
         super( snoing, self ).__init__()
         env = os.environ
-        for envbit in myenv:#check clean environment
-            inenv = myenv[envbit].find('G4')
+        for envbit in env:#check clean environment
+            inenv = env[envbit].find('G4')
             if inenv!=-1:
                 print 'G4... environment variables are present, please run in a clean environment.'
                 sys.exit(1)

@@ -87,13 +87,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     def _IsInstalled( self ):
         """ Check geant has been installed."""
         sys = os.uname()[0] + "-g++"
-<<<<<<< HEAD
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event." + self._LibExt ) ) and \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic." + self._LibExt ) )
-=======
         installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ), "libG4event" ) and \
             PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ),  "libG4UIbasic" )
->>>>>>> origin/master
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""

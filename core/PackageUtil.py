@@ -142,7 +142,6 @@ def TestLibrary( libName, header = None ):
     testFile = open( fileName, "w" )
     testFile.write( fileText )
     testFile.close()
-    shutil.copyfile(os.path.join( kInstallPath, "temp.cc" ),os.path.join( "testlibs", "temp_%s.cc" % libName ))
     try:
         output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
         os.remove( fileName )

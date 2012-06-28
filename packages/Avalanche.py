@@ -25,7 +25,7 @@ class Avalanche( LocalPackage.LocalPackage ):
         return os.path.exists( self.GetInstallPath() )
     def _IsInstalled( self ):
         """ Check if installed."""
-        return os.path.exists( os.path.join( self.GetInstallPath(), "lib/cpp/libavalanche.so" ) )
+        return PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/cpp" ), "libavalanche" )
     def _Download( self ):
         """ Download avalanche (git clone)."""
         self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/mastbaum/avalanche/tarball/" + self._TarName )

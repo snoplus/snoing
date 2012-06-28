@@ -22,10 +22,8 @@ class Bzip2( ConditionalLibraryPackage.ConditionalLibraryPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _IsInstalled( self ):
         """ Has bzip2 been installed."""
-        files = [os.path.join("bin", "bzip2"),
-                 os.path.join("lib", "lib%s.a" %self._Library),
-                 os.path.join("include", self._Header)]
-        return PackageUtil.All( [os.path.isfile( os.path.join( self.GetInstallPath(), f ) ) for f in files] )
+        return os.path.isfile( os.path.join("bin", "bzip2") ) and os.path.exists( os.path.join("include", self._Header) ) and \
+            PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "lib%s" % self._Library )
     def _Download( self ):
         """ Download the tar file."""
         self._DownloadPipe += PackageUtil.DownloadFile( "http://www.bzip.org/1.0.6/" + self._TarName )

@@ -23,18 +23,18 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", "cmake", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
-            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu", "Xi"] )
         return dependencies
     def _IsDownloaded( self ):
         """ Check if the tar file has been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._SourceTar ) )
     def _IsInstalled( self ):
         """ Check if the package has been installed."""
-        installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4event." + self._LibExt ) ) or \
-            os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4event." + self._LibExt ) )
+        installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib"), "libG4event" ) or \
+            PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4event" )
         if PackageUtil.kGraphical:
-            installed = installed and ( os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + "/libG4UIbasic." + self._LibExt ) ) or \
-                os.path.exists( os.path.join( self.GetInstallPath(), "lib64/" + "/libG4UIbasic." + self._LibExt ) ) )
+            installed = installed and ( PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libG4UIbasic" ) or \
+                PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4UIbasic" ) )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""
@@ -77,7 +77,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         """ Return the dependency names as a list of names."""
         dependencies = [ "make", "g++", "gcc", self._XercesDependency, self._ClhepDependency ]
         if PackageUtil.kGraphical:
-            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu"] )
+            dependencies.extend( ["Xm", "Xt", "opengl", "Xmu", "Xi"] )
         return dependencies
     def _IsDownloaded( self ):
         """ Check tar files have been downloaded."""
@@ -87,8 +87,13 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
     def _IsInstalled( self ):
         """ Check geant has been installed."""
         sys = os.uname()[0] + "-g++"
+<<<<<<< HEAD
         installed = os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4event." + self._LibExt ) ) and \
             os.path.exists( os.path.join( self.GetInstallPath(), "lib/" + sys + "/libG4UIbasic." + self._LibExt ) )
+=======
+        installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ), "libG4event" ) and \
+            PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib/" + sys ),  "libG4UIbasic" )
+>>>>>>> origin/master
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""

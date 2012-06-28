@@ -21,7 +21,7 @@ class Clhep( LocalPackage.LocalPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _IsInstalled( self ):
         """ Check if installed."""
-        return os.path.exists( os.path.join( self.GetInstallPath(), "lib/libCLHEP.a" ) )
+        return PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libCLHEP" )
     def _Download( self ):
         """ Download clhep, depends on the version."""
         pass

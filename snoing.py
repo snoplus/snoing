@@ -2,6 +2,7 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # SNO+ package manager
 import PackageManager
+import sys
 import os
 import inspect
 import PackageUtil
@@ -14,6 +15,12 @@ class snoing( PackageManager.PackageManager ):
     def __init__( self, options ):
         """ Initialise the snoing package manager."""
         super( snoing, self ).__init__()
+        env = os.environ
+        for envbit in myenv:#check clean environment
+            inenv = myenv[envbit].find('G4')
+            if inenv!=-1:
+                print 'G4... environment variables are present, please run in a clean environment.'
+                sys.exit(1)
         if options.cachePath[0] == '/': # Global path
             PackageUtil.kCachePath = options.cachePath
         else:

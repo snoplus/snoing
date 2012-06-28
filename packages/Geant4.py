@@ -15,8 +15,6 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         self._SourceTar = sourceTar
         self._XercesDependency = xercesDependency
         self._ClhepDependency = clhepDependency
-        if sys.platform == 'darwin':
-            self._LibExt = 'dylib'
         return
 
     def GetDependencies( self ):

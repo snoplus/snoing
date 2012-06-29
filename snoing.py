@@ -2,7 +2,6 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # SNO+ package manager
 import PackageManager
-import sys
 import os
 import inspect
 import PackageUtil
@@ -14,6 +13,7 @@ class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
     def __init__( self, options ):
         """ Initialise the snoing package manager."""
+        import sys
         super( snoing, self ).__init__()
         env = os.environ
         for envbit in env:#check clean environment

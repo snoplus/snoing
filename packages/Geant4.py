@@ -5,7 +5,6 @@
 import LocalPackage
 import os
 import PackageUtil
-import sys
 
 class Geant4Post5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
@@ -96,6 +95,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         return
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
+        import shutil
         sys = os.uname()[0] + "-g++"
         self._InstallPipe += PackageUtil.UnTarFile( self._SourceTar, self.GetInstallPath(), 1 )
         for dataTar in self._DataTars:
@@ -104,12 +104,9 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.GetInstallPath() )
         try:
-            try:
-                self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
-            finally:
-                self._InstallPipe += PackageUtil.ExecuteSimpleCommand( 'cp .config/bin/' + sys + '/env.sh env.sh' )
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying
-            pass
+            shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.GetInstallPath(),'env.sh'))
         return 
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

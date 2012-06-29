@@ -13,7 +13,14 @@ class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
     def __init__( self, options ):
         """ Initialise the snoing package manager."""
+        import sys
         super( snoing, self ).__init__()
+        env = os.environ
+        for envbit in env:#check clean environment
+            inenv = env[envbit].find('G4')
+            if inenv!=-1:
+                print 'G4... environment variables are present, please run in a clean environment.'
+                sys.exit(1)
         if options.cachePath[0] == '/': # Global path
             PackageUtil.kCachePath = options.cachePath
         else:

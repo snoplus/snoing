@@ -95,6 +95,8 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         return
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
+        import shutil
+        sys = os.uname()[0] + "-g++"
         self._InstallPipe += PackageUtil.UnTarFile( self._SourceTar, self.GetInstallPath(), 1 )
         for dataTar in self._DataTars:
             self._InstallPipe += PackageUtil.UnTarFile( dataTar, os.path.join( self.GetInstallPath(), "data" ), 0 )
@@ -105,6 +107,9 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying
             pass
+        if not os.path.join(self.GetInstallPath(),'env.sh'):
+            shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.GetInstallPath(),'env.sh'))
+            shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.csh'),os.path.join(self.GetInstallPath(),'env.csh'))
         return 
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

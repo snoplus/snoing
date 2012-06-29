@@ -106,7 +106,9 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
         try:
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying
-            shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.GetInstallPath(),'env.sh'))
+            if not os.path.join(self.GetInstallPath(),'env.sh'):
+                shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.GetInstallPath(),'env.sh'))
+                shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.csh'),os.path.join(self.GetInstallPath(),'env.csh'))
         return 
     def WriteGeant4ConfigFile( self ):
         """ Write the relevant geant4 configuration file, nasty function."""

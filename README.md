@@ -20,4 +20,19 @@ This has the following options:
 
 ### Adding packages
 If it is a new version of a package see first the packages folder. 
-If it is a completely new package note that installs that split the source and the install should preferably leave the install in the install path + package name folder.
+If it is a completely new package note that installs that split the source and the install should preferably leave the install in the install path + package name folder.## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py
+## SNOING
+This is a snoing install directory. Please alter only with snoing at ./snoing.py

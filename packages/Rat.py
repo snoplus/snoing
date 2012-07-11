@@ -21,7 +21,7 @@ class Rat( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        dependencies = [ self._SconsDependency, self._RootDependency ]
+        dependencies = [ "python", "python-dev", self._SconsDependency, self._RootDependency ]
         dependencies.extend( self._GetDependencies() )
         return dependencies
     def _IsDownloaded( self ):

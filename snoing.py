@@ -22,14 +22,15 @@ class snoing( PackageManager.PackageManager ):
                 print 'G4... environment variables are present, please run in a clean environment.'
                 sys.exit(1)
         PackageUtil.kCachePath = Util.BuildDirectory( options.cachePath )
-        PackageUtil.kInstalPath = Util.BuildDirectory( options.installPath )
+        PackageUtil.kInstallPath = Util.BuildDirectory( options.installPath )
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
         Log.kInfoFile.Write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
         # Now check the graphical option is compatible with install directory
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
-        if Util.DeSerialise( snoingSettingsPath ) != options.graphical:
+        graphical = Util.DeSerialise( snoingSettingsPath )
+        if graphical is not None and graphical != options.graphical:
             raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
         PackageUtil.kGraphical = options.graphical
         Util.Serialise( snoingSettingsPath, options.graphical )
@@ -44,13 +45,13 @@ class snoing( PackageManager.PackageManager ):
 if __name__ == "__main__":
     import optparse
     # Load defaults from file
-    defaultFilePath = os.path.join( os.path.dirname( __file__ ), "snoing.pkl" )
+    defaultFilePath = os.path.join( os.path.dirname( __file__ ), "snoing-settings.pkl" )
     defaults = Util.DeSerialise( defaultFilePath )
-    if defaults is not None: # No defaults
+    if defaults is None: # No defaults
         defaults = { "cache" : "cache", "install" : "install" }
     parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default=defaults["cache"] )
-    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defauls["install"] )
+    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
     parser.add_option( "-d", action="store_true", dest="dependency", help="Dependencies only?" )
@@ -59,8 +60,8 @@ if __name__ == "__main__":
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
     # Save the defaults to file
-    defaults["cache"] = options.cache
-    defaults["install"] = options.install
+    defaults["cache"] = options.cachePath
+    defaults["install"] = options.installPath
     Util.Serialise( defaultFilePath, defaults )
     # Construct snoing installer
     Log.Header( "Registering Packages" )

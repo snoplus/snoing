@@ -4,12 +4,6 @@
 import CommandPackage
 import LibraryPackage
 
-class Xm( LibraryPackage.LibraryPackage ):
-    """ Package for the Open Motif/Xm library."""
-    def __init__( self ):
-        super( Xm, self ).__init__( "Xm", "Install Xm-dev (OpenMotif) on this system.", "Xm", "Xm/Xm.h" )
-        return
-
 class Xt( LibraryPackage.LibraryPackage ):
     """ Package for the Xt library."""
     def __init__( self ):

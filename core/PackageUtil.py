@@ -137,24 +137,34 @@ def FindLibrary( libName ):
         else:
             return location[1]
 
-def TestLibrary( libName, header = None ):
-    """ Test if code can be compiled with header and linked to libName."""
-    global kCachePath, kInstallPath
+def _TestLibrary( header, flags ):
+    """ Test if code with include of header (if not None) can be compiled with flags."""
+    global kCachePath
     fileText = ""
     if header != None:
         fileText = "#include <%s>\n" % header
     fileText += "int main( int a, char* b[] ) { }"
-    fileName = os.path.join( kInstallPath, "temp.cc" )
+    fileName = os.path.join( kCachePath, "temp.cc" )
     testFile = open( fileName, "w" )
     testFile.write( fileText )
     testFile.close()
     try:
-        output = ExecuteSimpleCommand( "g++", [fileName, "-l", libName], os.environ, kInstallPath )
+        output = ExecuteSimpleCommand( "g++", [fileName] + flags, os.environ, kInstallPath )
         os.remove( fileName )
         return True, output
     except PackageException.PackageException, e:
         os.remove( fileName )
         return False, e.Pipe
+
+def TestLibrary( libName, header = None ):
+    """ Test if code can be compiled with header and linked to libName."""
+    return _TestLibrary( header, ["-l%s" % libName] )
+
+def TestConfigLibrary( configCommand, header = None ):
+    """ Test if code can be compiled using a xxx-config command."""
+    libs = ExecuteSimpleCommand( configCommand, ["--libs"], None, None ).strip('\n').split(' ')
+    includes = ExecuteSimpleCommand( configCommand, ["--includes"], None, None ).strip('\n').split(' ')
+    return _TestLibrary( header, libs + includes )
 
 def LibraryExists( path, libName ):
     """ Check if a library file exists, will check .a, .so and .dylib extensions."""

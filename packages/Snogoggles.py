@@ -23,7 +23,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return [self._SconsDependency, self._Geant4Dependency, self._RatDependency, self._RootDependency, \
+        return ["python", "python-dev", self._SconsDependency, self._Geant4Dependency, self._RatDependency, self._RootDependency, \
                     self._SfmlDependency, self._XercescDependency, self._AvalancheDependency, self._ZeromqDependency]
     def _IsDownloaded( self ):
         """ Check if downloaded."""

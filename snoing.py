@@ -35,7 +35,10 @@ class snoing( PackageManager.PackageManager ):
         for package in self._Packages:
             if isinstance( self._Packages[package], Rat.RatRelease ):
                 self._Packages[package].SetUsernamePassword( options.username, options.password )
-        
+    def PrintErrorMessage( self ):
+        """Print a standard error message if snoing fails."""
+        Log.Error( "Snoing has failed, please consult the above error messages or the snoing.log file." )
+        return
 
 if __name__ == "__main__":
     import optparse
@@ -71,14 +74,23 @@ if __name__ == "__main__":
         else:
             Log.Header( "Installing all packages" )
             for packageName in installer.PackageNameGenerator():
-                installer.InstallPackage( packageName )
+                try:
+                    installer.InstallPackage( packageName )
+                except:
+                    installer.PrintErrorMessage()
     else:
         if options.query == True:
             Log.Header( "Checking %s package" % args[0] )
             installer.CheckPackage( args[0] )
         elif options.dependency == True:
             Log.Header( "Installing %s package dependencies" % args[0] )
-            installer.InstallPackageDependencies( args[0] )
+            try:
+                installer.InstallPackageDependencies( args[0] )
+            except:
+                installer.PrintErrorMessage()
         else: 
             Log.Header( "Installing %s package" % args[0] )
-            installer.InstallPackage( args[0] )
+            try:
+                installer.InstallPackage( args[0] )
+            except:
+                installer.PrintErrorMessage()

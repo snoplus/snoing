@@ -59,7 +59,7 @@ class PackageManager( object ):
         # If here then not installed :(
         if isinstance( package, SystemPackage.SystemPackage ):
             # Nothing else to do thus return...
-            Log.Error( "Package %s must be installed manually." % package.GetName() )
+            Log.Error( "Package %s must be installed on this system, snoing cannot do this." % package.GetName() )
             Log.Detail( package.GetHelpText() )
             raise
         # Abort if package is a graphical only package and this is not a graphica install

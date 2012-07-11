@@ -10,7 +10,6 @@ class LogFile( object ):
     def __init__( self, filePath = None, append = False ):
         """ Open the correct file."""
         self._FilePath = filePath
-        self._Append = append
         if filePath is not None and not append and os.path.exists( filePath ):
             os.remove( filePath )
         return
@@ -18,10 +17,7 @@ class LogFile( object ):
         """ Write the text to the file."""
         if self._FilePath is None:
             return
-        if self._Append:
-            file = open( self._FilePath, "a" )
-        else:
-            file = open( self._FilePath, "w" )
+        file = open( self._FilePath, "a" )
         file.write( "%s\n" % text )
         file.close()
         return

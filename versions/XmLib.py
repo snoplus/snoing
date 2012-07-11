@@ -16,9 +16,9 @@ class Xm( SystemPackage.SystemPackage ):
         if sys == 'Darwin':
             flags = []
             if os.path.exists( "/sw/include" ):
-                flags = [ "-I%S" % "/sw/include", "-L%s" % "/sw/lib" ]
+                flags = [ "-I%s" % "/sw/include", "-L%s" % "/sw/lib" ]
             elif os.path.exists( "/usr/OpenMotif" ):
-                flags = [ "-I%S" % "/usr/OpenMotif/include", "-L%s" % "/usr/OpenMotif/lib" ]
+                flags = [ "-I%s" % "/usr/OpenMotif/include", "-L%s" % "/usr/OpenMotif/lib" ]
             installed, self._CheckPipe = PackageUtil._TestLibrary( "Xm.h", flags )
             self._Installed = installed
         else:

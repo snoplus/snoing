@@ -25,7 +25,7 @@ class EnvFileBuilder( object ):
         return
     def AddFinalSource( self, envFilePath, envFileName ):
         """ Add a source command to the end of the file."""
-        self._BaseFinal += "source %s/%s.sh\n" % ( envFilePath, envFileName )
+        self._BashFinal += "source %s/%s.sh\n" % ( envFilePath, envFileName )
         self._CshFinal += "source %s/%s.csh\n" % ( envFilePath, envFileName )
         return
     def AddEnvironment( self, key, value ):

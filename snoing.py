@@ -6,8 +6,8 @@ import os
 import inspect
 import PackageUtil
 import Rat
-import pickle
 import Log
+import Util
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -21,38 +21,19 @@ class snoing( PackageManager.PackageManager ):
             if inenv!=-1:
                 print 'G4... environment variables are present, please run in a clean environment.'
                 sys.exit(1)
-        if options.cachePath[0] == '/': # Global path
-            PackageUtil.kCachePath = options.cachePath
-        else:
-            PackageUtil.kCachePath = os.path.join( os.getcwd(), options.cachePath )
-        if not os.path.exists( PackageUtil.kCachePath ):
-            os.makedirs( PackageUtil.kCachePath )
-        if options.installPath[0] == '/': # Global path
-            PackageUtil.kInstallPath = options.installPath
-        else:
-            PackageUtil.kInstallPath = os.path.join( os.getcwd(), options.installPath )
-        if not os.path.exists( PackageUtil.kInstallPath ):
-            os.makedirs( PackageUtil.kInstallPath )
+        PackageUtil.kCachePath = Util.BuildDirectory( options.cachePath )
+        PackageUtil.kInstalPath = Util.BuildDirectory( options.installPath )
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
         Log.kInfoFile.Write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
-        PackageUtil.kInstallPath = PackageUtil.kInstallPath
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
-        # Now check for graphical option
+        # Now check the graphical option is compatible with install directory
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
-        if os.path.exists( snoingSettingsPath ):
-            settingsFile = open( snoingSettingsPath, "r" )
-            if options.graphical != pickle.load( settingsFile ):
-                raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
-            else:
-                PackageUtil.kGraphical = options.graphical
-            settingsFile.close()
-        else:
-            PackageUtil.kGraphical = options.graphical
-            settingsFile = open( snoingSettingsPath, "w" )
-            pickle.dump( options.graphical, settingsFile )
-            settingsFile.close()
-        # First import all register all packages in this folder
+        if Util.DeSerialise( snoingSettingsPath ) != options.graphical:
+            raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
+        PackageUtil.kGraphical = options.graphical
+        Util.Serialise( snoingSettingsPath, options.graphical )
+        # First import all register all packages in the versions folder
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "versions" ) )
         # Now set the username password for the rat packages
         for package in self._Packages:
@@ -62,9 +43,14 @@ class snoing( PackageManager.PackageManager ):
 
 if __name__ == "__main__":
     import optparse
+    # Load defaults from file
+    defaultFilePath = os.path.join( os.path.dirname( __file__ ), "snoing.pkl" )
+    defaults = Util.DeSerialise( defaultFilePath )
+    if defaults is not None: # No defaults
+        defaults = { "cache" : "cache", "install" : "install" }
     parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
-    parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default="cache" )
-    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default="install" )
+    parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default=defaults["cache"] )
+    parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defauls["install"] )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
     parser.add_option( "-d", action="store_true", dest="dependency", help="Dependencies only?" )
@@ -72,6 +58,11 @@ if __name__ == "__main__":
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
     parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
     (options, args) = parser.parse_args()
+    # Save the defaults to file
+    defaults["cache"] = options.cache
+    defaults["install"] = options.install
+    Util.Serialise( defaultFilePath, defaults )
+    # Construct snoing installer
     Log.Header( "Registering Packages" )
     PackageUtil.kVerbose = options.verbose
     installer = snoing( options )

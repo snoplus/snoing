@@ -19,7 +19,6 @@ class snoing( PackageManager.PackageManager ):
         PackageUtil.kCachePath = Util.BuildDirectory( options.cachePath )
         PackageUtil.kInstallPath = Util.BuildDirectory( options.installPath )
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
-        Log.kInfoFile.Write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
         # Now check the graphical option is compatible with install directory

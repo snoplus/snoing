@@ -12,6 +12,9 @@ class LogFile( object ):
         self._FilePath = filePath
         if filePath is not None and not append and os.path.exists( filePath ):
             os.remove( filePath )
+            file = open( self._FilePath, "w" )
+            file.write( "## SNOING\nThis is a snoing install directory. Please alter only with snoing at %s" % __file__ )
+            file.close()
         return
     def Write( self, text ):
         """ Write the text to the file."""

@@ -36,19 +36,28 @@ class Ld( CommandPackage.CommandPackage ):
 class X11( LibraryPackage.LibraryPackage ):
     """ Package for the x11-dev library."""
     def __init__( self ):
-        super( X11, self ).__init__( "X11", "Install X11-dev on this system.", "X11", "X11/Xlib.h" )
+        if PackageUtil.kMac:
+            super( X11, self ).__init__( "X11", "Install X11-dev on this system.", "X11", "X11/include/X11/Xlib.h" )
+        else:
+            super( X11, self ).__init__( "X11", "Install X11-dev on this system.", "X11", "X11/Xlib.h" )
         return
 
 class Xpm( LibraryPackage.LibraryPackage ):
     """ Package for the xpm-dev library."""
     def __init__( self ):
-        super( Xpm, self ).__init__( "Xpm", "Install Xpm-dev on this system.", "Xpm", "X11/xpm.h" )
+        if PackageUtil.kMac:
+            super( Xpm, self ).__init__( "Xpm", "Install Xpm-dev on this system.", "Xpm", "X11/include/X11/xpm.h" )
+        else:
+            super( Xpm, self ).__init__( "Xpm", "Install Xpm-dev on this system.", "Xpm", "X11/xpm.h" )
         return
 
 class Xft( LibraryPackage.LibraryPackage ):
     """ Package for the xft-dev library."""
     def __init__( self ):
-        super( Xft, self ).__init__( "Xft", "Install Xft-dev on this system.", "Xft")#, "X11/Xft/Xft.h" )
+        if PackageUtil.kMac:
+            super( Xft, self ).__init__( "Xft", "Install Xft-dev on this system.", "Xft", "X11/include/X11/Xft/Xft.h")
+        else:
+            super( Xft, self ).__init__( "Xft", "Install Xft-dev on this system.", "Xft")#, "X11/Xft/Xft.h" )
         return
 
 class Xext( LibraryPackage.LibraryPackage ):

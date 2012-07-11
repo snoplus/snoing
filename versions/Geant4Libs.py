@@ -3,17 +3,24 @@
 # The Geant4 prerequisites
 import CommandPackage
 import LibraryPackage
+import PackageUtil
 
 class Xt( LibraryPackage.LibraryPackage ):
     """ Package for the Xt library."""
     def __init__( self ):
-        super( Xt, self ).__init__( "Xt", "Install Xt-dev on this system.", "Xt", "X11/Intrinsic.h" )
+        if PackageUtil.kMac:
+            super( Xt, self ).__init__( "Xt", "Install Xt-dev on this system.", "Xt", "X11/include/X11/Intrinsic.h" )
+        else:
+            super( Xt, self ).__init__( "Xt", "Install Xt-dev on this system.", "Xt", "X11/Intrinsic.h" )
         return
 
 class Xmu( LibraryPackage.LibraryPackage ):
     """ Package for the Xmu library."""
     def __init__( self ):
-        super( Xmu, self ).__init__( "Xmu", "Install Xmu-dev on this system.", "Xmu", "X11/Xmu/Xmu.h" )
+        if PackageUtil.kMac:
+            super( Xmu, self ).__init__( "Xmu", "Install Xmu-dev on this system.", "Xmu", "X11/include/X11/Xmu/Xmu.h" )
+        else:
+            super( Xmu, self ).__init__( "Xmu", "Install Xmu-dev on this system.", "Xmu", "X11/Xmu/Xmu.h" )
         return
 
 class Xi( LibraryPackage.LibraryPackage ):

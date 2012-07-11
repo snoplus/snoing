@@ -15,12 +15,7 @@ class snoing( PackageManager.PackageManager ):
         """ Initialise the snoing package manager."""
         import sys
         super( snoing, self ).__init__()
-        env = os.environ
-        for envbit in env:#check clean environment
-            inenv = env[envbit].find('G4')
-            if inenv!=-1:
-                print 'G4... environment variables are present, please run in a clean environment.'
-                sys.exit(1)
+        Util.CheckSystem()
         PackageUtil.kCachePath = Util.BuildDirectory( options.cachePath )
         PackageUtil.kInstallPath = Util.BuildDirectory( options.installPath )
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
@@ -45,7 +40,7 @@ class snoing( PackageManager.PackageManager ):
 if __name__ == "__main__":
     import optparse
     # Load defaults from file
-    defaultFilePath = os.path.join( os.path.dirname( __file__ ), "snoing-settings.pkl" )
+    defaultFilePath = os.path.join( os.path.dirname( __file__ ), "settings.pkl" )
     defaults = Util.DeSerialise( defaultFilePath )
     if defaults is None: # No defaults
         defaults = { "cache" : "cache", "install" : "install" }

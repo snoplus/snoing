@@ -29,7 +29,7 @@ class RATDev( Rat.Rat ):
                      self._ZeromqDependency, self._XercescDependency ]
     def _IsDownloaded( self ):
         """ Check if git clone has completed."""
-        return os.path.exists( os.path.join( self.GetInstallPath() ) )
+        return os.path.exists( self.GetInstallPath() )
     def _Download( self ):
         """ Git clone rat-dev."""
         self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd(), True ) # Force verbose

@@ -62,10 +62,10 @@ class EnvFileBuilder( object ):
         self._BashEnv += self._BashFinal
         self._CshEnv += self._CshFinal
         # Now write the files
-        bashFile = open( os.path.join( directory, "env_%s.sh" % name ), "w" )
+        bashFile = open( os.path.join( directory, "%s.sh" % name ), "w" )
         bashFile.write( self._BashEnv )
         bashFile.close()
-        cshFile = open( os.path.join( directory, "env_%s.csh" % name ), "w" )
+        cshFile = open( os.path.join( directory, "%s.csh" % name ), "w" )
         cshFile.write( self._CshEnv )
         cshFile.close()
         return

@@ -4,6 +4,7 @@
 # The Avalanche package
 import Avalanche
 import os
+import PackageUtil
 
 class AvalancheDev( Avalanche.Avalanche ):
     """ The development version of avalanche (git repo)."""

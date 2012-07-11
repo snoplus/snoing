@@ -7,14 +7,14 @@ import LocalPackage
 import os
 import PackageUtil
 import getpass
-import RatEnv
+import EnvFileBuilder
 
 class Rat( LocalPackage.LocalPackage ):
     """ Base rat installer for rat."""
     def __init__( self, name, rootDependency, sconsDependency ):
         """ All Rat installs have the same root and scons dependence."""
         super( Rat, self ).__init__( name, False ) # Not graphical only
-        self._EnvFile = RatEnv.EnvFileBuilder()
+        self._EnvFile = EnvFileBuilder.EnvFileBuilder( "#ratcage environment\n" )
         self._RootDependency = rootDependency
         self._SconsDependency = sconsDependency
         return
@@ -51,7 +51,7 @@ class Rat( LocalPackage.LocalPackage ):
         self._EnvFile.AddEnvironment( "RAT_SCONS", self._DependencyPaths[self._SconsDependency] )
         self._EnvFile.AppendPythonPath( os.path.join( self._DependencyPaths[self._RootDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._RootDependency], "lib" ) )
-        self._EnvFile.AddRat( self.GetInstallPath() )
+        self._EnvFile.AddFinalSource( self.GetInstallPath(), "env" )
         self._WriteEnvFile()
         self._EnvFile.WriteEnvFiles( PackageUtil.kInstallPath, self._Name )
         return

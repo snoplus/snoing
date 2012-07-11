@@ -36,7 +36,7 @@ class RATDev( Rat.Rat ):
         return
     def _WriteEnvFile( self ):
         """ Write the environment file for rat."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "env" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "env" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
@@ -49,15 +49,6 @@ class RATDev( Rat.Rat ):
         if self._DependencyPaths[self._BzipDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
             self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
             self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._BzipDependency], "lib" ) )
-            # Must patch the rat config/EXTERNALS file.
-            externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "r" )
-            text = externalsFile.read()
-            externalsFile.close()
-            text = text.replace( "ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']" )
-            print text
-            externalsFile = open( os.path.join( self.GetInstallPath(), "config/EXTERNAL.scons" ), "w" )
-            externalsFile.write( text )
-            externalsFile.close()
         return
 
 class RAT4( RatReleases.RatReleasePost3 ):

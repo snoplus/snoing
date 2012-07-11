@@ -28,7 +28,7 @@ class RatReleasePost3( Rat.RatRelease ):
                      self._ZeromqDependency, self._XercescDependency ]
     def _WriteEnvFile( self ):
         """ Diff geant env file and no need to patch rat."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "/bin/geant4" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "/bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
@@ -64,7 +64,7 @@ class RatReleasePre4( Rat.RatRelease ):
                      self._ZeromqDependency, self._XercescDependency ]
     def _WriteEnvFile( self ):
         """ Add the extra info to the env file."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "env" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "env" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
@@ -103,7 +103,7 @@ class RatReleasePre3( Rat.RatRelease ):
         return [ self._GeantDependency, self._ClhepDependency, self._CurlDependency, self._BzipDependency ]
     def _WriteEnvFile( self ):
         """ Add the extra info to the env file."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "env" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "env" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         if self._DependencyPaths[self._CurlDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
             self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._CurlDependency], "bin" ) )
@@ -134,6 +134,6 @@ class RatReleasePre2( Rat.RatRelease ):
         return [ self._GeantDependency, self._ClhepDependency ]
     def _WriteEnvFile( self ):
         """ Add the extra info to the env file."""
-        self._EnvFile.AddGeant( self._DependencyPaths[self._GeantDependency], "env" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "env" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         return

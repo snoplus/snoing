@@ -1,24 +1,32 @@
 #!/usr/bin/env python
 # Author P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : First revision
-# Produces the RAT environment files both bash and csh
+# Produces a generic environment file
 import os
-import PackageUtil
 
 class EnvFileBuilder( object ):
     """ Builds the env file for rat."""
-    def __init__( self ):
+    def __init__( self, comment = None ):
         """ Initialise the env file text."""
-        self._BashEnv = "#!/bin/bash\n#ratcage environment\n"
-        self._CshEnv = "#!/bin/csh\n#ratcage environment\n"
+        self._BashEnv = "#!/bin/bash\n"
+        self._CshEnv = "#!/bin/csh\n"
+        if comment:
+            self._BashEnv += comment
+            self._CshEnv += comment
         self._LibraryPath = ""
         self._Path = ""
         self._PythonPath = ""
-        self._RatEnv = ""
+        self._BashFinal = ""
+        self._CshFinal = ""
         return
-    def AddGeant( self, envFilePath, envFileName ):
-        """ Add the geant environment file path to the env script."""
+    def AddSource( self, envFilePath, envFileName ):
+        """ Add a source command."""
         self._BashEnv += "source %s/%s.sh\n" % ( envFilePath, envFileName )
         self._CshEnv += "source %s/%s.csh\n" % ( envFilePath, envFileName )
+        return
+    def AddFinalSource( self, envFilePath, envFileName ):
+        """ Add a source command to the end of the file."""
+        self._BaseFinal += "source %s/%s.sh\n" % ( envFilePath, envFileName )
+        self._CshFinal += "source %s/%s.csh\n" % ( envFilePath, envFileName )
         return
     def AddEnvironment( self, key, value ):
         """ Add an environment variable."""
@@ -37,10 +45,6 @@ class EnvFileBuilder( object ):
         """ Append a path to the PYTHPNPATH."""
         self._PythonPath += "%s:" % path
         return
-    def AddRat( self, path ):
-        """ Set the path to the env file, almost always RATROOT."""
-        self._RatEnv = path
-        return
     def WriteEnvFiles( self, directory, name ):
         """ Write the env files to the directory."""
         # First add the Path
@@ -55,8 +59,8 @@ class EnvFileBuilder( object ):
         self._CshEnv += "if(${?LD_LIBRARY_PATH}) then\nsetenv LD_LIBRARY_PATH %s${LD_LIBRARY_PATH}\nelse\nsetenv LD_LIBRARY_PATH %s\n" % ( self._LibraryPath, self._LibraryPath )
         self._CshEnv += "if(${?DYLD_LIBRARY_PATH}) then\nsetenv DYLD_LIBRARY_PATH %s${DYLD_LIBRARY_PATH}\nelse\nsetenv DYLD_LIBRARY_PATH %s\n" % (self._LibraryPath, self._LibraryPath )
         # Finnally add the rat
-        self._BashEnv += "source %s/env.sh" % self._RatEnv
-        self._CshEnv += "source %s/env.csh" % self._RatEnv
+        self._BashEnv += self._BashFinal
+        self._CshEnv += self._CshFinal
         # Now write the files
         bashFile = open( os.path.join( directory, "env_%s.sh" % name ), "w" )
         bashFile.write( self._BashEnv )

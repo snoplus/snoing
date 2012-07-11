@@ -52,6 +52,7 @@ if __name__ == "__main__":
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
     parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
+    parser.add_option( "-r", action="store_true", dest="remove", help="Remove the package instead?" )
     parser.add_option( "-d", action="store_true", dest="dependency", help="Dependencies only?" )
     parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
     parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
@@ -86,6 +87,12 @@ if __name__ == "__main__":
             Log.Header( "Installing %s package dependencies" % args[0] )
             try:
                 installer.InstallPackageDependencies( args[0] )
+            except:
+                installer.PrintErrorMessage()
+        elif options.remove == True:
+            Log.Header( "Removing %s package" % args[0] )
+            try:
+                installer.RemovePackage( args[0] )
             except:
                 installer.PrintErrorMessage()
         else: 

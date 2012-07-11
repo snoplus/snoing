@@ -8,6 +8,7 @@ import inspect
 import Log
 import PackageException
 import PackageUtil
+import shutil
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
@@ -61,14 +62,14 @@ class PackageManager( object ):
             # Nothing else to do thus return...
             Log.Error( "Package %s must be installed on this system, snoing cannot do this." % package.GetName() )
             Log.Detail( package.GetHelpText() )
-            raise
+            raise Exception()
         # Abort if package is a graphical only package and this is not a graphica install
         # This should be done BEFORE we install the dependencies, not after.
         # Very annoying if we go through the trouble of installing the dependencies and then realize that this is not a graphical install
         if isinstance( package, LocalPackage.LocalPackage ):
             if package.IsGraphicalOnly() and not PackageUtil.kGraphical:
                 Log.Error( "Package %s can only be installed in a graphical install." % package.GetName() )
-                raise
+                raise Exception()
         # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
         dependencyPaths = {}
         for dependency in package.GetDependencies(): 
@@ -85,8 +86,28 @@ class PackageManager( object ):
         package.CheckState()
         if not package.IsInstalled():
             Log.Error( "Package: %s, errored during install." % package.GetName() )
-            raise
+            raise Exception()
         Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
         Log.Result( "Package: %s installed." % package.GetName() )
         return
-    
+    def RemovePackage( self, packageName ):
+        """ Remove the package called packageName."""
+        if not self.CheckPackage( packageName ):
+            return
+        package = self._Packages[packageName]
+        if isinstance( package, SystemPackage.SystemPackage ): # Don't try to delete system packages
+            return
+        # First check no other package is dependent on it
+        for testPackageName in self.PackageNameGenerator():
+            testPackage = self._Packages[testPackageName]
+            if isinstance( testPackage, SystemPackage.SystemPackage ): # Ignore system packages
+                continue
+            if testPackage.IsInstalled():
+                if packageName in testPackage.GetDependencies():
+                    Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackageName ) )
+                    raise Exception()
+        # Now delete the package
+        Log.Info( "Deleted %s" % packageName )
+        shutil.rmtree( package.GetInstallPath() )
+        return
+                

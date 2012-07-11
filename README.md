@@ -15,24 +15,9 @@ This has the following options:
       -c CACHEPATH    Cache path.
       -i INSTALLPATH  Install path.
       -g              Graphical install?
+      -q              Query Package Status?
+      -r              Remove the package instead?
+      -d              Dependencies only?
+      -v              Verbose Install?
       -u USERNAME     Github username (for rat releases)
       -p PASSWORD     Github password (for rat releases)
-
-### Adding packages
-If it is a new version of a package see first the packages folder. 
-If it is a completely new package note that installs that split the source and the install should preferably leave the install in the install path + package name folder.## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py
-## SNOING
-This is a snoing install directory. Please alter only with snoing at ./snoing.py

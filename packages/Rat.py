@@ -53,7 +53,7 @@ class Rat( LocalPackage.LocalPackage ):
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._RootDependency], "lib" ) )
         self._EnvFile.AddFinalSource( self.GetInstallPath(), "env" )
         self._WriteEnvFile()
-        self._EnvFile.WriteEnvFiles( PackageUtil.kInstallPath, "env-%s" % self._Name )
+        self._EnvFile.WriteEnvFiles( PackageUtil.kInstallPath, "env_%s" % self._Name )
         return
     # Functions that must be implemented by sub classes
     def _WriteEnvFile( self ):

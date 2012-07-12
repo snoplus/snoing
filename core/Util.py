@@ -43,7 +43,13 @@ def CheckSystem():
     if sys == 'Darwin':
         PackageUtil.kMac = True
         os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
-        os.environ["LIBRARY_PATH"] = "/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
-        os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include"
+        if "LIBRARY_PATH" in os.environ:
+            os.environ["LIBRARY_PATH"] = "/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
+        else:
+            os.environ["LIBRARY_PATH"] = "/usr/X11/lib"
+        if "CPLUS_INCLUDE_PATH" in os.environ:
+            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_DIR"]
+        else:
+            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include"
     else:
         PackageUtil.kMac = False

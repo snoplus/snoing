@@ -8,6 +8,7 @@ import PackageUtil
 import Rat
 import Log
 import Util
+import sys
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -25,7 +26,8 @@ class snoing( PackageManager.PackageManager ):
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
         graphical = Util.DeSerialise( snoingSettingsPath )
         if graphical is not None and graphical != options.graphical:
-            raise Exception( "Install path chosen is marked as graphical = %s" % (not options.graphical ) )
+            Log.Error( "Install path chosen is marked as graphical = %s, please add or remove the '-g' option." % (not options.graphical ) )
+            sys.exit(1)
         PackageUtil.kGraphical = options.graphical
         Util.Serialise( snoingSettingsPath, options.graphical )
         # First import all register all packages in the versions folder

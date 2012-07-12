@@ -5,6 +5,7 @@ import os
 import pickle
 import PackageUtil
 import sys
+import Log
 
 def BuildDirectory( path ):
     """ Change the path into a global path and ensure the path exists."""
@@ -34,14 +35,19 @@ def DeSerialise( path ):
 
 def CheckSystem():
     """ Check for G4 in the environment and check if mac."""
+    # Check the environment is clean
     env = os.environ
     for envbit in env: #check clean environment
         inenv = env[envbit].find('G4')
         if inenv!=-1:
-            print 'G4... environment variables are present, please run in a clean environment.'
+            Log.Error( "G4... environment variables are present, please run in a clean environment." )
             sys.exit(1)
-    sys =  os.uname()[0]
-    if sys == 'Darwin':
+    # Check g++ is installed (python and g++ are the only prerequisites)
+    if PackageUtil.FindLibrary( "g++" ) is None:
+        Log.Error( "g++ must be installed for snoing to work, try installing build essentials or xcode." )
+        sys.exit(1)
+    system =  os.uname()[0]
+    if system == 'Darwin':
         PackageUtil.kMac = True
         os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
         if "LIBRARY_PATH" in os.environ:

@@ -4,6 +4,7 @@
 import os
 import pickle
 import PackageUtil
+import sys
 
 def BuildDirectory( path ):
     """ Change the path into a global path and ensure the path exists."""

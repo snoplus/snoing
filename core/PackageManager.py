@@ -63,9 +63,7 @@ class PackageManager( object ):
             Log.Error( "Package %s must be installed on this system, snoing cannot do this." % package.GetName() )
             Log.Detail( package.GetHelpText() )
             raise Exception()
-        # Abort if package is a graphical only package and this is not a graphica install
-        # This should be done BEFORE we install the dependencies, not after.
-        # Very annoying if we go through the trouble of installing the dependencies and then realize that this is not a graphical install
+        # Abort if package is a graphical only package and this is not a graphical install
         if isinstance( package, LocalPackage.LocalPackage ):
             if package.IsGraphicalOnly() and not PackageUtil.kGraphical:
                 Log.Error( "Package %s can only be installed in a graphical install." % package.GetName() )

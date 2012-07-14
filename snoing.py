@@ -32,10 +32,10 @@ class snoing( PackageManager.PackageManager ):
         Util.Serialise( snoingSettingsPath, options.graphical )
         # First import all register all packages in the versions folder
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "versions" ) )
-        # Now set the username password for the rat packages
+        # Now set the username or token for the rat packages
         for package in self._Packages:
             if isinstance( self._Packages[package], Rat.RatRelease ):
-                self._Packages[package].SetUsernamePassword( options.username, options.password )
+                self._Packages[package].SetGithubAuthentication( options.username, options.token )
     def PrintErrorMessage( self ):
         """Print a standard error message if snoing fails."""
         Log.Error( "Snoing has failed, please consult the above error messages or the snoing.log file." )
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     defaults = Util.DeSerialise( defaultFilePath )
     if defaults is None: # No defaults
         defaults = { "cache" : "cache", "install" : "install" }
-    parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 1.0" )
+    parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 0.2" )
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default=defaults["cache"] )
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
     parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
@@ -56,8 +56,10 @@ if __name__ == "__main__":
     parser.add_option( "-r", action="store_true", dest="remove", help="Remove the package instead?" )
     parser.add_option( "-d", action="store_true", dest="dependency", help="Dependencies only?" )
     parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
-    parser.add_option( "-u", type="string", dest="username", help="Github username (for rat releases)" )
-    parser.add_option( "-p", type="string", dest="password", help="Github password (for rat releases)" )
+    parserGroup = optparse.OptionGroup( parser, "Github authentication Options", "Supply a username or a github token, not both." )
+    parserGroup.add_option( "-u", type="string", dest="username", help="Github username" )
+    parserGroup.add_option( "-t", type="string", dest="token", help="Github token" )
+    parser.add_option_group( parserGroup )
     (options, args) = parser.parse_args()
     # Save the defaults to file
     defaults["cache"] = options.cachePath

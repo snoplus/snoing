@@ -17,19 +17,22 @@ kGraphical = False
 kVerbose = False
 kMac = False
 
-def DownloadFile( url, username = None, password = None, fileName = "" ): # Never hard code a password!
+def DownloadFile( url, username = None, password = None, token = None, fileName = "" ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath. Optional fileName parameter to manually name the file which gets stored in the cachePath"""
     global kCachePath, kInstallPath, kVerbose
     if( fileName == "" ): # OW 07/06/2012
         fileName = url.split('/')[-1]
     tempFile = os.path.join( kCachePath, "download-temp" )
     urlRequest = urllib2.Request( url )
-    if username != None: # Add simple HTTP authorization
+    if username != None: # Add simple HTTP authentication
         b64string = base64.encodestring( '%s:%s' % ( username, password ) ).replace( '\n', '' )
         urlRequest.add_header( "Authorization", "Basic %s" % b64string )
+    elif token != None: # Add OAuth authentication
+        urlRequest.add_header( "Authorization", "token %s" % token )
     try:
         remoteFile = urllib2.urlopen( urlRequest )
-    except urllib2.URLError: # Server not available
+    except urllib2.URLError, e: # Server not available
+        print e
         raise PackageException.PackageException( "Server not available." )
     localFile = open( tempFile, 'wb')
     try:

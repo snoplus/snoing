@@ -76,21 +76,25 @@ class RatRelease( Rat ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
-        if self._Username is None:
-            self._Username = raw_input( "Github username:" )
-        if self._Password is None:
+        if self._Username is not None:
             print "Github password:"
-            self._Password = getpass.getpass()
-        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, \
-                                                            self._Username, self._Password )
+            password = getpass.getpass()
+            self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, \
+                                                                self._Username, self._Password )
+        elif self._Token is not None:
+            self._DownloadPipe += PackageUtil.DownloadFile( "https://api.github.com/repos/snoplus/rat/tarball/" + self._TarName, \
+                                                                token = self._Token )
+        else:
+            Log.Error( "No Authentication method supplied." )
+            raise Exception()
         return
     def _Install( self ):
         """ Release installs must untar first."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 ) # Strip the first directory
         super( RatRelease, self )._Install()
         return
-    def SetUsernamePassword( self, username, password ):
-        """ Set the username password combination required for github downloads."""
+    def SetGithubAuthentication( self, username, token ):
+        """ Set the username or token  required for github downloads."""
         self._Username = username
-        self._Password = password
+        self._Token = token
         return 

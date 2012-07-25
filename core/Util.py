@@ -10,9 +10,13 @@ import Log
 def BuildDirectory( path ):
     """ Change the path into a global path and ensure the path exists."""
     globalPath = path
+    print  '1',globalPath
     if path[0] != '/': # Global path
+        print 'join'
         globalPath = os.path.join( os.getcwd(), path )
+    print  '2',globalPath
     if not os.path.exists( globalPath ):
+        print 'makedirs'
         os.makedirs( globalPath )
     return globalPath
 

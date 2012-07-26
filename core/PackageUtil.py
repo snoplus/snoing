@@ -95,7 +95,7 @@ def ExecuteComplexCommand( command ):
 
 def UnTarFile( tarFileName, targetPath, strip = 0 ):
     """ Untar the file tarFile to targetPath take off the the first strip folders."""
-    global kCachePath, kInstallPath
+    global kCachePath, kInstallPath, kVerbose
     if strip == 0: # Can untar directly into target
         tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
         tarFile.extractall( targetPath )

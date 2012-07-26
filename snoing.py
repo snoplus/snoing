@@ -22,6 +22,7 @@ class snoing( PackageManager.PackageManager ):
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
+        Log.Header( "Caching to %s, installing to %s" % ( PackageUtil.kCachePath, PackageUtil.kInstallPath ) )
         # Now check the graphical option is compatible with install directory
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
         graphical = Util.DeSerialise( snoingSettingsPath )
@@ -82,32 +83,36 @@ if __name__ == "__main__":
     installer.Authenticate( options )
 
     # Default action is to assume installing, check for other actions
-    if options.all: # Wish to act on all packages
-        if options.query: # Wish to query all packages
-            installer.CheckAll()
-        elif options.remove: # Wish to remove all packages
-            shutil.rmtree( PackageUtil.kInstallPath )
-        elif options.dependency: # Doesn't make sense
-            Log.warn( "Input options don't make sense." )
-            installer.PrintErrorMessage()
-        else: # Wish to install all
-            installer.InstallAll()
-    else: # Only act on one package
-        if options.token is None: # Default local package
-            packageName = "rat-dev"
-        else: # Default grid package
-            packageName = "rat-3"
-        if len(args) != 0:
-            packageName = args[0]
-        if options.query: # Wish to query the package
-            Log.Info( "Checking package %s install status" % packageName )
-            if installer.CheckPackage( packageName ):
-                Log.Result( "Installed" )
-            else:
-                Log.Warn( "Not Installed" )
-        elif options.remove: # Wish to remove the package
-            installer.RemovePackage( packageName, options.forceRemove )
-        elif options.dependency: # Wish to install only the dependencies
-            installer.InstallDependencies( packageName )
-        else: # Wish to install the package
-            installer.InstallPackage( packageName )
+    try:
+        if options.all: # Wish to act on all packages
+            if options.query: # Wish to query all packages
+                installer.CheckAll()
+            elif options.remove: # Wish to remove all packages
+                shutil.rmtree( PackageUtil.kInstallPath )
+            elif options.dependency: # Doesn't make sense
+                Log.warn( "Input options don't make sense." )
+                installer.PrintErrorMessage()
+            else: # Wish to install all
+                installer.InstallAll()
+        else: # Only act on one package
+            if options.token is None: # Default local package
+                packageName = "rat-dev"
+            else: # Default grid package
+                packageName = "rat-3"
+            if len(args) != 0:
+                packageName = args[0]
+            if options.query: # Wish to query the package
+                Log.Info( "Checking package %s install status" % packageName )
+                if installer.CheckPackage( packageName ):
+                    Log.Result( "Installed" )
+                else:
+                    Log.Warn( "Not Installed" )
+            elif options.remove or options.forceRemove: # Wish to remove the package
+                installer.RemovePackage( packageName, options.forceRemove )
+            elif options.dependency: # Wish to install only the dependencies
+                installer.InstallDependencies( packageName )
+            else: # Wish to install the package
+                installer.InstallPackage( packageName )
+    except Exception, e:
+        print e
+        installer.PrintErrorMessage()

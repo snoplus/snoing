@@ -43,7 +43,7 @@ class PackageManager( object ):
     # Helpful ALL functions
     def CheckAll( self ):
         """ Check all packages for install state."""
-        for packageName, package in self._Packages.iteritems:
+        for packageName, package in self._Packages.iteritems():
             Log.Info( "Checking package %s install status" % packageName )
             if self.CheckPackage( packageName ):
                 Log.Result( "Installed" )
@@ -52,7 +52,7 @@ class PackageManager( object ):
         return
     def InstallAll( self ):
         """ Install all the packages."""
-        for packageName, package in self._Packages.iteritems:
+        for packageName, package in self._Packages.iteritems():
             self.InstallPackage( packageName )
         return
     # Now the package installers
@@ -60,12 +60,12 @@ class PackageManager( object ):
         """ Install the package named packageName. Must raise if package is not installed!"""
         # First check if installed
         if self.CheckPackage( packageName ):
-            return packageGetInstallPath()
+            return package.GetInstallPath()
         package = self._Packages[packageName]
         # Now check if it can be installed
         if isinstance( package, LocalPackage.LocalPackage ):
             # First install the dependencies
-            dependencies = self._InstallDependencies()
+            dependencies = self._InstallDependencies( package )
             # Now install the package
             package.SetDependencyPaths( dependencies )
             Log.Info( "Installing %s" % package.GetName() )
@@ -96,7 +96,7 @@ class PackageManager( object ):
     def _InstallDependencies( self, package ):
         """ Install the dependencies (if required)."""
         dependencyDict = {} # Return dictionary of dependencies
-        for depedency in package.GetDependencies():
+        for dependency in package.GetDependencies():
             if isinstance( dependency, types.ListType ): # Multiple optional dependencies
                 for optionalDependency in dependency:
                     if self.CheckPackage( optionalDependency ): # Great found one!
@@ -121,16 +121,16 @@ class PackageManager( object ):
         package = self._Packages[packageName]
         if not force: # Check nothing depends on it, loop over packages
             for testName, testPackage in self._Packages.iteritems():
-                if testPackage.IsInstalled(): # Check if package to be deleted is a dependecy of testPackage
-                    for depedency in testPackage.GetDependencies():
+                if testPackage.IsInstalled() and not isinstance( testPackage, SystemPackage.SystemPackage ): # Check if package to be deleted is a dependecy of testPackage
+                    for dependency in testPackage.GetDependencies():
                         if isinstance( dependency, types.ListType ):
                             if packageName in dependency:
-                                LogError( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
+                                Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
                                 raise Exception()
                         elif dependency == packageName:
-                            LogError( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
+                            Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
                             raise Exception()
         # If get here then package can be deleted
-        Log.Info( "Deleted %s" % packageName )
         shutil.rmtree( package.GetInstallPath() )
+        Log.Result( "Deleted %s" % packageName )
         return

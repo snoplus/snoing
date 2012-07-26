@@ -17,7 +17,7 @@ class Root( LocalPackage.LocalPackage ):
     # Functions to override
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", ["python-dev", "python-dev-2.4" ]
+        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", ["python-dev", "python-dev-2.4"] ]
     def _IsDownloaded( self ):
         """ Check the tar ball has been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )

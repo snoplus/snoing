@@ -170,38 +170,6 @@ def TestConfigLibrary( configCommand, header = None ):
     includes = ExecuteSimpleCommand( configCommand, ["--includes"], None, None ).strip('\n').split(' ')
     return _TestLibrary( header, libs + includes )
 
-def TestConfigRPM( libName ):
-    """ Check if an RPM exists (used by grid nodes and many SL based clusters
-    to install SW)."""
-    global kCachePath, kInstallPath
-    print '-------rpm -qa-------'
-    command = "rpm -qa " + libName
-    process = subprocess.Popen( args = command, shell = True, stdout=subprocess.PIPE)
-    x, y = process.communicate()
-    print 'out',x
-    print 'err',y
-    print '-------rpm -qa | grep-------'
-    command = "rpm -qa | grep " + libName
-    process = subprocess.Popen( args = command, shell = True, stdout=subprocess.PIPE)
-    x, y = process.communicate()
-    print 'out',x
-    print 'err',y
-    print '-------rpm -q-------'
-    command = "rpm -q " + libName
-    process = subprocess.Popen( args = command, shell = True, stdout=subprocess.PIPE)
-    x, y = process.communicate()
-    print 'out',x
-    print 'err',y
-    location = x.strip()
-    if process.returncode==0:
-        #process returns OK (otherwise likely on a system with no RPM)
-        if location.find(libName)==0:
-            return True
-        else:
-            return False
-    else:
-        return False
-
 def LibraryExists( path, libName ):
     """ Check if a library file exists, will check .a, .so and .dylib extensions."""
     return os.path.exists( os.path.join( path, libName + ".a" ) ) or \

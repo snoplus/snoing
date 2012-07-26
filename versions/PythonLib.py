@@ -21,13 +21,6 @@ class PythonDev( SystemPackage.SystemPackage ):
         # First check for python config
         if PackageUtil.FindLibrary( "python-config" ) is not None:
             # Now can test for linking
-            print 'check config'
             installed, self._CheckPipe = PackageUtil.TestConfigLibrary( "python-config", "Python.h")
-            print 'python:',installed
-            self._Installed = installed
-        elif PackageUtil.FindLibrary( "rpm" ) is not None:
-            print 'check rpm'
-            installed = PackageUtil.TestConfigRPM( "python-devel" )
-            print 'python:',installed
             self._Installed = installed
         return

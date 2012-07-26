@@ -39,7 +39,7 @@ class snoing( PackageManager.PackageManager ):
     def PrintErrorMessage( self ):
         """Print a standard error message if snoing fails."""
         Log.Error( "Snoing has failed, please consult the above error messages or the snoing.log file." )
-        sys.exit(1)
+        return
 
 if __name__ == "__main__":
     import optparse

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
+# Author P G Jones - 25/07/2012 <p.g.jones@qmul.ac.uk> : Refactor for multiple dependency versions
 # Base class package manager
 import SystemPackage
 import LocalPackage
@@ -9,16 +10,20 @@ import Log
 import PackageException
 import PackageUtil
 import shutil
+import types
 
 class PackageManager( object ):
     """ Manages a dictionary of packages that the software can install."""
     def __init__( self ):
-        """ Initialise the package manager."""
+        """ Initialise with an empty dict."""
         self._Packages = {}
         return
-    def PackageNameGenerator( self ):
-        for packageName in self._Packages:
-            yield packageName
+    def RegisterPackage( self, package ):
+        """ Register the package."""
+        Log.Info( "Registering package %s" % package.GetName() )
+        package.CheckState()
+        self._Packages[package.GetName()] = package
+        return
     def RegisterPackagesInDirectory( self, folderPath ):
         """ Register all the packages in the folderPath. """
         for module in os.listdir( folderPath ):
@@ -29,83 +34,103 @@ class PackageManager( object ):
                 if inspect.isclass( obj ):
                     self.RegisterPackage( obj() )
         return
-    def RegisterPackage( self, package ):
-        """ Add the package to the list of known packages."""
-        Log.Info( "Registering package %s" % package.GetName() )
-        package.CheckState()
-        self._Packages[package.GetName()] = package
-        return
     def CheckPackage( self, packageName ):
-        """ Check if the package called packageName is installed."""
+        """ Check if a package is installed, minimal logging. Returns True or False."""
         if not packageName in self._Packages.keys():
             Log.Error( "Package %s not found" % packageName )
-        package = self._Packages[packageName]
-        Log.Info( "Checking package %s install status" % packageName )
-        if package.IsInstalled():
-            Log.Result( "Installed" )
-            return True
-        Log.Warn( "Not Installed" )
-        return False
-    def InstallPackageDependencies( self, packageName ):
-        """ Install the package dependencies and not the package."""
-        package = self._Packages[packageName]
-        for dependency in package.GetDependencies():
-            self.InstallPackage( dependency )
+            raise Exception()
+        return self._Packages[packageName].IsInstalled()
+    # Helpful ALL functions
+    def CheckAll( self ):
+        """ Check all packages for install state."""
+        for packageName, package in self._Packages.iteritems:
+            Log.Info( "Checking package %s install status" % packageName )
+            if self.CheckPackage( packageName ):
+                Log.Result( "Installed" )
+            else:
+                Log.Warn( "Not Installed" )
         return
+    def InstallAll( self ):
+        """ Install all the packages."""
+        for packageName, package in self._Packages.iteritems:
+            self.InstallPackage( packageName )
+        return
+    # Now the package installers
     def InstallPackage( self, packageName ):
-        """ Install the package by package name."""
+        """ Install the package named packageName. Must raise if package is not installed!"""
+        # First check if installed
         if self.CheckPackage( packageName ):
-            return
+            return packageGetInstallPath()
         package = self._Packages[packageName]
-        # If here then not installed :(
-        if isinstance( package, SystemPackage.SystemPackage ):
-            # Nothing else to do thus return...
-            Log.Error( "Package %s must be installed on this system, snoing cannot do this." % package.GetName() )
+        # Now check if it can be installed
+        if isinstance( package, LocalPackage.LocalPackage ):
+            # First install the dependencies
+            dependencies = self._InstallDependencies()
+            # Now install the package
+            package.SetDependencyPaths( dependencies )
+            Log.Info( "Installing %s" % package.GetName() )
+            try:
+                package.Install()
+            except PackageException.PackageException, e:
+                Log.Warn( e.Pipe )
+            package.CheckState()
+            if not package.IsInstalled():
+                Log.Error( "Package: %s, errored during install." % package.GetName() )
+                raise Exception()
+            Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
+            Log.Result( "Package: %s installed." % package.GetName() )
+            return package.GetInstallPath()            
+        else: # Cannot be installed, raise error
+            Log.Error( "Package %s cannot be installed, please install manually." % packageName )
             Log.Detail( package.GetHelpText() )
             raise Exception()
-        # Abort if package is a graphical only package and this is not a graphical install
-        if isinstance( package, LocalPackage.LocalPackage ):
-            if package.IsGraphicalOnly() and not PackageUtil.kGraphical:
-                Log.Error( "Package %s can only be installed in a graphical install." % package.GetName() )
-                raise Exception()
-        # Not installed and a LocalPackage, thus can install. Start with dependencies, and build dependency dict
-        dependencyPaths = {}
-        for dependency in package.GetDependencies(): 
-            self.InstallPackage( dependency )
-            if not isinstance( self._Packages[dependency], SystemPackage.SystemPackage ):
-                dependencyPaths[dependency] = self._Packages[dependency].GetInstallPath()
-        # All dependencies installed, now we can install this package
-        package.SetDependencyPaths( dependencyPaths )
-        Log.Info( "Installing %s" % package.GetName() )
-        try:
-            package.Install()
-        except PackageException.PackageException, e:
-            Log.Warn( e.Pipe )
-        package.CheckState()
-        if not package.IsInstalled():
-            Log.Error( "Package: %s, errored during install." % package.GetName() )
+
+    def InstallDepedencies( self, packageName ):
+        """ Install the depedencies for named package."""
+        if not packageName in self._Packages.keys():
+            Log.Error( "Package %s not found" % packageName )
             raise Exception()
-        Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
-        Log.Result( "Package: %s installed." % package.GetName() )
+        self._InstallDependencies( self._Packages[packageName] )
         return
-    def RemovePackage( self, packageName ):
-        """ Remove the package called packageName."""
+
+    def _InstallDependencies( self, package ):
+        """ Install the dependencies (if required)."""
+        dependencyDict = {} # Return dictionary of dependencies
+        for depedency in package.GetDependencies():
+            if isinstance( dependency, types.ListType ): # Multiple optional dependencies
+                for optionalDependency in dependency:
+                    if self.CheckPackage( optionalDependency ): # Great found one!
+                        dependencyDict[optionalDependency] = self._Packages[optionalDependency].GetInstallPath()
+                        break
+                else: # No optional dependency is installed, thus install the first
+                    dependencyDict[dependency[0]] = self.InstallPackage( depdency[0] )
+            else: # Just a single dependency
+                if self.CheckPackage( dependency ):
+                    dependencyDict[dependency] = self._Packages[dependency].GetInstallPath()
+                else: # Must install it
+                    dependencyDict[dependency] = self.InstallPackage( depdency )
+        # Massive success, return dict of install paths
+        return dependencyDict
+
+    # Now the package uninstallers
+    def RemovePackage( self, packageName, force = False ):
+        """ Remove a package, force remove if necessary."""
         if not self.CheckPackage( packageName ):
-            return
+            Log.Error( "Package %s is not installed." % packageName )
+            raise Exception()
         package = self._Packages[packageName]
-        if isinstance( package, SystemPackage.SystemPackage ): # Don't try to delete system packages
-            return
-        # First check no other package is dependent on it
-        for testPackageName in self.PackageNameGenerator():
-            testPackage = self._Packages[testPackageName]
-            if isinstance( testPackage, SystemPackage.SystemPackage ): # Ignore system packages
-                continue
-            if testPackage.IsInstalled():
-                if packageName in testPackage.GetDependencies():
-                    Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackageName ) )
-                    raise Exception()
-        # Now delete the package
+        if not force: # Check nothing depends on it, loop over packages
+            for testName, testPackage in self._Packages.iteritems():
+                if testPackage.IsInstalled(): # Check if package to be deleted is a dependecy of testPackage
+                    for depedency in testPackage.GetDependencies():
+                        if isinstance( dependency, types.ListType ):
+                            if packageName in dependency:
+                                LogError( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
+                                raise Exception()
+                        elif dependency == packageName:
+                            LogError( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
+                            raise Exception()
+        # If get here then package can be deleted
         Log.Info( "Deleted %s" % packageName )
         shutil.rmtree( package.GetInstallPath() )
         return
-                

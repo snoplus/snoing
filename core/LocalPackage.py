@@ -32,9 +32,6 @@ class LocalPackage( Package.Package ):
         """ Set the dependency path dictionary."""
         self._DependencyPaths = paths
         return
-    def GetInstallPath( self ):
-        """ Return a local package install path."""
-        return self._InstallPath
     def Install( self ):
         """ Full install process."""
         self.CheckState()

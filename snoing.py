@@ -32,6 +32,9 @@ class snoing( PackageManager.PackageManager ):
         Util.Serialise( snoingSettingsPath, options.graphical )
         # First import all register all packages in the versions folder
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "versions" ) )
+        return
+    def Authenticate( self, options ):
+        """ Set the github authentication."""
         # Now set the username or token for the rat packages
         for package in self._Packages:
             if isinstance( self._Packages[package], Rat.RatRelease ):
@@ -39,6 +42,7 @@ class snoing( PackageManager.PackageManager ):
     def PrintErrorMessage( self ):
         """Print a standard error message if snoing fails."""
         Log.Error( "Snoing has failed, please consult the above error messages or the snoing.log file." )
+        sys.exit(1)
         return
 
 if __name__ == "__main__":
@@ -48,18 +52,24 @@ if __name__ == "__main__":
     defaults = Util.DeSerialise( defaultFilePath )
     if defaults is None: # No defaults
         defaults = { "cache" : "cache", "install" : "install" }
-    parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 0.2" )
+    parser = optparse.OptionParser( usage = "usage: %prog [options] [package]", version="%prog 0.3" )
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default=defaults["cache"] )
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
-    parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?" )
-    parser.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
-    parser.add_option( "-r", action="store_true", dest="remove", help="Remove the package instead?" )
-    parser.add_option( "-d", action="store_true", dest="dependency", help="Dependencies only?" )
     parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
-    parserGroup = optparse.OptionGroup( parser, "Github authentication Options", "Supply a username or a github token, not both." )
-    parserGroup.add_option( "-u", type="string", dest="username", help="Github username" )
-    parserGroup.add_option( "-t", type="string", dest="token", help="Github token" )
-    parser.add_option_group( parserGroup )
+    parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?", default=False )
+    parser.add_option( "-a", action="store_true", dest="all", help="All packages?" )
+
+    actionGroup = optparse.OptionGroup( parser, "Optional Actions", "Default snoing action is to install the specified package, which defaults to rat-dev." )
+    actionGroup.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
+    actionGroup.add_option( "-r", action="store_true", dest="remove", help="Remove the package?" )
+    actionGroup.add_option( "-R", action="store_true", dest="forceRemove", help=optparse.SUPPRESS_HELP, default=False )
+    actionGroup.add_option( "-d", action="store_true", dest="dependency", help="Install dependencies only?" )
+    parser.add_option_group( actionGroup )
+
+    githubGroup = optparse.OptionGroup( parser, "Github authentication Options", "Supply a username or a github token, not both." )
+    githubGroup.add_option( "-u", type="string", dest="username", help="Github username" )
+    githubGroup.add_option( "-t", type="string", dest="token", help="Github token" )
+    parser.add_option_group( githubGroup )
     (options, args) = parser.parse_args()
     # Save the defaults to file
     defaults["cache"] = options.cachePath
@@ -69,38 +79,35 @@ if __name__ == "__main__":
     Log.Header( "Registering Packages" )
     PackageUtil.kVerbose = options.verbose
     installer = snoing( options )
-    if len(args) == 0:
-        #Do something to all packages
-        if options.query == True:
-            Log.Header( "Checking all packages" )
-            for packageName in installer.PackageNameGenerator():
-                installer.CheckPackage( packageName )
-        else:
-            Log.Header( "Installing all packages" )
-            for packageName in installer.PackageNameGenerator():
-                try:
-                    installer.InstallPackage( packageName )
-                except:
-                    installer.PrintErrorMessage()
-    else:
-        if options.query == True:
-            Log.Header( "Checking %s package" % args[0] )
-            installer.CheckPackage( args[0] )
-        elif options.dependency == True:
-            Log.Header( "Installing %s package dependencies" % args[0] )
-            try:
-                installer.InstallPackageDependencies( args[0] )
-            except:
-                installer.PrintErrorMessage()
-        elif options.remove == True:
-            Log.Header( "Removing %s package" % args[0] )
-            try:
-                installer.RemovePackage( args[0] )
-            except:
-                installer.PrintErrorMessage()
-        else: 
-            Log.Header( "Installing %s package" % args[0] )
-            try:
-                installer.InstallPackage( args[0] )
-            except:
-                installer.PrintErrorMessage()
+    installer.Authenticate( options )
+
+    # Default action is to assume installing, check for other actions
+    if options.all: # Wish to act on all packages
+        if options.query: # Wish to query all packages
+            installer.CheckAll()
+        elif options.remove: # Wish to remove all packages
+            shutil.rmtree( PackageUtil.kInstallPath )
+        elif options.dependency: # Doesn't make sense
+            Log.warn( "Input options don't make sense." )
+            installer.PrintErrorMessage()
+        else: # Wish to install all
+            installer.InstallAll()
+    else: # Only act on one package
+        if options.token is None: # Default local package
+            packageName = "rat-dev"
+        else: # Default grid package
+            packageName = "rat-3"
+        if len(args) != 0:
+            packageName = args[0]
+        if options.query: # Wish to query the package
+            Log.Info( "Checking package %s install status" % packageName )
+            if installer.CheckPackage( packageName ):
+                Log.Result( "Installed" )
+            else:
+                Log.Warn( "Not Installed" )
+        elif options.remove: # Wish to remove the package
+            installer.RemovePackage( packageName, options.forceRemove )
+        elif options.dependency: # Wish to install only the dependencies
+            installer.InstallDependencies( packageName )
+        else: # Wish to install the package
+            installer.InstallPackage( packageName )

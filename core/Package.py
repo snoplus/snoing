@@ -11,6 +11,7 @@ class Package( object ):
         """ Construct the package with name"""
         self._Name = name
         self._CheckPipe = "" # Checking output
+        self._InstallPath = ""
         return
     def GetName( self ):
         """ Return the package name."""
@@ -22,3 +23,6 @@ class Package( object ):
     def IsInstalled( self ):
         """ Check and return if package is installed."""
         return False
+    def GetInstallPath( self ):
+        """ Return a local package install path."""
+        return self._InstallPath

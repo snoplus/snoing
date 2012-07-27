@@ -85,8 +85,8 @@ class PackageManager( object ):
             Log.Detail( package.GetHelpText() )
             raise Exception()
 
-    def InstallDepedencies( self, packageName ):
-        """ Install the depedencies for named package."""
+    def InstallDependencies( self, packageName ):
+        """ Install the dependencies for named package."""
         if not packageName in self._Packages.keys():
             Log.Error( "Package %s not found" % packageName )
             raise Exception()
@@ -103,12 +103,12 @@ class PackageManager( object ):
                         dependencyDict[optionalDependency] = self._Packages[optionalDependency].GetInstallPath()
                         break
                 else: # No optional dependency is installed, thus install the first
-                    dependencyDict[dependency[0]] = self.InstallPackage( depdency[0] )
+                    dependencyDict[dependency[0]] = self.InstallPackage( dependency[0] )
             else: # Just a single dependency
                 if self.CheckPackage( dependency ):
                     dependencyDict[dependency] = self._Packages[dependency].GetInstallPath()
                 else: # Must install it
-                    dependencyDict[dependency] = self.InstallPackage( depdency )
+                    dependencyDict[dependency] = self.InstallPackage( dependency )
         # Massive success, return dict of install paths
         return dependencyDict
 

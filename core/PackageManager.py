@@ -60,6 +60,7 @@ class PackageManager( object ):
         """ Install the package named packageName. Must raise if package is not installed!"""
         # First check if installed
         if self.CheckPackage( packageName ):
+            package = self._Packages[packageName]
             return package.GetInstallPath()
         package = self._Packages[packageName]
         # Now check if it can be installed

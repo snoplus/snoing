@@ -23,14 +23,23 @@ class snoing( PackageManager.PackageManager ):
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
         Log.Header( "Caching to %s, installing to %s" % ( PackageUtil.kCachePath, PackageUtil.kInstallPath ) )
-        # Now check the graphical option is compatible with install directory
+        # Now check the install options are compatible with install directory
+        if options.graphical == True and options.grid == True:
+            Log.Error( "Cannot be both graphical and grid." )
+            self.PrintErrorMessage()
         snoingSettingsPath = os.path.join( PackageUtil.kInstallPath, "snoing.pkl" )
-        graphical = Util.DeSerialise( snoingSettingsPath )
-        if graphical is not None and graphical != options.graphical:
-            Log.Error( "Install path chosen is marked as graphical = %s, please add or remove the '-g' option." % (not options.graphical ) )
-            sys.exit(1)
+        installModes = Util.DeSerialise( snoingSettingsPath )
+        # Set the file options if not set
+        if installModes is None: 
+            installModes = { "Graphical" : options.graphical, "Grid" : options.grid }
+            Util.Serialise( snoingSettingsPath, installModes )
+        # Check the options match
+        if installModes["Graphical"] != options.graphical or installModes["Grid"] != options.grid:
+            Log.Error( "Install mode for install directory does not match that specified. Install path is graphical %s and grid %s" \
+                           % ( options.graphical, options.grid ) )
+            self.PrintErrorMessage()
         PackageUtil.kGraphical = options.graphical
-        Util.Serialise( snoingSettingsPath, options.graphical )
+        PackageUtil.kGrid = options.grid
         # First import all register all packages in the versions folder
         self.RegisterPackagesInDirectory( os.path.join( os.path.dirname( __file__ ), "versions" ) )
         return
@@ -57,8 +66,12 @@ if __name__ == "__main__":
     parser.add_option( "-c", type="string", dest="cachePath", help="Cache path.", default=defaults["cache"] )
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
     parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
-    parser.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?", default=False )
     parser.add_option( "-a", action="store_true", dest="all", help="All packages?" )
+
+    installerGroup = optparse.OptionGroup( parser, "Optional Install modes", "Default snoing action is to install non graphically, i.e. no viewer. This can be changed with the -g option. If installing on the grid use the -x option." )
+    installerGroup.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?", default=False )
+    installerGroup.add_option( "-x", action="store_true", dest="grid", help="Grid install (NO X11)?", default=False )
+    parser.add_option_group( installerGroup )
 
     actionGroup = optparse.OptionGroup( parser, "Optional Actions", "Default snoing action is to install the specified package, which defaults to rat-dev." )
     actionGroup.add_option( "-q", action="store_true", dest="query", help="Query Package Status?" )
@@ -95,7 +108,7 @@ if __name__ == "__main__":
             else: # Wish to install all
                 installer.InstallAll()
         else: # Only act on one package
-            if options.token is None: # Default local package
+            if options.grid == False: # Default local package
                 packageName = "rat-dev"
             else: # Default grid package
                 packageName = "rat-3"

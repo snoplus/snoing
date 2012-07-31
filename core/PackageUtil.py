@@ -14,6 +14,7 @@ import sys
 kCachePath = ""
 kInstallPath = ""
 kGraphical = False
+kGrid = False
 kVerbose = False
 kMac = False
 

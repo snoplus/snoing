@@ -17,7 +17,10 @@ class Root( LocalPackage.LocalPackage ):
     # Functions to override
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
-        return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", ["python-dev", "python-dev-2.4"] ]
+        if PackageUtil.kGrid:
+            return [ "make", "g++", "gcc", "ld", "python", ["python-dev", "python-dev-2.4"] ]
+        else:
+            return [ "make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", ["python-dev", "python-dev-2.4"] ]
     def _IsDownloaded( self ):
         """ Check the tar ball has been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
@@ -34,6 +37,8 @@ class Root( LocalPackage.LocalPackage ):
         sys =  os.uname()[0]
         if sys == 'Darwin' and os.path.exists('/usr/X11/lib'):            
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--with-x11-libdir=/usr/X11/lib','--with-xft-libdir=/usr/X11/lib','--with-xext-libdir=/usr/X11/lib'], None, self.GetInstallPath() )
+        elif PackageUtil.kGrid:
+            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python', '-disable-castor', '--disable-rfio', '--disable-x11'], None, self.GetInstallPath() )
         else:
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python'], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( 'make', [], None, self.GetInstallPath() )

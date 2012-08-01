@@ -30,5 +30,5 @@ class Scons( LocalPackage.LocalPackage ):
     def _Install( self ):
         """ Mark the script as executable."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
-        os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0751 )
+        os.chmod( os.path.join( self.GetInstallPath(), "script/scons" ), 0755 )
         return

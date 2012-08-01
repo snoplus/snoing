@@ -107,7 +107,7 @@ class Geant4Pre5( LocalPackage.LocalPackage ):
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './Configure', [], None, self.GetInstallPath() )
         except Exception: # Geant4 configure always fails, it is annoying
             pass
-        if not os.path.join(self.GetInstallPath(),'env.sh'):
+        if not os.path.exists(os.path.join(self.GetInstallPath(),'env.sh')):
             shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.GetInstallPath(),'env.sh'))
             shutil.copy(os.path.join(self.GetInstallPath(),'.config/bin/'+sys+'/env.csh'),os.path.join(self.GetInstallPath(),'env.csh'))
         return 

@@ -3,6 +3,7 @@
 #        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency to RAT-dev and rat-3
 #        O Wasalski - 13/06/2012 <waslski@berkeley.edu> : Added bzip2 dependency to rat-dev
 #        P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : New releases usage.
+#        P G Jones - 02/08/2012 <p.g.jones@qmul.ac.uk> : Moved rat-dev to geant4.9.5 and updated rat-4
 # The RAT packages (versions)
 import Rat
 import RatReleases
@@ -14,7 +15,7 @@ class RATDev( Rat.Rat ):
     """ Rat dev install package."""
     def __init__( self ):
         """ Initiliase the rat dev package."""
-        self._GeantDependency = "geant4.9.4.p01"
+        self._GeantDependency = "geant4.9.5.p01"
         self._ClhepDependency = "clhep-2.1.0.1"
         self._CurlDependency = "curl-7.26.0"
         self._BzipDependency = "bzip2-1.0.6"
@@ -35,12 +36,15 @@ class RATDev( Rat.Rat ):
         self._DownloadPipe += PackageUtil.ExecuteSimpleCommand( "git", ["clone", "git@github.com:snoplus/rat.git",  self.GetInstallPath()], None, os.getcwd(), True ) # Force verbose
         return
     def _WriteEnvFile( self ):
-        """ Write the environment file for rat."""
-        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "env" )
+        """ Diff geant env file and no need to patch rat."""
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
         self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
+        self._EnvFile.AddEnvironment( "CLHEP_LIB_DIR", os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
+        self._EnvFile.AppendPath( os.path.join(self._DependencyPaths[self._GeantDependency], "bin" ) )
+        self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._AvalancheDependency], "lib/cpp" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ZeromqDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._XercescDependency], "lib" ) )
@@ -56,16 +60,7 @@ class RAT4( RatReleases.RatReleasePost3 ):
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
         super( RAT4, self ).__init__( "rat-4", "root-5.32.03", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
-                                          "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "ProposedPhysicsList" )
-        return
-    def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
-        if self._Username is None:
-            self._Username = raw_input( "Github username:" )
-        if self._Password is None:
-            print "Github password:"
-            self._Password = getpass.getpass()
-        self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/pgjones/rat/tarball/ProposedPhysicsList", self._Username, self._Password )
+                                          "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "rat-4" )
         return
 
 class RAT3( RatReleases.RatReleasePre4 ):

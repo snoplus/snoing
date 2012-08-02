@@ -10,7 +10,7 @@ import Rat
 class RatReleasePost3( Rat.RatRelease ):
     """ Base package installer for rat release 3."""
     def __init__( self, name,  rootDependency, sconsDependency, geantDependency, clhepDependency, curlDependency, bzipDependency, \
-                      avalancheDependency, zeromqDependency, xercescDependency, tarName ):
+                  avalancheDependency, zeromqDependency, xercescDependency, tarName ):
         """ Initlaise, take extra dependencies."""
         super( RatReleasePost3, self ).__init__( name,  rootDependency, sconsDependency, tarName )
         self._GeantDependency = geantDependency
@@ -25,14 +25,17 @@ class RatReleasePost3( Rat.RatRelease ):
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
         return [ self._GeantDependency, self._ClhepDependency, self._CurlDependency, self._BzipDependency, self._AvalancheDependency, \
-                     self._ZeromqDependency, self._XercescDependency ]
+                 self._ZeromqDependency, self._XercescDependency ]
     def _WriteEnvFile( self ):
         """ Diff geant env file and no need to patch rat."""
-        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "/bin/geant4" )
+        self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
         self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
+        self._EnvFile.AddEnvironment( "CLHEP_LIB_DIR", os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._GeantDependency], "bin" ) )
+        self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._AvalancheDependency], "lib/cpp" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ZeromqDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._XercescDependency], "lib" ) )

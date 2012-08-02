@@ -7,7 +7,7 @@ import LocalPackage
 import os
 import inspect
 import Log
-import PackageException
+import Exceptions
 import PackageUtil
 import shutil
 import types
@@ -38,7 +38,7 @@ class PackageManager( object ):
         """ Check if a package is installed, minimal logging. Returns True or False."""
         if not packageName in self._Packages.keys():
             Log.Error( "Package %s not found" % packageName )
-            raise Exception()
+            raise Exceptions.InstallException( "Package not found", packageName )
         return self._Packages[packageName].IsInstalled()
     # Helpful ALL functions
     def CheckAll( self ):
@@ -72,25 +72,25 @@ class PackageManager( object ):
             Log.Info( "Installing %s" % package.GetName() )
             try:
                 package.Install()
-            except PackageException.PackageException, e:
+            except Exceptions.PackageException, e:
                 Log.Warn( e.Pipe )
             package.CheckState()
             if not package.IsInstalled():
                 Log.Error( "Package: %s, errored during install." % package.GetName() )
-                raise Exception()
+                raise Exceptions.InstallException( "Failed to install", package.GetName() )
             Log.kLogFile.Write( "Package: %s installed.\n" % package.GetName() )
             Log.Result( "Package: %s installed." % package.GetName() )
             return package.GetInstallPath()            
         else: # Cannot be installed, raise error
             Log.Error( "Package %s cannot be installed, please install manually." % packageName )
             Log.Detail( package.GetHelpText() )
-            raise Exception()
+            raise Exceptions.InstallException( "Cannot install", packageName )
 
     def InstallDependencies( self, packageName ):
         """ Install the dependencies for named package."""
         if not packageName in self._Packages.keys():
             Log.Error( "Package %s not found" % packageName )
-            raise Exception()
+            raise Exceptions.InstallException( "Package not found", packageName )
         self._InstallDependencies( self._Packages[packageName] )
         return
 
@@ -118,7 +118,7 @@ class PackageManager( object ):
         """ Remove a package, force remove if necessary."""
         if not self.CheckPackage( packageName ):
             Log.Error( "Package %s is not installed." % packageName )
-            raise Exception()
+            raise Exceptions.InstallException( "Package not installed", packageName )
         package = self._Packages[packageName]
         if not force: # Check nothing depends on it, loop over packages
             for testName, testPackage in self._Packages.iteritems():
@@ -127,10 +127,10 @@ class PackageManager( object ):
                         if isinstance( dependency, types.ListType ):
                             if packageName in dependency:
                                 Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
-                                raise Exception()
+                                raise Exceptions.InstallException( "Cannot remove", packageName )
                         elif dependency == packageName:
                             Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
-                            raise Exception()
+                            raise Exceptions.InstallException( "Cannot remove", packageName )
         # If get here then package can be deleted
         shutil.rmtree( package.GetInstallPath() )
         Log.Result( "Deleted %s" % packageName )

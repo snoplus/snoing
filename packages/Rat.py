@@ -8,6 +8,7 @@ import os
 import PackageUtil
 import getpass
 import EnvFileBuilder
+import Log
 
 class Rat( LocalPackage.LocalPackage ):
     """ Base rat installer for rat."""
@@ -80,7 +81,7 @@ class RatRelease( Rat ):
             print "Github password:"
             password = getpass.getpass()
             self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/rat/tarball/" + self._TarName, \
-                                                                self._Username, self._Password )
+                                                                self._Username, password )
         elif self._Token is not None:
             self._DownloadPipe += PackageUtil.DownloadFile( "https://api.github.com/repos/snoplus/rat/tarball/" + self._TarName, \
                                                                 token = self._Token )

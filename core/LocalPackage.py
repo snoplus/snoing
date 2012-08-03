@@ -6,6 +6,7 @@ import Package
 import os
 import PackageUtil
 import Log
+import Exceptions
 
 class LocalPackage( Package.Package ):
     """ Base class for packages that can be installed."""
@@ -37,7 +38,7 @@ class LocalPackage( Package.Package ):
         self.CheckState()
         self.Download()
         if self._Graphical and not PackageUtil.kGraphical:
-            raise PackageException( "Install Error", "Must be a graphical install." )
+            raise Exceptions.PackageException( "Install Error", "Must be a graphical install." )
         if not self.IsInstalled():
             try:
                 self._Install()

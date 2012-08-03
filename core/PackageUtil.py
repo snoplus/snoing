@@ -2,7 +2,7 @@
 # Author P G Jones - 19/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 #        OW - 07/06/2012 <wasalski@berkeley.edu> : Added optional filename to DownloadedFile function
 # Package utility module, has many useful functions
-import PackageException
+import Exceptions
 import urllib2
 import subprocess
 import tarfile
@@ -34,7 +34,7 @@ def DownloadFile( url, username = None, password = None, token = None, fileName 
         remoteFile = urllib2.urlopen( urlRequest )
     except urllib2.URLError, e: # Server not available
         print e
-        raise PackageException.PackageException( "Server not available." )
+        raise Exceptions.PackageException( "Server not available." )
     localFile = open( tempFile, 'wb')
     try:
         downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )
@@ -54,7 +54,7 @@ def DownloadFile( url, username = None, password = None, token = None, fileName 
         os.remove( tempFile )
         raise
     if downloaded < downloadSize: # Something has gone wrong
-        raise PackageException.PackageException( "Download error", "$i" % downloadSize )
+        raise Exceptions.PackageException( "Download error", "$i" % downloadSize )
     os.rename( tempFile, os.path.join( kCachePath, fileName ) )
     return "Downloaded %i bytes\n" % downloadSize
     
@@ -80,7 +80,7 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     output += error
     logText = command + output
     if process.returncode != 0:
-        raise PackageException.PackageException( "Command Error", logText )
+        raise Exceptions.PackageException( "Command Error", logText )
     return output
 
 def ExecuteComplexCommand( command ):
@@ -157,7 +157,7 @@ def _TestLibrary( header, flags ):
         output = ExecuteSimpleCommand( "g++", [fileName] + flags, os.environ, kInstallPath )
         os.remove( fileName )
         return True, output
-    except PackageException.PackageException, e:
+    except Exceptions.PackageException, e:
         os.remove( fileName )
         return False, e.Pipe
 

@@ -9,6 +9,7 @@ import Rat
 import Log
 import Util
 import sys
+import Exceptions
 
 class snoing( PackageManager.PackageManager ):
     """ The package manager for sno+."""
@@ -126,6 +127,6 @@ if __name__ == "__main__":
                 installer.InstallDependencies( packageName )
             else: # Wish to install the package
                 installer.InstallPackage( packageName )
-    except Exception, e:
+    except Exceptions.InstallException, e:
         print e
         installer.PrintErrorMessage()

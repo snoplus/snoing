@@ -47,7 +47,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
                           "-DCLHEP_ROOT_DIR=%s" % self._DependencyPaths[self._ClhepDependency], \
                           "-DXERCESC_ROOT_DIR=%s" % self._DependencyPaths[self._XercesDependency], \
                           "-DGEANT4_INSTALL_DATA=ON", \
-                          "-DCLHEP_CONFIG_EXECUTABLE=%s" % os.path.join( self._DependencyPaths[self._ClhepDependency], "clhep-config" ) ]
+                          "-DCLHEP_CONFIG_EXECUTABLE=%s" % os.path.join( self._DependencyPaths[self._ClhepDependency], "bin/clhep-config" ) ]
         if PackageUtil.kGraphical:
             cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
         cmakeOpts.extend( [ sourcePath ] )

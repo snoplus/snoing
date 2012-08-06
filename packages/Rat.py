@@ -15,7 +15,7 @@ class Rat( LocalPackage.LocalPackage ):
     def __init__( self, name, rootDependency, sconsDependency ):
         """ All Rat installs have the same root and scons dependence."""
         super( Rat, self ).__init__( name, False ) # Not graphical only
-        self._EnvFile = EnvFileBuilder.EnvFileBuilder( "#ratcage environment\n" )
+        self._EnvFile = EnvFileBuilder.EnvFileBuilder( "#rat environment\n" )
         self._RootDependency = rootDependency
         self._SconsDependency = sconsDependency
         return

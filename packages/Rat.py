@@ -50,6 +50,7 @@ class Rat( LocalPackage.LocalPackage ):
         """ Adds general parts and then writes the env file."""
         self._EnvFile.AddEnvironment( "ROOTSYS", self._DependencyPaths[self._RootDependency] )
         self._EnvFile.AddEnvironment( "RAT_SCONS", self._DependencyPaths[self._SconsDependency] )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._RootDependency], "bin" ) )
         self._EnvFile.AppendPythonPath( os.path.join( self._DependencyPaths[self._RootDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._RootDependency], "lib" ) )
         self._EnvFile.AddFinalSource( self.GetInstallPath(), "env" )

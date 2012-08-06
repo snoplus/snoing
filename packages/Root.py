@@ -26,7 +26,10 @@ class Root( LocalPackage.LocalPackage ):
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )
     def _IsInstalled( self ):
         """ Check if root is installed."""
-        return os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) )
+        if PackageUtil.kGrid:
+            return os.path.exists( os.path.join( self.GetInstallPath(), "bin/root.exe" ) )#no X11, no bit/root
+        else:
+            return os.path.exists( os.path.join( self.GetInstallPath(), "bin/root" ) )
     def _Download( self ):
         """ Derived classes should override this to download the package. Return True on success."""
         self._DownloadPipe += PackageUtil.DownloadFile( "ftp://root.cern.ch/root/" + self._TarName )

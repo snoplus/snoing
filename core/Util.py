@@ -51,11 +51,11 @@ def CheckSystem():
         PackageUtil.kMac = True
         os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
         if "LIBRARY_PATH" in os.environ:
-            os.environ["LIBRARY_PATH"] = "/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
+            os.environ["LIBRARY_PATH"] = "/sw/lib:/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
         else:
-            os.environ["LIBRARY_PATH"] = "/usr/X11/lib"
+            os.environ["LIBRARY_PATH"] = "/sw/lib:/usr/X11/lib"
         if "CPLUS_INCLUDE_PATH" in os.environ:
-            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_DIR"]
+            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_PATH"]
         else:
             os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include"
     else:

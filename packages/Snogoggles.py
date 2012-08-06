@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # Author P G Jones - 24/06/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 27/07/2012 <p.g.jones@qmul.ac.uk> : Added snogoggles versions.
+# Author P G Jones - 27/07/2012 <p.g.jones@qmul.ac.uk> : Moved to env file builder.
 # The Snogoggles base classes
 import LocalPackage
 import os
 import PackageUtil
+import EnvFileBuilder
 
 class Snogoggles( LocalPackage.LocalPackage ):
     """ Base snogoggles installer for snogoggles."""
@@ -22,34 +24,56 @@ class Snogoggles( LocalPackage.LocalPackage ):
         self._ZeromqDependency = zmqDependency
         self._CurlDependency = curlDependency
         self._BzipDependency = bzipDependency
+        self._EnvFile = EnvFileBuilder.EnvFileBuilder( "#snogoggles environment\n" )
         return
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return ["python", "python-dev", self._SconsDependency, self._Geant4Dependency, self._RatDependency, self._RootDependency, \
-                    self._SfmlDependency, self._XercescDependency, self._AvalancheDependency, self._ZeromqDependency, \
-                    self._CurlDependency, self._BzipDependency]
+        dependencies = ["python", "python-dev", self._SconsDependency, self._Geant4Dependency, self._RatDependency, self._RootDependency, \
+                            self._SfmlDependency, self._XercescDependency, self._AvalancheDependency, self._ZeromqDependency, \
+                            self._CurlDependency, self._BzipDependency]
+        dependencies.extend( self._GetDependencies() )
+        return dependencies
     def _IsInstalled( self ):
         """ Check if installed."""
         return os.path.exists( os.path.join( self.GetInstallPath(), "bin", "snogoggles" ) )
     def _Install( self ):
         """ Install Snogoggles."""
-        env = os.environ
-        env['RAT_SCONS'] = self._DependencyPaths[self._SconsDependency]
-        env['GEANT4_BASE'] = self._DependencyPaths[self._Geant4Dependency]
-        env['RATROOT'] = self._DependencyPaths[self._RatDependency]
-        env['ROOTSYS'] = self._DependencyPaths[self._RootDependency]
-        env['SFMLROOT'] = self._DependencyPaths[self._SfmlDependency]
-        env['XERCESCROOT'] = self._DependencyPaths[self._XercescDependency]
-        env['AVALANCHEROOT'] = self._DependencyPaths[self._AvalancheDependency]
-        env['ZEROMQROOT'] = self._DependencyPaths[self._ZeromqDependency]
-        if self._DependencyPaths[self._CurlDependency] is not None:
-            env['PATH'] = os.path.join( self._DependencyPaths[self._CurlDependency], "bin" ) + ":" + env['PATH']
-        if self._DependencyPaths[self._BzipDependency] is not None:
-            env['BZIPROOT'] = self._DependencyPaths[self._BzipDependency]
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "./autoconfigure", [], env, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteComplexCommand( "cd %s\nsource env.sh\nscons" % self.GetInstallPath() )
+        self.WriteEnvFile()
+        self._InstallPipe += PackageUtil.ExecuteComplexCommand( "source env_%s.sh\ncd %s\nscons" % (self._Name, self.GetInstallPath() ) )
         return
+    def WriteEnvFile( self ):
+        """ Adds general parts and then writes the env file."""
+        self._EnvFile.AddEnvironment( "VIEWERROOT", self.GetInstallPath() )
+        self._EnvFile.AddEnvironment( "ROOTSYS", self._DependencyPaths[self._RootDependency] )
+        self._EnvFile.AddEnvironment( "SFMLROOT", self._DependencyPaths[self._SfmlDependency] )
+        self._EnvFile.AddEnvironment( "GLEWROOT", os.path.join( self._DependencyPaths[self._SfmlDependency], "extlibs" ) )
+        self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
+        self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
+        self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
+        if self._DependencyPaths[self._BzipDependency] is not None:
+            self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
+
+        if self._DependencyPaths[self._CurlDependency] is not None:
+            self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._CurlDependency], "bin" ) )
+        self._EnvFile.AppendPath( os.path.join( self.GetInstallPath(), "bin" ) )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._RootDependency], "bin" ) )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._SconsDependency], "script" ) )
+
+        self._EnvFile.AppendPythonPath( os.path.join( self.GetInstallPath(), "python" ) )
+
+        # Library path is always after the environment exports/setenvs
+        self._EnvFile.AppendLibraryPath( "$ROOTSYS/lib:$AVALANCHEROOT/lib/cpp:$ZEROMQROOT/lib:$SFMLROOT/lib:$XERCESCROOT/lib:$GLEWROOT/lib" )
+        self._WriteEnvFile()
+        self._EnvFile.WriteEnvFiles( PackageUtil.kInstallPath, "env_%s" % self._Name )
+        return
+    # Functions that must be implemented by sub classes
+    def _WriteEnvFile( self ):
+        """ Sub classes should add parts to the env file."""
+        pass
+    def _GetDependencies( self ):
+        """ Sub Classes should add dependencies."""
+        pass
 
 class SnogogglesRelease( Snogoggles ):
     """ Release versions of snogoggles."""
@@ -67,3 +91,19 @@ class SnogogglesRelease( Snogoggles ):
         """ Derived classes should override this to download the package. Return True on success."""
         self._DownloadPipe += PackageUtil.DownloadFile( "https://github.com/snoplus/snogoggles/tarball/" + self._TarName )
         return
+    def _Install( self ):
+        """ Untar the file first."""
+        self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
+        super( SnogogglesRelease, self )._Install()
+        return
+    def _WriteEnvFile( self ):
+        """ Previous releases had a special geant4 environment."""
+        self._EnvFile.AddSource( self._DependencyPaths[self._Geant4Dependency], "env" )
+        self._EnvFile.AddEnvironment( "RATROOT", self._DependencyPaths[self._RatDependency] )
+        self._EnvFile.AppendLibraryPath( "$G4LIB/$G4SYSTEM" )
+        self._EnvFile.AppendPythonPath( os.path.join( self._DependencyPaths[self._SconsDependency], "engine" ) )
+        self._EnvFile.AppendLibraryPath( "$RATROOT/lib" )
+        return
+    def _GetDependencies( self ):
+        """ No extra dependencies."""
+        return []

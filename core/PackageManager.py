@@ -82,7 +82,7 @@ class PackageManager( object ):
             Log.Result( "Package: %s installed." % package.GetName() )
             return package.GetInstallPath()            
         else: # Cannot be installed, raise error
-            Log.Error( "Package %s cannot be installed, please install manually." % packageName )
+            Log.Error( "Package %s cannot be installed by snoing, please install manually." % packageName )
             Log.Detail( package.GetHelpText() )
             raise Exceptions.InstallException( "Cannot install", packageName )
 

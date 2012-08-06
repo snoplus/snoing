@@ -3,6 +3,7 @@
 # The ROOT prerequisites
 import CommandPackage
 import LibraryPackage
+import os
 
 class Pthread( LibraryPackage.LibraryPackage ):
     """ Package for the pthread library."""
@@ -56,5 +57,12 @@ class SndFile( LibraryPackage.LibraryPackage ):
 class OpenAL( LibraryPackage.LibraryPackage ):
     """ Package for the openAL library."""
     def __init__( self ):
-        super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "openal", "AL/al.h" )
+        sys =  os.uname()[0]
+        if sys == 'Darwin':
+            if os.path.exists("/sw/include/OpenAL"):
+                super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "alure", "OpenAL/alure.h" )
+            else:
+                super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "openal", "AL/al.h" )
+        else:
+            super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "openal", "AL/al.h" )
         return

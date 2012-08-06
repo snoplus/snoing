@@ -12,7 +12,7 @@ class SnogogglesDev( Snogoggles.Snogoggles ):
     """ Installs development version. """
     def __init__( self ):
         """ Initializes snogoggles package. """
-        super( SnogogglesDev, self ).__init__( "snogoggles-dev", "scons-2.1.0", "geant4.9.4.p01", "rat-dev", "root-5.32.03", "sfml-2.0-rc", "xerces-c-3.1.1", "avalanche-1", "zeromq-2.2.0", "curl-7.26.0", "bzip2-1.0.6" )
+        super( SnogogglesDev, self ).__init__( "snogoggles-dev", "scons-2.1.0", "geant4.9.5.p01", "rat-dev", "root-5.32.03", "sfml-2.0-rc", "xerces-c-3.1.1", "avalanche-1", "zeromq-2.2.0", "curl-7.26.0", "bzip2-1.0.6" )
         return
     def _IsDownloaded( self ):
         """ Check if downloaded."""

@@ -30,8 +30,8 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         installed = PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib"), "libG4event" ) or \
             PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4event" )
         if PackageUtil.kGraphical:
-            installed = installed and ( PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libG4UIbasic" ) or \
-                PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4UIbasic" ) )
+            installed = installed and ( PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libG4OpenGL" ) or \
+                PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib64" ), "libG4OpenGL" ) )
         return installed
     def _Download( self ):
         """ Derived classes should override this to download the package."""

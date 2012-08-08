@@ -23,6 +23,9 @@ class snoing( PackageManager.PackageManager ):
         Log.kInfoFile = Log.LogFile( os.path.join( PackageUtil.kInstallPath, "README.md" ), True )
         # Set the local details file
         Log.kDetailsFile = Log.LogFile( os.path.join( os.path.dirname( __file__ ), "snoing.log" ) )
+        Log.Detail( options )
+        Log.Detail( os.uname()[0] )
+        Log.Detail( os.uname()[2] )
         Log.Header( "Caching to %s, installing to %s" % ( PackageUtil.kCachePath, PackageUtil.kInstallPath ) )
         # Now check the install options are compatible with install directory
         if options.graphical == True and options.grid == True:

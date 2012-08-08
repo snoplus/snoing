@@ -4,6 +4,7 @@
 # Logs text to the screen
 import sys
 import os
+import PackageUtil
 
 class LogFile( object ):
     """ Opens and manages a log file."""
@@ -53,7 +54,8 @@ def Result( text ):
 def Detail( text ):
     """ Output long information to the screen."""
     kDetailsFile.Write( text )
-    print text
+    if PackageUtil.kVerbose:
+        print text
 
 def Warn( text ):
     """ Output a warning to the screen."""

@@ -4,15 +4,18 @@
 import Clhep
 import PackageUtil
 
+class CLHEP2110( Clhep.Clhep ):
+    """ Clhep 2.1.1.0, install package."""
+    def __init__( self ):
+        """ Initiliase the clhep 2.1.1.0 package."""
+        super( CLHEP2110, self ).__init__( "clhep-2.1.1.0", "clhep-2.1.1.0.tgz" )
+        return
+
 class CLHEP2101( Clhep.Clhep ):
     """ Clhep 2.1.0.1, install package."""
     def __init__( self ):
         """ Initiliase the clhep 2.1.0.1 package."""
         super( CLHEP2101, self ).__init__( "clhep-2.1.0.1", "clhep-2.1.0.1.tgz" )
-        return
-    def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
-        self._DownloadPipe += PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-2.1.0.1.tgz" )
         return
 
 class CLHEP2042( Clhep.Clhep ):
@@ -20,8 +23,4 @@ class CLHEP2042( Clhep.Clhep ):
     def __init__( self ):
         """ Initiliase the clhep 2.0.4.2 package."""
         super( CLHEP2042, self ).__init__( "clhep-2.0.4.2", "clhep-2.0.4.2.tgz" )
-        return
-    def _Download( self ):
-        """ Derived classes should override this to download the package. Return True on success."""
-        self._DownloadPipe += PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/distributions/clhep-2.0.4.2.tgz" )
         return

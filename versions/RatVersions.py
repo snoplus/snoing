@@ -16,7 +16,7 @@ class RATDev( Rat.Rat ):
     def __init__( self ):
         """ Initiliase the rat dev package."""
         self._GeantDependency = "geant4.9.5.p01"
-        self._ClhepDependency = "clhep-2.1.0.1"
+        self._ClhepDependency = "clhep-2.1.1.0"
         self._CurlDependency = "curl-7.26.0"
         self._BzipDependency = "bzip2-1.0.6"
         self._AvalancheDependency = "avalanche-1"
@@ -42,7 +42,7 @@ class RATDev( Rat.Rat ):
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
         self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
-        self._EnvFile.AddEnvironment( "CLHEP_LIB_DIR", os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join(self._DependencyPaths[self._GeantDependency], "bin" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._AvalancheDependency], "lib/cpp" ) )
@@ -59,7 +59,7 @@ class RAT4( RatReleases.RatReleasePost3 ):
     """ Temporary Rat release-4.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
-        super( RAT4, self ).__init__( "rat-4", "root-5.32.03", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
+        super( RAT4, self ).__init__( "rat-4", "root-5.32.03", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", \
                                           "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "rat-4" )
         return
 

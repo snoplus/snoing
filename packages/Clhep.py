@@ -23,8 +23,9 @@ class Clhep( LocalPackage.LocalPackage ):
         """ Check if installed."""
         return PackageUtil.LibraryExists( os.path.join( self.GetInstallPath(), "lib" ), "libCLHEP" )
     def _Download( self ):
-        """ Download clhep, depends on the version."""
-        pass
+        """ Derived classes should override this to download the package. Return True on success."""
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/" + self._TarName )
+        return
     def _Install( self ):
         """ Install clhep."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 2 )

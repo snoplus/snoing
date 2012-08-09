@@ -10,12 +10,13 @@ import EnvFileBuilder
 
 class Snogoggles( LocalPackage.LocalPackage ):
     """ Base snogoggles installer for snogoggles."""
-    def __init__( self, name, sconsDependency, geant4Dependency, ratDependency, rootDependency, \
+    def __init__( self, name, sconsDependency, geant4Dependency, clhepDependency, ratDependency, rootDependency, \
                       sfmlDependency, xercescDependency, avalancheDependency, zmqDependency, curlDependency, bzipDependency ):
         """ Initialise snogoggles."""
         super( Snogoggles, self ).__init__( name, True ) # Graphical only
         self._SconsDependency = sconsDependency
         self._Geant4Dependency = geant4Dependency
+        self._ClhepDependency = clhepDependency
         self._RatDependency = ratDependency
         self._RootDependency = rootDependency
         self._SfmlDependency = sfmlDependency
@@ -29,10 +30,9 @@ class Snogoggles( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        dependencies = ["python", "python-dev", self._SconsDependency, self._Geant4Dependency, self._RatDependency, self._RootDependency, \
-                            self._SfmlDependency, self._XercescDependency, self._AvalancheDependency, self._ZeromqDependency, \
-                            self._CurlDependency, self._BzipDependency]
-        dependencies.extend( self._GetDependencies() )
+        dependencies = ["python", "python-dev", self._SconsDependency, self._Geant4Dependency, self._ClhepDependency, self._RatDependency, \
+                            self._RootDependency, self._SfmlDependency, self._XercescDependency, self._AvalancheDependency, \
+                            self._ZeromqDependency, self._CurlDependency, self._BzipDependency]
         return dependencies
     def _IsInstalled( self ):
         """ Check if installed."""
@@ -58,6 +58,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
             self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._CurlDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join( self.GetInstallPath(), "bin" ) )
         self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._RootDependency], "bin" ) )
+        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._SconsDependency], "script" ) )
 
         self._EnvFile.AppendPythonPath( os.path.join( self.GetInstallPath(), "python" ) )
@@ -71,15 +72,12 @@ class Snogoggles( LocalPackage.LocalPackage ):
     def _WriteEnvFile( self ):
         """ Sub classes should add parts to the env file."""
         pass
-    def _GetDependencies( self ):
-        """ Sub Classes should add dependencies."""
-        pass
 
 class SnogogglesRelease( Snogoggles ):
     """ Release versions of snogoggles."""
-    def __init__( self, name, tarName, sconsDependency, geant4Dependency, ratDependency, rootDependency, \
+    def __init__( self, name, tarName, sconsDependency, geant4Dependency, clhepDependency, ratDependency, rootDependency, \
                       sfmlDependency, xercescDependency, avalancheDependency, zmqDependency, curlDependency, bzipDependency ):
-        super( SnogogglesRelease, self ).__init__( name, sconsDependency, geant4Dependency, ratDependency, rootDependency, \
+        super( SnogogglesRelease, self ).__init__( name, sconsDependency, geant4Dependency, clhepDependency, ratDependency, rootDependency, \
                                                        sfmlDependency, xercescDependency, avalancheDependency, zmqDependency, \
                                                        curlDependency, bzipDependency )
         self._TarName = tarName
@@ -104,6 +102,3 @@ class SnogogglesRelease( Snogoggles ):
         self._EnvFile.AppendPythonPath( os.path.join( self._DependencyPaths[self._SconsDependency], "engine" ) )
         self._EnvFile.AppendLibraryPath( "$RATROOT/lib" )
         return
-    def _GetDependencies( self ):
-        """ No extra dependencies."""
-        return []

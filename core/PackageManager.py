@@ -9,7 +9,6 @@ import inspect
 import Log
 import Exceptions
 import PackageUtil
-import shutil
 import types
 
 class PackageManager( object ):
@@ -132,6 +131,6 @@ class PackageManager( object ):
                             Log.Error( "Cannot remove %s as %s depends on it." % ( packageName, testPackage.GetName() ) )
                             raise Exceptions.InstallException( "Cannot remove", packageName )
         # If get here then package can be deleted
-        shutil.rmtree( package.GetInstallPath() )
+        package.Remove()
         Log.Result( "Deleted %s" % packageName )
         return

@@ -7,6 +7,7 @@ import os
 import PackageUtil
 import Log
 import Exceptions
+import shutil
 
 class LocalPackage( Package.Package ):
     """ Base class for packages that can be installed."""
@@ -59,6 +60,21 @@ class LocalPackage( Package.Package ):
                 Log.Detail( self._DownloadPipe )
                 raise
         return
+    def Update( self ):
+        """ Update the package install, usually deletes and reinstalls..."""
+        self.CheckState()
+        if self._Graphical and not PackageUtil.kGraphical:
+            raise Exceptions.PackageException( "Install Error", "Must be a graphical install." )
+        if not self.IsInstalled():
+            self.Install()
+        else:
+            self._Update()
+        return
+    def Remove( self ):
+        """ Default is to delete the directory, derived classes should add extra."""
+        shutil.rmtree( self.GetInstallPath() )
+        self._Remove()
+        return
     def CheckState( self ):
         """ Check if the package is downloaded and/or installed."""
         if self._IsDownloaded():
@@ -81,6 +97,12 @@ class LocalPackage( Package.Package ):
         pass
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished."""
+        pass
+    def _Update( self ):
+        """ Derived classes should update the package."""
+        pass
+    def _Remove( self ):
+        """ Delete the package, extra information."""
         pass
     # Useful functions
     def _SetMode( self, mode ):

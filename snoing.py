@@ -110,6 +110,8 @@ if __name__ == "__main__":
             elif options.dependency: # Doesn't make sense
                 Log.warn( "Input options don't make sense." )
                 installer.PrintErrorMessage()
+            elif options.progress: # Update all installed
+                installer.UpdateAll()
             else: # Wish to install all
                 installer.InstallAll()
         else: # Only act on one package
@@ -129,6 +131,8 @@ if __name__ == "__main__":
                 installer.RemovePackage( packageName, options.forceRemove )
             elif options.dependency: # Wish to install only the dependencies
                 installer.InstallDependencies( packageName )
+            elif options.progress: # Wish to update the package
+                installer.UpdatePackage( packageName )
             else: # Wish to install the package
                 installer.InstallPackage( packageName )
     except Exceptions.InstallException, e:

@@ -52,7 +52,14 @@ class PackageManager( object ):
     def InstallAll( self ):
         """ Install all the packages."""
         for packageName, package in self._Packages.iteritems():
-            self.InstallPackage( packageName )
+            if not isinstance( package, SystemPackage.SystemPackage ):
+                self.InstallPackage( packageName )
+        return
+    def UpdateAll( self ):
+        """ Update all the installed packages."""
+        for packageName, package in self._Packages.iteritems():
+            if package.IsInstalled() and not isinstance( package,SystemPackage.SystemPackage ):
+                self.UpdatePackage( packageName )
         return
     # Now the package installers
     def InstallPackage( self, packageName ):
@@ -112,7 +119,7 @@ class PackageManager( object ):
         # Massive success, return dict of install paths
         return dependencyDict
 
-    # Now the package uninstallers
+    # Now the package uninstaller
     def RemovePackage( self, packageName, force = False ):
         """ Remove a package, force remove if necessary."""
         if not self.CheckPackage( packageName ):
@@ -133,4 +140,32 @@ class PackageManager( object ):
         # If get here then package can be deleted
         package.Remove()
         Log.Result( "Deleted %s" % packageName )
+        return
+
+    # Now the package updater
+    def UpdatePackage( self, packageName ):
+        """ Update a package and all packages that depend on it."""
+        if not packageName in self._Packages.keys():
+            Log.Error( "Package %s not found" % packageName )
+            raise Exceptions.InstallException( "Package not found", packageName )
+        package = self._Packages[packageName]
+        if isinstance( package, SystemPackage.SystemPackage ):
+            Log.Error( "Snoing cannot update %s, please update manually." % packageName )
+            raise Exceptions.InstallException( "Cannot update", packageName )
+        if package.IsUpdated(): # Nothing todo if already updated
+            return
+        Log.Info( "Updating %s" % packageName )
+        dependencies = self._InstallDependencies( package )
+        package.SetDependencyPaths( dependencies )
+        package.Update()
+        Log.Result( "Updated %s" % packageName )
+        # Now update the packages that depend on this
+        for testName, testPackage in self._Packages.iteritems():
+             if testPackage.IsInstalled() and not isinstance( testPackage, SystemPackage.SystemPackage ): # Check if package to be deleted is a dependecy of testPackage
+                 for dependency in testPackage.GetDependencies():
+                     if isinstance( dependency, types.ListType ):
+                         if packageName in dependency: # Update this package
+                             self.UpdatePackage( testName )
+                     elif dependency == packageName:
+                         self.UpdatePackage( testName )
         return

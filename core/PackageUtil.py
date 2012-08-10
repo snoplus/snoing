@@ -83,14 +83,14 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
         raise Exceptions.PackageException( "Command Error", logText )
     return output
 
-def ExecuteComplexCommand( command ):
+def ExecuteComplexCommand( command, verbose = False ):
     """ Execute a multiple line bash command, writes to a temp bash file then executes it."""
     global kCachePath, kInstallPath
     fileName = os.path.join( kInstallPath, "temp.sh" )
     commandFile = open( fileName, "w" )
     commandFile.write( command )
     commandFile.close()
-    output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath )
+    output = ExecuteSimpleCommand( "/bin/bash", [fileName], os.environ, kInstallPath, verbose )
     os.remove( fileName )
     return output
 

@@ -89,7 +89,7 @@ class LocalPackage( Package.Package ):
     # Functions to override
     def _Update( self ):
         """ Derived classes should override this if needed. Default is to remove then install."""
-        self._Remove()
+        self.Remove()
         self.Install()
         return
     def _Remove( self ):

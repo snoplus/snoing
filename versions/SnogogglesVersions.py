@@ -27,6 +27,15 @@ class SnogogglesDev( Snogoggles.Snogoggles ):
         self._EnvFile.AddSource( self._DependencyPaths[self._Geant4Dependency], "bin/geant4" )
         self._EnvFile.AddSource( self._DependencyPaths[self._RatDependency], "env" )
         return
+    # Dev packages have special updates
+    def _Update( self ):
+        """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ) )
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.csh" % self._Name ) )
+        self.WriteEnvFile()
+        commandText = """#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteComplexCommand( commandText, True )
+        return
 
 class SnogogglesAirFill( Snogoggles.SnogogglesRelease ):
     """ Installs the air fill (1) version."""

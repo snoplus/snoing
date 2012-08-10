@@ -54,6 +54,15 @@ class RATDev( Rat.Rat ):
             self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
             self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._BzipDependency], "lib" ) )
         return
+    # Dev packages have special updates
+    def _Update( self ):
+        """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ) )
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.csh" % self._Name ) )
+        self.WriteEnvFile()
+        commandText = """#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\nsource env.sh\nscons -c\nscons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteComplexCommand( commandText, True )
+        return
 
 class RAT4( RatReleases.RatReleasePost3 ):
     """ Temporary Rat release-4.00, install package."""

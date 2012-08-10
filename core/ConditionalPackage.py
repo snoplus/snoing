@@ -27,6 +27,20 @@ class ConditionalPackage( LocalPackage.LocalPackage ):
             if self._IsInstalled():
                 self._SetMode(2)
         return        
+    def Update( self ):
+        """ Update the package install, usually deletes and reinstalls..."""
+        self.CheckState()
+        if self._Graphical and not PackageUtil.kGraphical:
+            raise Exceptions.PackageException( "Install Error", "Must be a graphical install." )
+        if self._IsSystemInstalled():
+            self._SetMode(3)
+            return
+        if not self.IsInstalled():
+            self.Install()
+        else:
+            self._Update()
+            self._SetMode(3)
+        return
     # Functions to override
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""

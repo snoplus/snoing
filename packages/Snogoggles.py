@@ -53,9 +53,11 @@ class Snogoggles( LocalPackage.LocalPackage ):
         self._EnvFile.AddEnvironment( "ROOTSYS", self._DependencyPaths[self._RootDependency] )
         self._EnvFile.AddEnvironment( "SFMLROOT", self._DependencyPaths[self._SfmlDependency] )
         self._EnvFile.AddEnvironment( "GLEWROOT", os.path.join( self._DependencyPaths[self._SfmlDependency], "extlibs" ) )
-        self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
-        self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
+        if self._DependencyPaths[self._ZeromqDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
+        if self._DependencyPaths[self._XercescDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
         if self._DependencyPaths[self._BzipDependency] is not None:
             self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
 

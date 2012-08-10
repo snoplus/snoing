@@ -40,8 +40,10 @@ class RATDev( Rat.Rat ):
         self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
-        self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
-        self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
+        if self._DependencyPaths[self._ZeromqDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
+        if self._DependencyPaths[self._XercescDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
         self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join(self._DependencyPaths[self._GeantDependency], "bin" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )

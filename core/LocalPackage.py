@@ -14,7 +14,7 @@ class LocalPackage( Package.Package ):
     def __init__( self, name, graphicalOnly = False ):
         """ Initialise the package, grab a lock."""
         super( LocalPackage, self ).__init__( name )
-        self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install
+        self._Mode = 0 # Mode 0 is initial, 1 is post download, 2 is post install, 3 is post update
         self._DependencyPaths = {}
         self._Graphical = graphicalOnly
         self._InstallPipe = "" # Install output
@@ -30,6 +30,9 @@ class LocalPackage( Package.Package ):
     def IsInstalled( self ):
         """ Check and return if package is installed."""
         return self._Mode > 1
+    def IsUpdated( self ):
+        """ No way of checking, only updated if mode is 3."""
+        return self._Mode > 2
     def SetDependencyPaths( self, paths ):
         """ Set the dependency path dictionary."""
         self._DependencyPaths = paths
@@ -69,6 +72,7 @@ class LocalPackage( Package.Package ):
             self.Install()
         else:
             self._Update()
+            self._SetMode(3)
         return
     def Remove( self ):
         """ Default is to delete the directory, derived classes should add extra."""
@@ -83,6 +87,15 @@ class LocalPackage( Package.Package ):
             self._SetMode(2)
         return
     # Functions to override
+    def _Update( self ):
+        """ Derived classes should override this if needed. Default is to remove then install."""
+        self._Remove()
+        self.Install()
+        return
+    def _Remove( self ):
+        """ Derived classes should override this if needed."""
+        return
+    # Functions to implement
     def GetDependencies( self ):
         """ Return the dependency names as a list of names."""
         pass
@@ -97,12 +110,6 @@ class LocalPackage( Package.Package ):
         pass
     def _Install( self ):
         """ Derived classes should override this to install the package, should install only when finished."""
-        pass
-    def _Update( self ):
-        """ Derived classes should update the package."""
-        pass
-    def _Remove( self ):
-        """ Delete the package, extra information."""
         pass
     # Useful functions
     def _SetMode( self, mode ):

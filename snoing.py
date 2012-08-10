@@ -82,6 +82,7 @@ if __name__ == "__main__":
     actionGroup.add_option( "-r", action="store_true", dest="remove", help="Remove the package?" )
     actionGroup.add_option( "-R", action="store_true", dest="forceRemove", help=optparse.SUPPRESS_HELP, default=False )
     actionGroup.add_option( "-d", action="store_true", dest="dependency", help="Install dependencies only?" )
+    actionGroup.add_option( "-p", action="store_true", dest="progress", help="Progress/update the package?" )
     parser.add_option_group( actionGroup )
 
     githubGroup = optparse.OptionGroup( parser, "Github authentication Options", "Supply a username or a github token, not both." )

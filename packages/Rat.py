@@ -46,6 +46,11 @@ class Rat( LocalPackage.LocalPackage ):
         commandText = """#!/bin/bash\nsource %s\ncd %s\n./configure\nsource env.sh\nscons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteComplexCommand( commandText )
         return
+    def _Remove( self ):
+        """ Delete the env files as well."""
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ) )
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.csh" % self._Name ) )
+        return
     def WriteEnvFile( self ):
         """ Adds general parts and then writes the env file."""
         self._EnvFile.AddEnvironment( "ROOTSYS", self._DependencyPaths[self._RootDependency] )

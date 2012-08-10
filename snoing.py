@@ -82,6 +82,7 @@ if __name__ == "__main__":
     actionGroup.add_option( "-r", action="store_true", dest="remove", help="Remove the package?" )
     actionGroup.add_option( "-R", action="store_true", dest="forceRemove", help=optparse.SUPPRESS_HELP, default=False )
     actionGroup.add_option( "-d", action="store_true", dest="dependency", help="Install dependencies only?" )
+    actionGroup.add_option( "-p", action="store_true", dest="progress", help="Progress/update the package?" )
     parser.add_option_group( actionGroup )
 
     githubGroup = optparse.OptionGroup( parser, "Github authentication Options", "Supply a username or a github token, not both." )
@@ -109,6 +110,8 @@ if __name__ == "__main__":
             elif options.dependency: # Doesn't make sense
                 Log.warn( "Input options don't make sense." )
                 installer.PrintErrorMessage()
+            elif options.progress: # Update all installed
+                installer.UpdateAll()
             else: # Wish to install all
                 installer.InstallAll()
         else: # Only act on one package
@@ -128,6 +131,8 @@ if __name__ == "__main__":
                 installer.RemovePackage( packageName, options.forceRemove )
             elif options.dependency: # Wish to install only the dependencies
                 installer.InstallDependencies( packageName )
+            elif options.progress: # Wish to update the package
+                installer.UpdatePackage( packageName )
             else: # Wish to install the package
                 installer.InstallPackage( packageName )
     except Exceptions.InstallException, e:

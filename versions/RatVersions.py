@@ -40,8 +40,10 @@ class RATDev( Rat.Rat ):
         self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
-        self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
-        self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
+        if self._DependencyPaths[self._ZeromqDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )
+        if self._DependencyPaths[self._XercescDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
+            self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
         self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join(self._DependencyPaths[self._GeantDependency], "bin" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
@@ -53,6 +55,15 @@ class RATDev( Rat.Rat ):
         if self._DependencyPaths[self._BzipDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
             self._EnvFile.AddEnvironment( "BZIPROOT", self._DependencyPaths[self._BzipDependency] )
             self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._BzipDependency], "lib" ) )
+        return
+    # Dev packages have special updates
+    def _Update( self ):
+        """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ) )
+        os.remove( os.path.join( PackageUtil.kInstallPath, "env_%s.csh" % self._Name ) )
+        self.WriteEnvFile()
+        commandText = """#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\nsource env.sh\nscons -c\nscons""" % ( os.path.join( PackageUtil.kInstallPath, "env_%s.sh" % self._Name ), self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteComplexCommand( commandText, True )
         return
 
 class RAT4( RatReleases.RatReleasePost3 ):

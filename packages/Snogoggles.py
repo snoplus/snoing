@@ -71,6 +71,7 @@ class Snogoggles( LocalPackage.LocalPackage ):
         self._EnvFile.AppendPythonPath( os.path.join( self.GetInstallPath(), "python" ) )
 
         # Library path is always after the environment exports/setenvs
+        self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( "$ROOTSYS/lib:$AVALANCHEROOT/lib/cpp:$ZEROMQROOT/lib:$SFMLROOT/lib:$XERCESCROOT/lib:$GLEWROOT/lib" )
         self._WriteEnvFile()
         self._EnvFile.WriteEnvFiles( PackageUtil.kInstallPath, "env_%s" % self._Name )

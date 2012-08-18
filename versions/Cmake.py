@@ -21,7 +21,13 @@ class Cmake( ConditionalPackage.ConditionalPackage ):
             # Now check the version
             versionString = PackageUtil.ExecuteSimpleCommand( "cmake", ["--version"], None, os.getcwd() ).split()[2]
             versionNumbers = versionString.split(".")
-            if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1] ) >= 8: # Issues with this long term, e.g. cmake 3 or 2.10
+            if len( versionNumbers ) == 2: #Patched version
+                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1][0] ) >= 8: # Issues with this long term, e.g. cmake 3 or 2.10
+                # Installed is correct version
+                self._SetMode( 2 )
+                return
+            elif len( versionNumbers ) == 3: #Base version
+                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1] ) >= 8: # Issues with this long term, e.g. cmake 3 or 2.10
                 # Installed is correct version
                 self._SetMode( 2 )
                 return

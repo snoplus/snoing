@@ -62,7 +62,7 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
-    useEnv = os.environ # Default to current environment
+    useEnv = os.environ.copy() # Default to current environment
     if env is not None:
         for key in env:
             useEnv[key] = env[key]

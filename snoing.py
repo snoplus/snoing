@@ -71,6 +71,7 @@ if __name__ == "__main__":
     parser.add_option( "-i", type="string", dest="installPath", help="Install path.", default=defaults["install"] )
     parser.add_option( "-v", action="store_true", dest="verbose", help="Verbose Install?", default=False )
     parser.add_option( "-a", action="store_true", dest="all", help="All packages?" )
+    parser.add_option( "-A", type="string", dest="arguments", help=optparse.SUPPRESS_HELP )
 
     installerGroup = optparse.OptionGroup( parser, "Optional Install modes", "Default snoing action is to install non graphically, i.e. no viewer. This can be changed with the -g option. If installing on the grid use the -x option." )
     installerGroup.add_option( "-g", action="store_true", dest="graphical", help="Graphical install?", default=False )
@@ -97,6 +98,8 @@ if __name__ == "__main__":
     # Construct snoing installer
     Log.Header( "Registering Packages" )
     PackageUtil.kVerbose = options.verbose
+    if options.arguments is not None:
+        PackageUtil.arguments = arguments
     installer = snoing( options )
     installer.Authenticate( options )
 

@@ -17,6 +17,7 @@ kGraphical = False
 kGrid = False
 kVerbose = False
 kMac = False
+arguments = [] # Extra arguments for configure scripts
 
 def DownloadFile( url, username = None, password = None, token = None, fileName = "" ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath. Optional fileName parameter to manually name the file which gets stored in the cachePath"""

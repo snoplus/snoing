@@ -99,7 +99,7 @@ if __name__ == "__main__":
     Log.Header( "Registering Packages" )
     PackageUtil.kVerbose = options.verbose
     if options.arguments is not None:
-        PackageUtil.arguments = arguments
+        PackageUtil.arguments = options.arguments.split()
     installer = snoing( options )
     installer.Authenticate( options )
 

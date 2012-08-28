@@ -86,6 +86,7 @@ class LocalPackage( Package.Package ):
         if self._IsInstalled():
             self._SetMode(2)
         return
+
     # Functions to override
     def _Update( self ):
         """ Derived classes should override this if needed. Default is to remove then install."""

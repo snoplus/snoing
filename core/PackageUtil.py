@@ -17,6 +17,7 @@ kGraphical = False
 kGrid = False
 kVerbose = False
 kMac = False
+arguments = [] # Extra arguments for configure scripts
 
 def DownloadFile( url, username = None, password = None, token = None, fileName = "" ): # Never hard code a password!
     """ Download a file at url, using the username and password if provided and save into the cachePath. Optional fileName parameter to manually name the file which gets stored in the cachePath"""
@@ -62,7 +63,7 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     """ Blocking execute command. Returns True on success"""
     global kCachePath, kInstallPath, kVerbose
     shellCommand = [ command ] + args
-    useEnv = os.environ # Default to current environment
+    useEnv = os.environ.copy() # Default to current environment
     if env is not None:
         for key in env:
             useEnv[key] = env[key]

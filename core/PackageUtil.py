@@ -67,8 +67,7 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     if env is not None:
         for key in env:
             useEnv[key] = env[key]
-    shellCommand = ' '.join(shellCommand)
-    process = subprocess.Popen( args = shellCommand, env = useEnv, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell=True )
+    process = subprocess.Popen( args = shellCommand, env = useEnv, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     output = ""
     error = ""
     if kVerbose or verbose:
@@ -80,7 +79,7 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     else:
         output, error = process.communicate()
     output += error
-    logText = command + output
+    logText = command + ' '.join( args ) + ' ' + output
     if process.returncode != 0:
         raise Exceptions.PackageException( "Command Error", logText )
     return output

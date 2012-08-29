@@ -16,18 +16,18 @@ class Cmake( ConditionalPackage.ConditionalPackage ):
         return []
     def CheckState( self ):
         """ Check if downloaded and installed."""
-        # First test if globally installed
+        # First test if globally installed, requires at least 2.8.1
         if PackageUtil.FindLibrary( self._Name ) is not None: 
             # Now check the version
             versionString = PackageUtil.ExecuteSimpleCommand( "cmake", ["--version"], None, os.getcwd() ).split()[2]
             versionNumbers = versionString.split(".")
             if len( versionNumbers ) == 2: #Patched version
-                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1][0] ) >= 8: # Issues with this long term, e.g. cmake 3 or 2.10
+                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1][0] ) >= 9: # Issues with this long term, e.g. cmake 3 or 2.10
                 # Installed is correct version
                     self._SetMode( 2 )
                     return
             elif len( versionNumbers ) == 3: #Base version
-                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1] ) >= 8: # Issues with this long term, e.g. cmake 3 or 2.10
+                if int( versionNumbers[0] ) >= 2 and int( versionNumbers[1] ) >= 8 and int( versionNumbers[2] ) >= 1: # Issues with this long term, e.g. cmake 3 or 2.10
                 # Installed is correct version
                     self._SetMode( 2 )
                     return

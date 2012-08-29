@@ -41,6 +41,7 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         """ Install geant4, using cmake."""
         sourcePath = os.path.join( PackageUtil.kInstallPath, "%s-source" % self._Name )
         PackageUtil.UnTarFile( self._SourceTar, sourcePath, 1 )
+        self._patch_timeout()
         if not os.path.exists( self.GetInstallPath() ):
             os.makedirs( self.GetInstallPath() )
         cmakeOpts = [ "-DCMAKE_INSTALL_PREFIX=%s" % self.GetInstallPath(), \
@@ -58,6 +59,17 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
         self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
         return
+    def _patch_timeout(self):
+        """ Patch the cmake scripts to increase the timeout limit, geant4.9.5.p01 fix."""
+        filePath = os.path.join( PackageUtil.kInstallPath, "%s-source/cmake/Modules/Geant4InstallData.cmake" % self._Name )
+        cmakeFile = open( filePath, "r" )
+        text = cmakeFile.read()
+        cmakeFile.close()
+        text = text.replace( "PREFIX", "TIMEOUT 1800\nPREFIX" )
+        cmakeFile = open( filePath, "w" )
+        cmakeFile.write( text )
+        cmakeFile.close()
+        
 
 class Geant4Pre5( LocalPackage.LocalPackage ):
     """ Base geant4 installer for pre 4.9.5 geant versions."""

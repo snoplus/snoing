@@ -61,14 +61,14 @@ class Geant4Post5( LocalPackage.LocalPackage ):
         return
     def _patch_timeout(self):
         """ Patch the cmake scripts to increase the timeout limit, geant4.9.5.p01 fix."""
-        filePath = os.path.join( PackageUtil.kInstallPath, "%s-source/cmake/Modules/Geant4InstallData.cmake" % self._Name )
-        cmakeFile = open( filePath, "r" )
-        text = cmakeFile.read()
-        cmakeFile.close()
-        text = text.replace( "PREFIX", "TIMEOUT 1800\nPREFIX" )
-        cmakeFile = open( filePath, "w" )
-        cmakeFile.write( text )
-        cmakeFile.close()
+        file_path = os.path.join( PackageUtil.kInstallPath, "%s-source/cmake/Modules/Geant4InstallData.cmake" % self._Name )
+        cmake_file = open( file_path, "r" )
+        text = cmake_file.read()
+        cmake_file.close()
+        text = text.replace( "PREFIX", "TIMEOUT 1800\n        PREFIX" )
+        cmake_file = open( file_path, "w" )
+        cmake_file.write( text )
+        cmake_file.close()
         
 
 class Geant4Pre5( LocalPackage.LocalPackage ):

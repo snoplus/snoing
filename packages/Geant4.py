@@ -49,15 +49,17 @@ class Geant4Post5( LocalPackage.LocalPackage ):
                           "-DXERCESC_ROOT_DIR=%s" % self._DependencyPaths[self._XercesDependency], \
                           "-DGEANT4_INSTALL_DATA=ON", \
                           "-DCLHEP_CONFIG_EXECUTABLE=%s" % os.path.join( self._DependencyPaths[self._ClhepDependency], "bin/clhep-config" ) ]
+        env = None
         if PackageUtil.kGraphical:
             cmakeOpts.extend( [ "-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", "-DGEANT4_USE_RAYTRACER_X11=ON" ]  )
+            env = {'G4VIS_BUILD_VRML_DRIVER' : "1", 'G4VIS_BUILD_OPENGLX_DRIVER' : "1", 'G4VIS_BUILD_OPENGLXM_DRIVER' : "1", 'G4VIS_BUILD_DAWN_DRIVER' : "1" }
         cmakeOpts.extend( [ sourcePath ] )
         cmakeCommand = "cmake"
         if self._DependencyPaths["cmake"] is not None: # Special cmake installed
             cmakeCommand = "%s/bin/cmake" % self._DependencyPaths["cmake"]
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( cmakeCommand, cmakeOpts, None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], None, self.GetInstallPath() )
-        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], None, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( cmakeCommand, cmakeOpts, env, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", [], env, self.GetInstallPath() )
+        self._InstallPipe += PackageUtil.ExecuteSimpleCommand( "make", ['install'], env, self.GetInstallPath() )
         return
     def _patch_timeout(self):
         """ Patch the cmake scripts to increase the timeout limit, geant4.9.5.p01 fix."""

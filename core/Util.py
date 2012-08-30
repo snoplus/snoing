@@ -11,7 +11,7 @@ def BuildDirectory( path ):
     """ Change the path into a global path and ensure the path exists."""
     globalPath = path
     if path[0] != '/': # Global path
-        globalPath = os.path.join( os.getcwd(), path )
+        globalPath = os.path.abspath(os.path.join( os.getcwd(), path ))
     if not os.path.exists( globalPath ):
         os.makedirs( globalPath )
     return globalPath

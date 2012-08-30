@@ -12,6 +12,7 @@ def BuildDirectory( path ):
     globalPath = path
     if path[0] != '/': # Global path
         globalPath = os.path.join( os.getcwd(), path )
+        globalPath = os.path.abspath( globalPath )
     if not os.path.exists( globalPath ):
         os.makedirs( globalPath )
     return globalPath

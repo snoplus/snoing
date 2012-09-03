@@ -67,7 +67,6 @@ def ExecuteSimpleCommand( command, args, env, cwd, verbose = False ):
     if env is not None:
         for key in env:
             useEnv[key] = env[key]
-    print useEnv
     process = subprocess.Popen( args = shellCommand, env = useEnv, cwd = cwd, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
     output = ""
     error = ""

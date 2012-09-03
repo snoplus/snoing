@@ -31,8 +31,6 @@ class RatReleasePost3( Rat.RatRelease ):
         """ Diff geant env file and no need to patch rat."""
         self._EnvFile.AddSource( self._DependencyPaths[self._GeantDependency], "bin/geant4" )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
-        if not PackageUtil.kGraphical: # Needed until http://bugzilla-geant4.kek.jp/show_bug.cgi?id=1348
-            self._EnvFile.AddEnvironment( "G4VIS_NONE", "1" )
         self._EnvFile.AddEnvironment( "AVALANCHEROOT", self._DependencyPaths[self._AvalancheDependency] )
         if self._DependencyPaths[self._ZeromqDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
             self._EnvFile.AddEnvironment( "ZEROMQROOT", self._DependencyPaths[self._ZeromqDependency] )

@@ -6,6 +6,7 @@
 # RAT-4 slightly changes the geant dependency
 import os
 import Rat
+import PackageUtil
 
 class RatReleasePost3( Rat.RatRelease ):
     """ Base package installer for rat release 3."""

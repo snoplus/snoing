@@ -38,8 +38,8 @@ class RatReleasePost3( Rat.RatRelease ):
         if self._DependencyPaths[self._XercescDependency] is not None: # Conditional Package, set to None if installed on system instead of locally
             self._EnvFile.AddEnvironment( "XERCESCROOT", self._DependencyPaths[self._XercescDependency] )
             self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._XercescDependency], "lib" ) )
-        self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._GeantDependency], "bin" ) )
         self._EnvFile.AppendPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "bin" ) )
+        self._EnvFile.AppendPath( os.path.join(self._DependencyPaths[self._GeantDependency], "bin" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._ClhepDependency], "lib" ) )
         self._EnvFile.AppendLibraryPath( os.path.join( self._DependencyPaths[self._AvalancheDependency], "lib/cpp" ) )
         if self._DependencyPaths[self._CurlDependency] is not None: # Conditional Package, set to None if installed on system instead of locally

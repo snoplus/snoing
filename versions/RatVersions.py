@@ -71,7 +71,7 @@ class RAT4( RatReleases.RatReleasePost3 ):
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
         super( RAT4, self ).__init__( "rat-4", "root-5.32.03", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", \
-                                          "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "rat-4" )
+                                          "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "release-4.00" )
         return
 
 class RAT3( RatReleases.RatReleasePre4 ):

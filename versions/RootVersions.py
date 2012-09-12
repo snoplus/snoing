@@ -8,7 +8,7 @@ class ROOT53204( Root.Root ):
     """ Root 5.32.04, install package."""
     def __init__( self ):
         """ Initiliase the root 5.32.04 package."""
-        super( ROOT53203, self ).__init__( "root-5.32.04", "root_v5.32.04.source.tar.gz" )
+        super( ROOT53204, self ).__init__( "root-5.32.04", "root_v5.32.04.source.tar.gz" )
         return
 
 class ROOT52800( Root.Root ):

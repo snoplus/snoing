@@ -4,11 +4,11 @@
 # The ROOT packages (versions)
 import Root
 
-class ROOT53203( Root.Root ):
-    """ Root 5.32.03, install package."""
+class ROOT53204( Root.Root ):
+    """ Root 5.32.04, install package."""
     def __init__( self ):
-        """ Initiliase the root 5.32.00 package."""
-        super( ROOT53203, self ).__init__( "root-5.32.03", "root_v5.32.03.source.tar.gz" )
+        """ Initiliase the root 5.32.04 package."""
+        super( ROOT53203, self ).__init__( "root-5.32.04", "root_v5.32.04.source.tar.gz" )
         return
 
 class ROOT52800( Root.Root ):

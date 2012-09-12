@@ -22,7 +22,7 @@ class RATDev( Rat.Rat ):
         self._AvalancheDependency = "avalanche-1"
         self._ZeromqDependency = "zeromq-2.2.0"
         self._XercescDependency = "xerces-c-3.1.1"
-        super( RATDev, self ).__init__( "rat-dev", "root-5.32.03", "scons-2.1.0" )
+        super( RATDev, self ).__init__( "rat-dev", "root-5.32.04", "scons-2.1.0" )
         return
     def _GetDependencies( self ):
         """ Return the extra dependencies."""
@@ -70,7 +70,7 @@ class RAT4( RatReleases.RatReleasePost3 ):
     """ Temporary Rat release-4.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 4.0 package."""
-        super( RAT4, self ).__init__( "rat-4", "root-5.32.03", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", \
+        super( RAT4, self ).__init__( "rat-4", "root-5.32.04", "scons-2.1.0", "geant4.9.5.p01", "clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", \
                                           "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "release-4.00" )
         return
 
@@ -78,7 +78,7 @@ class RAT3( RatReleases.RatReleasePre4 ):
     """ Rat release-3.00, install package."""
     def __init__( self ):
         """ Initiliase the rat 3.0 package."""
-        super( RAT3, self ).__init__( "rat-3", "root-5.32.03", "scons-2.1.0", "geant4.9.4.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
+        super( RAT3, self ).__init__( "rat-3", "root-5.32.04", "scons-2.1.0", "geant4.9.4.p01", "clhep-2.1.0.1", "curl-7.26.0", "bzip2-1.0.6", \
                                           "avalanche-1", "zeromq-2.2.0", "xerces-c-3.1.1", "release-3.00" )
         return
 

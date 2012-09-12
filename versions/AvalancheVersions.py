@@ -10,7 +10,7 @@ class AvalancheDev( Avalanche.Avalanche ):
     """ The development version of avalanche (git repo)."""
     def __init__( self ):
         """ Initiliase the dev version."""
-        super( AvalancheDev, self ).__init__( "avalanche-dev", "zeromq-2.2.0", "root-5.32.03", "curl-7.26.0" )
+        super( AvalancheDev, self ).__init__( "avalanche-dev", "zeromq-2.2.0", "root-5.32.04", "curl-7.26.0" )
         return
     def _IsDownloaded( self ):
         """ Check if downloaded."""
@@ -23,5 +23,5 @@ class AvalancheDev( Avalanche.Avalanche ):
 class AvalancheV1( Avalanche.AvalancheRelease ):
     def __init__( self ):
         """ Initialise version 1."""
-        super( AvalancheV1, self ).__init__( "avalanche-1", "zeromq-2.2.0", "root-5.32.03", "curl-7.26.0", "d400c35640413a1b017bcd93a926e354c7aaaaff" )
+        super( AvalancheV1, self ).__init__( "avalanche-1", "zeromq-2.2.0", "root-5.32.04", "curl-7.26.0", "d400c35640413a1b017bcd93a926e354c7aaaaff" )
         return

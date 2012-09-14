@@ -49,14 +49,29 @@ def CheckSystem():
     system =  os.uname()[0]
     if system == 'Darwin':
         PackageUtil.kMac = True
-        os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
-        if "LIBRARY_PATH" in os.environ:
-            os.environ["LIBRARY_PATH"] = "/sw/lib:/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
-        else:
-            os.environ["LIBRARY_PATH"] = "/sw/lib:/usr/X11/lib"
-        if "CPLUS_INCLUDE_PATH" in os.environ:
-            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_PATH"]
-        else:
-            os.environ["CPLUS_INCLUDE_PATH"] = "/sw/include:/usr/X11/include"
+        #Check which environments exist
+        if "LIBRARY_PATH" not in os.environ:
+            os.environ["LIBRARY_PATH"]=""
+        if "CPLUS_INCLUDE_PATH" not in os.environ:
+            os.environ["CPLUS_INCLUDE_PATH"]=""
+        #Append fink or macports directories, if not already appended
+        finkLoc = PackageUtil.ExecuteSimpleCommand("which",["fink"],None,os.getcwd())
+        portLoc = PackageUtil.ExecuteSimpleCommand("which",["port"],None,os.getcwd())
+        finkDir = None
+        if finkLoc!="" and portLoc!="":
+            Log.Warn("Both fink and macports installed, going with fink...")
+        if finkLoc!="":
+            finkDir = finkLoc.replace("/bin/fink","")
+        elif portLoc!="":
+            finkDir = portLoc.replace("/bin/port","")
+        if finkDir is not None:
+            os.environ["PATH"]="%s:%s"%(os.path.join(finkDir,"bin"),os.environ["PATH"])
+            os.environ["LIBRARY_PATH"]="%s:%s"%(os.path.join(finkDir,"lib"),os.environ["LIBRARY_PATH"])
+            os.environ["CPLUS_INCLUDE_PATH"]="%s:%s"%(os.path.join(finkDir,"include"),os.environ["CPLUS_INCLUDE_PATH"])
+        #XCode in 10.7 installs X11 to /usr/X11
+        if os.path.exists("/usr/X11"):
+            os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
+            os.environ["LIBRARY_PATH"] = "/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
+            os.environ["CPLUS_INCLUDE_PATH"] = "/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_PATH"]
     else:
         PackageUtil.kMac = False

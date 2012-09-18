@@ -59,10 +59,10 @@ class OpenAL( LibraryPackage.LibraryPackage ):
     def __init__( self ):
         sys =  os.uname()[0]
         if sys == 'Darwin':
-            if os.path.exists("/sw/include/OpenAL"):
+            if os.path.exists("/sw/include/OpenAL/alure.h"):
                 super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "alure", "OpenAL/alure.h" )
             else:
-                super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "openal", "AL/al.h" )
+                super( OpenAL, self).__init__( "openal", "Instal openAL on this system.", "OpenAL", "OpenAL.framework/Headers/al.h" , True )
         else:
             super( OpenAL, self ).__init__( "openal", "Install openAL dev on this system.", "openal", "AL/al.h" )
         return

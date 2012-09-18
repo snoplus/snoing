@@ -166,6 +166,10 @@ def TestLibrary( libName, header = None ):
     """ Test if code can be compiled with header and linked to libName."""
     return _TestLibrary( header, ["-l%s" % libName] )
 
+def TestFramework( libName, header = None ):
+    """ Test if code can be compiled with header and linked to libName for Mac OSX Frameworks."""
+    return _TestLibrary( header, ["-framework","%s" % libName] )
+
 def TestConfigLibrary( configCommand, header = None ):
     """ Test if code can be compiled using a xxx-config command."""
     libs = ExecuteSimpleCommand( configCommand, ["--libs"], None, None ).strip('\n').split(' ')

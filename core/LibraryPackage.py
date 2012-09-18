@@ -7,15 +7,19 @@ import PackageUtil
 
 class LibraryPackage( SystemPackage.SystemPackage ):
     """ For packages that are system wide libraries e.g. X11."""
-    def __init__( self, name, helpText, libName, header = None ):
+    def __init__( self, name, helpText, libName, header = None, framework = False ):
         """ Initialise the package."""
         super( LibraryPackage, self ).__init__( name, helpText )
         self._LibName = libName
         self._Header = header
+        self._Framework = framework
         return
     def CheckState( self ):
         """ Need to test the library linking and inclusion of the header."""
-        installed, self._CheckPipe = PackageUtil.TestLibrary( self._LibName, self._Header )
+        if self._Framework == False:
+            installed, self._CheckPipe = PackageUtil.TestLibrary( self._LibName, self._Header )
+        else:
+            installed, self._CheckPipe = PackageUtil.TestFramework( self._LibName, self._Header )
         if installed:
             self._Installed = True
         return

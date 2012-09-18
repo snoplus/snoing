@@ -59,11 +59,11 @@ def CheckSystem():
         portLoc = PackageUtil.ExecuteSimpleCommand("which",["port"],None,os.getcwd())
         finkDir = None
         if finkLoc!="" and portLoc!="":
-            Log.Warn("Both fink and macports installed, going with fink...")
+            Log.Warn("Both fink and macports installed, going with fink in dir: %s"%finkLoc)
         if finkLoc!="":
-            finkDir = finkLoc.replace("/bin/fink","")
+            finkDir = finkLoc.strip().replace("/bin/fink","")
         elif portLoc!="":
-            finkDir = portLoc.replace("/bin/port","")
+            finkDir = portLoc.strip().replace("/bin/port","")
         if finkDir is not None:
             os.environ["PATH"]="%s:%s"%(os.path.join(finkDir,"bin"),os.environ["PATH"])
             os.environ["LIBRARY_PATH"]="%s:%s"%(os.path.join(finkDir,"lib"),os.environ["LIBRARY_PATH"])
@@ -73,5 +73,8 @@ def CheckSystem():
             os.environ["PATH"] = "/usr/X11/bin:%s" % os.environ["PATH"]
             os.environ["LIBRARY_PATH"] = "/usr/X11/lib:%s" % os.environ["LIBRARY_PATH"]
             os.environ["CPLUS_INCLUDE_PATH"] = "/usr/X11/include:%s" % os.environ["CPLUS_INCLUDE_PATH"]
+        #Frameworks
+        if os.path.exists("/System/Library/Frameworks"):
+            os.environ["CPLUS_INCLUDE_PATH"] = "/System/Library/Frameworks:%s" % os.environ["CPLUS_INCLUDE_PATH"]
     else:
         PackageUtil.kMac = False

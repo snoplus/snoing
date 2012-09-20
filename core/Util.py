@@ -55,8 +55,14 @@ def CheckSystem():
         if "CPLUS_INCLUDE_PATH" not in os.environ:
             os.environ["CPLUS_INCLUDE_PATH"]=""
         #Append fink or macports directories, if not already appended
-        finkLoc = PackageUtil.ExecuteSimpleCommand("which",["fink"],None,os.getcwd())
-        portLoc = PackageUtil.ExecuteSimpleCommand("which",["port"],None,os.getcwd())
+        try:
+            finkLoc = PackageUtil.ExecuteSimpleCommand("which",["fink"],None,os.getcwd())
+        except Exceptions.PackageException:
+            finkLoc = None
+        try:
+            portLoc = PackageUtil.ExecuteSimpleCommand("which",["port"],None,os.getcwd())
+        except Exceptions.PackageException:    
+            portLoc = None
         finkDir = None
         if finkLoc!="" and portLoc!="":
             Log.Warn("Both fink and macports installed, going with fink in dir: %s"%finkLoc)

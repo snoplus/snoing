@@ -20,7 +20,7 @@ class LocalPackage(package.Package):
         super(LocalPackage, self).__init__(name, system)
         self._set_state(Initial)
         self._dependency_paths = {} # Dictionary of dependencies and the installed path
-        self._install_mode = -1 # Optional install mode requirement if >0 then requires that mode
+        self._install_mode = None # Optional install mode requirement
         self._download_pipe = "" # Download loggin output
         self._install_pipe = "" # Installation logging output
         self._install_path = os.path.join(system.get_install_path(), self._name)

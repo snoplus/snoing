@@ -8,6 +8,7 @@
 # Author P G Jones - 21/09/2012 <p.g.jones@qmul.ac.uk> : First revision
 ####################################################################################################
 import os
+import exceptions
 import subprocess
 import urllib2
 import tarfile
@@ -61,7 +62,9 @@ class System(object):
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
                 self._logger.error!
-                raise !!
+                raise exceptions.SystemException("Install mode mismatch.", 
+                                                 "Install folder is mode %i, user selected mode %i"\
+                                                     % (self._install_mode, install_mode) )
             else:
                 self._serialise(settings_path)
         # All good if we get here
@@ -98,7 +101,8 @@ class System(object):
         output += "\n%s" % error
         # After process has finished
         if process.returncode != 0:
-            raise !!
+            raise exceptions.SystemException("Command returned %i" % process.returncode,
+                                             output)
         return output
     def execute_complex_command(command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 
@@ -134,7 +138,7 @@ class System(object):
             remote_file.close()
         except urllib2.URLError, e: # Server not available
             os.remove(local_file)
-            raise !!
+            raise exceptions.SystemException("Download error", url)
         return "Downloaded %i bytes\n" % download_size
     def untar_file(file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
@@ -218,7 +222,7 @@ class System(object):
             inenv = env[envbit].find('G4')
             if inenv!=-1:
                 self._logger.Error!!
-                raise !!
+                raise exceptions.SystemException("System not clean", envbit)
     def _build_path(self, path):
         """ Change the path into a global path and ensure the path exists."""
         globalPath = path

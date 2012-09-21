@@ -13,17 +13,19 @@ class Logger(object):
     """ Update with pacakages state change information, and convey information to a
     file.
     """
-    def __init__(self, local, install):
+    def __init__(self, local):
         """ Save the file paths and setup the install folder file if needed."""
         self._local_file = local
+        if os.path.exists(self._local_file):
+            os.remove(self._local_file)
+    def set_install_path(self, install):
+        """ Set the install file path name."""
         self._install_file = install
         if not os.path.exists(self._install_file):
             file_ = open(self._install_file, "w")
             file_.write(("## SNOING\nThis is a snoing install directory. Please alter only with"
                          "snoing at %s") % __file__)
             file_.close()
-        if os.path.exists(self._local_file):
-            os.remove(self._local_file)
     def end(self):
         """ Stop logging, cleanup resources."""
         pass

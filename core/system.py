@@ -20,14 +20,16 @@ class System(object):
     executed.
     """
     Mac, Linux = range(2)
-    def __init__(self, logger, cache_path, install_path, install_mode=None):
+    def __init__(self, logger, cache_path, install_path, install_mode=None, arguments=None):
         """ Initialise with a logger for output and a prefered cache and install path. The 
-        install_mode is optional, None is no install mode required.
+        install_mode is optional, None is no install mode required. The arguments are extra 
+        arguments applied to all configure script calls (package specific).
         """
         self._logger = logger
         self._check_clean_environment()
         self._cache_path = self._build_path(cache_path)
         self._install_path = self._build_path(install_path)
+        self._arguments = arguments
         # Check the system type, only concerned about mac or linux
         if os.uname()[0] == "Darwin":
             self.os_type = Mac

@@ -20,9 +20,9 @@ class TextLogger(Logger.Logger):
     """ Update with pacakages state change information, and convey information to the
     screen in different colours :).
     """
-    def __init__(self, local, install):
+    def __init__(self, local):
         """ Call the base class init."""
-        super(TextLogger, self).__init__(local, install)
+        super(TextLogger, self).__init__(local)
     def package_registered(self, package_name):
         """ Notify that a package has been registered."""
         print HEADER + ("Package %s registered." % package_name) + END

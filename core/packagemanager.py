@@ -12,6 +12,7 @@ import package
 import inspect
 import exceptions
 import types
+import os
 
 class PackageManager(object):
     """ Manages a dictionary of packages for installation on the system."""
@@ -22,7 +23,7 @@ class PackageManager(object):
         self._packages = {} # Dict of packages keyed by name
     def register_package(self, package):
         """ Register an instance of a package."""
-        self._logger...
+        self._logger.package_registered(package.get_name())
         package.check_state()
         self._packages[package.get_name()] = package(self._system)
     def register_packages(self, path):
@@ -55,7 +56,7 @@ class PackageManager(object):
         try:
             package.install()
         except exceptions.SystemException, e:
-            self._logger ...
+            self._logger.error("Error")
         return self.get_install_path()
     def install_package_dependencies(self, package_name):
         """ Install the dependencies for named package."""
@@ -76,7 +77,7 @@ class PackageManager(object):
         try:
             package.Update()
         except exceptions.SystemException, e:
-            self._logger ...
+            self._logger.error("eror")
         for dependent_name in self._package_dependents(package_name):
             self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):
@@ -96,7 +97,6 @@ class PackageManager(object):
         """ Check the install status of all the packages."""
         for package_name in self._packages.iterkeys():
             self.check_installed(package_name)
-            ...
     def install_all(self):
         """ Install all the packages."""
         for package_name in self._packages.iterkeys():

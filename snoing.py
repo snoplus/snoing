@@ -10,9 +10,11 @@
 import optparse
 import textlogger
 import installmode
-import exceptions
+import snoing_exceptions
 import system
 import packagemanager
+import os
+import pickle
 
 def print_error_message():
     """Print a standard error message if snoing fails."""
@@ -26,9 +28,9 @@ if __name__ == "__main__":
         defaults = pickle.load(default_file)
         default_file.close()
     else: # No defaults to load, thus create
-        defaults = {"cache_path" : "cache", "install_path", "install"}
+        defaults = {"cache_path" : "cache", "install_path" : "install"}
     # First build the options and parse the calling command
-    parser = optparse.OptionParser(usage = "usage: %prog [options] [package]", version="%prog 0.3")
+    parser = optparse.OptionParser(usage = "usage: %prog [options] [package]", version="%prog 2.0")
     parser.add_option("-c", type="string", dest="cache_path", help="Cache path.", 
                       default=defaults["cache_path"])
     parser.add_option("-i", type="string", dest="install_path", help="Install path.", 
@@ -75,7 +77,7 @@ if __name__ == "__main__":
     logger = textlogger.TextLogger(os.path.join(os.path.dirname(__file__), "snoing.log"))
     # Now create the system
     if options.grid and options.graphical:
-        !!!
+        print_error_message()
     elif options.grid:
         install_mode = installmode.Grid
     elif options.graphical:
@@ -84,8 +86,8 @@ if __name__ == "__main__":
         install_mode = installmode.Normal
     try:
         install_system = system.System(logger, options.cache_path, options.install_path, install_mode, options.arguments)
-    except exceptions.SystemException, e:
-        !!!
+    except snoing_exceptions.SystemException, e:
+        print_error_message()
     # Now create the package manage and populate it
     package_manager = packagemanager.PackageManager(install_system, logger)
     package_manager.register_packages(os.path.join(os.path.dirname(__file__), "versions"))
@@ -126,6 +128,6 @@ if __name__ == "__main__":
                 package_manager.UpdatePackage( package_name )
             else: # Wish to install the package
                 package_manager.InstallPackage( package_name )
-    except Exceptions.PackageException, e:
+    except snoing_exceptions.PackageException, e:
         print e
         PrintErrorMessage()

@@ -16,7 +16,7 @@ WARNING = '\033[93m'
 FAIL = '\033[91m'
 END = '\033[0m'
 
-class TextLogger(Logger.Logger):
+class TextLogger(logger.Logger):
     """ Update with pacakages state change information, and convey information to the
     screen in different colours :).
     """

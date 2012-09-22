@@ -34,8 +34,8 @@ class System(object):
         if os.uname()[0] == "Darwin":
             self.os_type = Mac
             # Setup the mac environment, first find fink or ports and set a special mac environment
-            fink_path = self._Find("fink")!!
-            ports_path = self._Find("port")!!
+            fink_path = self.find_library("fink")
+            ports_path = self.find_library("port")
             mac_dir = None
             if fink_path is not None and ports_path is not None: # Both fink and ports exist
                 self._logger.warn("Both Fink and Ports exist, will use fink.")
@@ -57,13 +57,13 @@ class System(object):
             if os.path.exists("/System/Library/Frameworks"):
                 self._append_environment("CPLUS_INCLUDE_PATH", "/System/Library/Frameworks")
         else: # So much easier for Linux systems....
-            self.os_type = Linux
+            self.os_type = System.Linux
         # Check the install mode status of the install_path
         settings_path = os.path.join(self._install_path, "snoing.pkl")
         self._install_mode = self._deserialise(settings_path)
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
-                self._logger.error!
+                self._logger.error("Settings mismatch")
                 raise exceptions.SystemException("Install mode mismatch.", 
                                                  "Install folder is mode %i, user selected mode %i"\
                                                      % (self._install_mode, install_mode) )
@@ -71,7 +71,7 @@ class System(object):
                 self._serialise(settings_path)
         self._install_mode = install_mode
         # All good if we get here
-        self._logger.set_state("System ready.")!
+        self._logger.info("System ready.")
 ####################################################################################################
     # Functions that are publically useful and available
     def get_cache_path(self):
@@ -88,13 +88,16 @@ class System(object):
         return self._os_type
 ####################################################################################################
     # Functions that do stuff to the system
-    def configure_command(self, command='./configure', args=[], cwd=self.get_install_path(), env={}, 
-                          verbose=False):
+    def configure_command(self, command='./configure', args=[], cwd=None, env={}, verbose=False):
         """ Execute a configure command, add the extra arguments."""
+        if cwd is None:
+            cwd = self.get_install_path()
         args.extend(self._arguments)
         self.execute_command(command, args, cwd, env, verbose)
-    def execute_command(self, command, args=[], cwd=self.get_install_path(), env={}, verbose=False):
+    def execute_command(self, command, args=[], cwd=None, env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""
+        if cwd is None:
+            cwd = self.get_install_path()
         # Firstly setup the environment
         local_env = os.environ.copy()
         for key in env:
@@ -199,12 +202,14 @@ class System(object):
         return os.path.exists(os.path.join(path, library + ".a")) or \
             os.path.exists(os.path.join(path, library + ".so")) or \
             os.path.exists(os.path.join(path, library + ".dylib"))
-    def file_exists(self, file_name, path=self.get_cache_path()):
+    def file_exists(self, file_name, path=None):
         """ Check that a file exists."""
+        if path is None:
+            path = self.get_cache_path()
         return os.path.exists(os.path.join(path, file_name))
     def test_library(self, library, headers=[]):
         """ Test if code can be compiled with header and linked to libName."""
-        if self._os_type = Mac:
+        if self._os_type == Mac:
             return self._test_compile(headers, ["-l%s" % library]) or \
                 self._test_compile(headers, ["-framework","%s" % library])
         else:
@@ -238,23 +243,23 @@ class System(object):
             output = self.execute_command("g++", [file_name] + flags)
             os.remove( file_name )
             return True, output
-        except !!
+        except exceptions.SystemException, e:
             os.remove( fileName )
             return False, e.Pipe
 
     def _check_clean_environment(self):
         """ Check the environment is clean (mainly no G4 variables)."""
-        for envbit in os.environ:
-            inenv = env[envbit].find('G4')
+        for env in os.environ.itervalues():
+            inenv = env.find('G4')
             if inenv!=-1:
-                self._logger.Error!!
-                raise exceptions.SystemException("System not clean", envbit)
-    def _serialise(path, data):
+                self._logger.error("System not clean")
+                raise exceptions.SystemException("System not clean", env)
+    def _serialise(self, path, data):
         """ Pickle data to path."""
         data_file = open(path, "w")
         pickle.dump(data, data_file)
         data_file.close()
-    def _deserialise(path):
+    def _deserialise(self, path):
         """ Unpickle data from path."""
         if os.path.isfile(path):
             data_file = open(path, "r")

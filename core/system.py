@@ -191,6 +191,9 @@ class System(object):
         return os.path.exists(os.path.join(path, library + ".a")) or \
             os.path.exists(os.path.join(path, library + ".so")) or \
             os.path.exists(os.path.join(path, library + ".dylib"))
+    def file_exists(self, path):
+        """ Check that a file exists."""
+        return os.path.exists(path)
     def test_library(self, library, headers=[]):
         """ Test if code can be compiled with header and linked to libName."""
         return self._test_compile(headers, ["-l%s" % library])

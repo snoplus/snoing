@@ -7,7 +7,7 @@
 # Author P G Jones - 16/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 #        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency
 #        P G Jones - 11/07/2012 <p.g.jones@qmul.ac.uk> : Refactor into dev and fixed versions
-# Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+# Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import localpackage
 
@@ -45,7 +45,7 @@ class AvalancheRelease(Avalanche):
         return
     def _is_downloaded( self ):
         """ Check if downloaded."""
-        return self._system.FileExists(os.path.join(self._system.get_cache_path(), self._tar_name))
+        return self._system.file_exists(self._tar_name)
     def _download( self ):
         """ Download avalanche release."""
         self._DownloadPipe += self._system.download_file("https://github.com/mastbaum/avalanche/tarball/" \

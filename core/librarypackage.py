@@ -12,15 +12,13 @@ import systempackage
 
 class LibraryPackage(systempackage.SystemPackage):
     """ For packages that are system wide libraries e.g. X11."""
-    def __init__(self, name, system, help_text, library, header = None):
+    def __init__(self, name, system, help_text, library, headers = []):
         """ Initlialise with library and header (optional)."""
-        super(LibraryPackage, self).__init__(name, help_Text)
+        super(LibraryPackage, self).__init__(name, system, help_text)
         self._library = library
-        self._header = header
-        return
+        self._headers = headers
     def check_state(self):
         """ Need to test the library linking and inclusion of the header."""
-        installed, self._check_pipe = PackageUtil.TestFramework( self._LibName, self._Header )
+        installed, self._check_pipe = self._system.test_library(self._library, self._headers)
         if installed:
             self._installed = True
-        return

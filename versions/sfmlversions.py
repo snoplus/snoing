@@ -11,14 +11,14 @@
 ####################################################################################################
 import sfml
 
-class Sfml20RC(Sfml.Sfml):
+class Sfml20RC(sfml.Sfml):
     """ Installer for release 1.0 sfml-2.0 pre release version."""
     def __init__(self, system):
         """ Initialize the package, set the name."""
         super(Sfml20RC, self).__init__("sfml-2.0-rc", system, 
                                        "bdfc2dc3f538605d5e9d7a09a04f87b2a02d2b3f")
 
-class Sfml18(Sfml.Sfml):
+class Sfml18(sfml.Sfml):
     """ Installer for air fill 1 & 2 sfml-2.0 pre release version."""
     def __init__(self, system):
         """ Initialize the package, set the name."""

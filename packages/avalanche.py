@@ -10,10 +10,11 @@
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import localpackage
+import os
 
 class Avalanche(localpackage.LocalPackage):
     """ Base class for all Avalanche installations."""
-    def __init__(self, name, system, zeromq_dep, root_dep, curlDependency):
+    def __init__(self, name, system, zeromq_dep, root_dep, curl_dep):
         """ Initialise with the zmq, root and curl dependency versions."""
         super(Avalanche, self).__init__(name, system)
         self._zeromq_dep = zeromq_dep
@@ -40,7 +41,7 @@ class AvalancheRelease(Avalanche):
     """ Base class for release versions."""
     def __init__(self, name, system, zeromq_dep, root_dep, curl_dep, tar_name):
         """ Initialise avalanche with the tar_name."""
-        super(AvalancheRelease, self).__init__(name, zeromq_dep, root_dep, curl_dep)
+        super(AvalancheRelease, self).__init__(name, system, zeromq_dep, root_dep, curl_dep)
         self._tar_name = tar_name
         return
     def _is_downloaded( self ):

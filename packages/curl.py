@@ -14,7 +14,7 @@ import os
 class Curl(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Base curl installer package. """
     def __init__(self, name, system, tar_name):
-        super(Curl, self).__init__(name, "curl", system, "curl/curl.h")
+        super(Curl, self).__init__(name, system, "curl", ["curl/curl.h"])
         self._tar_name = tar_name
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""

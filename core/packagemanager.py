@@ -23,9 +23,10 @@ class PackageManager(object):
         self._packages = {} # Dict of packages keyed by name
     def register_package(self, package):
         """ Register an instance of a package."""
-        self._logger.package_registered(package.get_name())
-        package.check_state()
-        self._packages[package.get_name()] = package(self._system)
+        instance = package(self._system)
+        self._logger.package_registered(instance.get_name())
+        instance.check_state()
+        self._packages[instance.get_name()] = instance
     def register_packages(self, path):
         """ Register all the packages in the path. """
         for module in os.listdir(path):

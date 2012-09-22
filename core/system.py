@@ -8,7 +8,7 @@
 # Author P G Jones - 21/09/2012 <p.g.jones@qmul.ac.uk> : First revision
 ####################################################################################################
 import os
-import exceptions
+import snoing_exceptions
 import subprocess
 import urllib2
 import tarfile
@@ -32,7 +32,7 @@ class System(object):
         self._arguments = arguments
         # Check the system type, only concerned about mac or linux
         if os.uname()[0] == "Darwin":
-            self.os_type = Mac
+            self._os_type = System.Mac
             # Setup the mac environment, first find fink or ports and set a special mac environment
             fink_path = self.find_library("fink")
             ports_path = self.find_library("port")
@@ -57,14 +57,14 @@ class System(object):
             if os.path.exists("/System/Library/Frameworks"):
                 self._append_environment("CPLUS_INCLUDE_PATH", "/System/Library/Frameworks")
         else: # So much easier for Linux systems....
-            self.os_type = System.Linux
+            self._os_type = System.Linux
         # Check the install mode status of the install_path
         settings_path = os.path.join(self._install_path, "snoing.pkl")
         self._install_mode = self._deserialise(settings_path)
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
                 self._logger.error("Settings mismatch")
-                raise exceptions.SystemException("Install mode mismatch.", 
+                raise snoing_exceptions.SystemException("Install mode mismatch.", 
                                                  "Install folder is mode %i, user selected mode %i"\
                                                      % (self._install_mode, install_mode) )
             else:
@@ -104,7 +104,7 @@ class System(object):
             self._append_environment( key, env[key], local_env )
         # Now open and run the shell_command
         shell_command = [command] + args
-        process = subprocess.Popen(args=shellCommand, env=local_env, cwd=cwd, 
+        process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = command + ' '.join( args ) + '\n'
         if verbose:
@@ -118,7 +118,7 @@ class System(object):
         output += "\n%s" % error
         # After process has finished
         if process.returncode != 0:
-            raise exceptions.SystemException("Command returned %i" % process.returncode,
+            raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
                                              output)
         return output
     def execute_complex_command(command, verbose=False):
@@ -155,7 +155,7 @@ class System(object):
             remote_file.close()
         except urllib2.URLError, e: # Server not available
             os.remove(local_file)
-            raise exceptions.SystemException("Download error", url)
+            raise snoing_exceptions.SystemException("Download error", url)
         return "Downloaded %i bytes\n" % download_size
     def untar_file(file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
@@ -209,7 +209,7 @@ class System(object):
         return os.path.exists(os.path.join(path, file_name))
     def test_library(self, library, headers=[]):
         """ Test if code can be compiled with header and linked to libName."""
-        if self._os_type == Mac:
+        if self._os_type == System.Mac:
             return self._test_compile(headers, ["-l%s" % library]) or \
                 self._test_compile(headers, ["-framework","%s" % library])
         else:
@@ -243,9 +243,9 @@ class System(object):
             output = self.execute_command("g++", [file_name] + flags)
             os.remove( file_name )
             return True, output
-        except exceptions.SystemException, e:
-            os.remove( fileName )
-            return False, e.Pipe
+        except snoing_exceptions.SystemException, e:
+            os.remove( file_name )
+            return False, e.Details
 
     def _check_clean_environment(self):
         """ Check the environment is clean (mainly no G4 variables)."""
@@ -253,7 +253,7 @@ class System(object):
             inenv = env.find('G4')
             if inenv!=-1:
                 self._logger.error("System not clean")
-                raise exceptions.SystemException("System not clean", env)
+                raise snoing_exceptions.SystemException("System not clean", env)
     def _serialise(self, path, data):
         """ Pickle data to path."""
         data_file = open(path, "w")

@@ -19,7 +19,7 @@ class CommandPackage(systempackage.SystemPackage):
         return
     def check_state(self):
         """ For a command package, merely need to test if the command exists."""
-        location = self._system.FindLibrary(self._Name)
+        location = self._system.find_library(self._name)
         if location is not None:
             self._installed = True
             self._install_path = location

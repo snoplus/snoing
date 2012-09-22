@@ -10,7 +10,7 @@
 import conditionallibrarypackage
 import os
 
-class XercesC(ConditionalLibraryPackage.ConditionalLibraryPackage):
+class XercesC(conditionallibrarypackage.ConditionalLibraryPackage):
     """ XercesC install package."""
     def __init__(self, name, system, tar_name):
         """ Initlaise the XercesC packages."""

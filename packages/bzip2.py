@@ -9,6 +9,7 @@
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import conditionallibrarypackage
+import os
 
 class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Base bzip2 installer package."""
@@ -24,8 +25,8 @@ class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
         return self._system.file_exists(self._tar_name)
     def _is_installed(self):
         """ Has bzip2 been installed."""
-        return self._system.file_exists(self._header, os.path.join(self.get_install_path(), "include")) and \
-            self._system.library_exists(self._library, os.path.join(self.get_install_path(), "lib"))
+        return self._system.file_exists("bzlib.h", os.path.join(self.get_install_path(), "include")) and \
+            self._system.library_exists("bz2", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
         """ Download the tar file."""
         self._download_pipe += self._system.download_file("http://www.bzip.org/1.0.6/" + self._tar_name)

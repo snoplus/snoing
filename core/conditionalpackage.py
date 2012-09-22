@@ -25,7 +25,7 @@ class ConditionalPackage(localpackage.LocalPackage):
         if self._is_system_installed():
             self._set_state(localpackage.LocalPackage.Installed)
         else: # Not on the system, set the install path and check the local state
-            self._install_path = os.path.join(system.get_install_path(), self._name)
+            self._install_path = os.path.join(self._system.get_install_path(), self._name)
             super(ConditionalPackage, self).check_state()
         return        
     def update( self ):

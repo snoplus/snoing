@@ -10,7 +10,7 @@
 import conditionallibrarypackage
 import os
 
-class Zeromq(ConditionalLibraryPackage.ConditionalLibraryPackage):
+class Zeromq(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Zeromq install package."""
     def __init__(self, name, system, tar_name):
         """ Initlaise the ZMQ packages."""

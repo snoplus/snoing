@@ -19,7 +19,7 @@ class SCONS210(scons.Scons):
         self._download_pipe += self._system.download_file(
             "http://downloads.sourceforge.net/project/scons/scons/2.1.0/scons-2.1.0.tar.gz")
 
-class SCONS120(Scons.Scons):
+class SCONS120(scons.Scons):
     """ Scons 1.2.0, install package."""
     def __init__(self, system):
         """ Initiliase the scons 1.2.0 package."""

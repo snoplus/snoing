@@ -12,14 +12,14 @@ import conditionalpackage
 
 class ConditionalLibraryPackage(conditionalpackage.ConditionalPackage):
     """ Base class to install conditional libraries."""
-    def __init__(self, name, system, library, header = None):
+    def __init__(self, name, system, library, headers = []):
         """ Initialise the with the library and header file (optional)."""
         super(ConditionalLibraryPackage, self).__init__(name, system)
         self._library = library
-        self._header = header
+        self._headers = headers
         return
     def _is_system_installed( self ):
         """ Check if library is available on the system."""
-        installed, output = self._system.PackageUtil.TestLibrary( self._Library, self._Header )
+        installed, output = self._system.test_library( self._library, self._headers )
         self._check_pipe += output
         return installed

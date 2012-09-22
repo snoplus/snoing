@@ -52,7 +52,7 @@ if __name__ == "__main__":
                                         " which defaults to rat-dev."))
     actionGroup.add_option("-q", action="store_true", dest="query", help="Query Package Status?")
     actionGroup.add_option("-r", action="store_true", dest="remove", help="Remove the package?")
-    actionGroup.add_option("-R", action="store_true", dest="forceRemove", help=optparse.SUPPRESS_HELP, 
+    actionGroup.add_option("-R", action="store_true", dest="force_remove", help=optparse.SUPPRESS_HELP, 
                            default=False)
     actionGroup.add_option("-d", action="store_true", dest="dependency", help="Install dependencies only?")
     actionGroup.add_option("-p", action="store_true", dest="progress", help="Progress/update the package?")
@@ -118,14 +118,14 @@ if __name__ == "__main__":
                     Log.Result( "Installed" )
                 else:
                     Log.Warn( "Not Installed" )
-            elif options.remove or options.forceRemove: # Wish to remove the package
-                package_manager.RemovePackage( package_name, options.forceRemove )
+            elif options.remove or options.force_remove: # Wish to remove the package
+                package_manager.RemovePackage( package_name, options.force_remove )
             elif options.dependency: # Wish to install only the dependencies
                 package_manager.InstallDependencies( package_name )
             elif options.progress: # Wish to update the package
                 package_manager.UpdatePackage( package_name )
             else: # Wish to install the package
                 package_manager.InstallPackage( package_name )
-    except Exceptions.InstallException, e:
+    except Exceptions.PackageException, e:
         print e
         PrintErrorMessage()

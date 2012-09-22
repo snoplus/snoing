@@ -69,6 +69,7 @@ class System(object):
                                                      % (self._install_mode, install_mode) )
             else:
                 self._serialise(settings_path)
+        self._install_mode = install_mode
         # All good if we get here
         self._logger.set_state("System ready.")!
 ####################################################################################################
@@ -79,6 +80,9 @@ class System(object):
     def get_install_path(self):
         """ Return the install path."""
         return self._install_path
+    def get_install_mode(self):
+        """ Return the system install mode."""
+        return self._install_mode
 ####################################################################################################
     # Functions that do stuff to the system
     def execute_command(self, command, args=[], cwd=self.get_install_path(), env={}, verbose=False):

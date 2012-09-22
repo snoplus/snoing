@@ -47,6 +47,7 @@ class PackageManager(object):
         if self.check_installed(package_name):
             return
         package = self._packages[package_name]
+        self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
             raise exceptions.PackageException("Package cannot be installed by snoing", package_name)
         dependencies = self._install_dependencies(package)
@@ -65,6 +66,7 @@ class PackageManager(object):
         """ Update a package and all packages that depend on it."""
         self._check_package(package_name)
         package = self._packages[package_name]
+        self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
             raise exceptions.PackageException("Package cannot be updated by snoing", package_name)
         if package.is_updated(): # Nothing todo if already updated
@@ -98,11 +100,11 @@ class PackageManager(object):
     def install_all(self):
         """ Install all the packages."""
         for package_name in self._packages.iterkeys():
-            self.install_package( package_name )
+            self.install_package(package_name)
     def update_all(self):
         """ Update all the installed packages."""
         for package_name in self._packages.iterkeys():
-            self.update_package( package_name )
+            self.update_package(package_name)
 ####################################################################################################
     # Internal functions
     def _check_package(self, package_name):
@@ -110,6 +112,14 @@ class PackageManager(object):
         if not package_name in self._packages.iterkeys():
             raise exceptions.PackageException("Package doesn't exist.", package_name)
         self._packages[package_name].check_state()
+    def _check_mode(self, package):
+        """ Check the package install mode is compatible with the system."""
+        if isinstance(package, localpackage.LocalPackage):
+            if package.get_install_mode() is not None and \
+                    package.get_install_mode() != self._system.get_install_mode():
+                raise exceptions.PackageException(("Package install mode is incompatible with the "
+                                                   "system"),
+                                                  package.get_name())
     def _install_dependencies(self, package):
         """ Install the dependencies (if required)."""
         dependency_paths = {} # Dictionary of dependency paths

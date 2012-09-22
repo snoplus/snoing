@@ -88,6 +88,11 @@ class System(object):
         return self._os_type
 ####################################################################################################
     # Functions that do stuff to the system
+    def configure_command(self, command='./configure', args=[], cwd=self.get_install_path(), env={}, 
+                          verbose=False):
+        """ Execute a configure command, add the extra arguments."""
+        args.extend(self._arguments)
+        self.execute_command(command, args, cwd, env, verbose)
     def execute_command(self, command, args=[], cwd=self.get_install_path(), env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""
         # Firstly setup the environment

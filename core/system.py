@@ -27,8 +27,8 @@ class System(object):
         """
         self._logger = logger
         self._check_clean_environment()
-        self._cache_path = self._build_path(cache_path)
-        self._install_path = self._build_path(install_path)
+        self._cache_path = self.build_path(cache_path)
+        self._install_path = self.build_path(install_path)
         self._arguments = arguments
         # Check the system type, only concerned about mac or linux
         if os.uname()[0] == "Darwin":
@@ -205,6 +205,14 @@ class System(object):
         libs = self.execute_command(config, ["--libs"]).strip('\n').split(' ')
         includes = self.execute_command(config, ["--includes"]).strip('\n').split(' ')
         return self._test_compile(headers, libs + includes)
+    def build_path(self, path):
+        """ Change the path into a global path and ensure the path exists."""
+        globalPath = path
+        if path[0] != '/': # Global path
+            globalPath = os.path.abspath(os.path.join(os.getcwd(), path ))
+        if not os.path.exists(globalPath):
+            os.makedirs(globalPath)
+        return globalPath
 ####################################################################################################
     # Useful internal functions
     def _test_compile(self, headers=[], flags=[]):
@@ -232,14 +240,6 @@ class System(object):
             if inenv!=-1:
                 self._logger.Error!!
                 raise exceptions.SystemException("System not clean", envbit)
-    def _build_path(self, path):
-        """ Change the path into a global path and ensure the path exists."""
-        globalPath = path
-        if path[0] != '/': # Global path
-            globalPath = os.path.abspath(os.path.join(os.getcwd(), path ))
-        if not os.path.exists(globalPath):
-            os.makedirs(globalPath)
-        return globalPath
     def _serialise(path, data):
         """ Pickle data to path."""
         data_file = open(path, "w")

@@ -1,8 +1,14 @@
 #!/usr/bin/env python
+#
+# Snogoggles
+#
+# The snogoggles install packages.
+#
 # Author P G Jones - 24/06/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 27/07/2012 <p.g.jones@qmul.ac.uk> : Added snogoggles versions.
 # Author P G Jones - 27/07/2012 <p.g.jones@qmul.ac.uk> : Moved to env file builder.
-# The Snogoggles base classes
+# Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+####################################################################################################
 import LocalPackage
 import os
 import PackageUtil

@@ -83,6 +83,9 @@ class System(object):
     def get_install_mode(self):
         """ Return the system install mode."""
         return self._install_mode
+    def get_os_type(self):
+        """ Return the system os type."""
+        return self._os_type
 ####################################################################################################
     # Functions that do stuff to the system
     def execute_command(self, command, args=[], cwd=self.get_install_path(), env={}, verbose=False):
@@ -196,10 +199,11 @@ class System(object):
         return os.path.exists(os.path.join(path, file_name))
     def test_library(self, library, headers=[]):
         """ Test if code can be compiled with header and linked to libName."""
-        return self._test_compile(headers, ["-l%s" % library])
-    def test_framework_library(self, library, headers=[]):
-        """ Test if code can be compiled with header and linked to libName for Mac OSX Frameworks."""
-        return self._test_compile(headers, ["-framework","%s" % libName])
+        if self._os_type = Mac:
+            return self._test_compile(headers, ["-l%s" % library]) or \
+                self._test_compile(headers, ["-framework","%s" % library])
+        else:
+            return self._test_compile(headers, ["-l%s" % library])
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
         libs = self.execute_command(config, ["--libs"]).strip('\n').split(' ')

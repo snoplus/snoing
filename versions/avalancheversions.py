@@ -10,21 +10,7 @@
 ####################################################################################################
 import avalanche
 
-class AvalancheDev(avalanche.Avalanche):
-    """ The development version of avalanche (git repo)."""
-    def __init__(self, system):
-        """ Initiliase the dev version."""
-        super(AvalancheDev, self).__init__("avalanche-dev", system, "zeromq-2.2.0", 
-                                           "root-5.32.04", "curl-7.26.0")
-    def _IsDownloaded( self ):
-        """ Check if downloaded."""
-        return self._system.file_exists(self.get_install_path())
-    def _Download( self ):
-        """ Download avalanche (git clone)."""
-        args = ["clone", "git@github.com:mastbaum/avalanche.git",  self.get_install_path()]
-        self._system.execute_command("git", args)
-
-class AvalancheV1(avalanche.AvalancheRelease):
+class AvalancheV1(avalanche.Avalanche):
     def __init__(self, system):
         """ Initialise version 1."""
         super(AvalancheV1, self).__init__("avalanche-1", system, "zeromq-2.2.0", 

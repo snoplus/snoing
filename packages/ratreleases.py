@@ -13,13 +13,12 @@
 import os
 import rat
 
-class RatReleasePost3(rat.RatRelease):
-    """ Base package installer for rat release 3."""
-    def __init__(self, name, system, root_dep, scons_dep, geant_dep, clhep_dep, curl_dep, \
+class RatRelease4(rat.RatRelease):
+    """ Base package installer for rat release 4."""
+    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, \
                      bzip_dep, avalanche_dep, zeromq_dep, xercesc_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatReleasePost3, self).__init__(name, system, root_dep, scons_dep, tar_name)
-        self._geant_dep = geant_dep
+        super(RatRelease4, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
         self._clhep_dep = clhep_dep
         self._curl_dep = curl_dep
         self._bzip_dep = bzip_dep
@@ -28,8 +27,8 @@ class RatReleasePost3(rat.RatRelease):
         self._xercesc_dep = xercesc_dep
     def _get_dependencies(self):
         """ Return the extra dependencies."""
-        return [self._geant_dep, self._clhep_dep, self._curl_dep, self._bzip_dep, \
-                    self._avalanche_dep, self._zeromq_dep, self._xercesc_dep]
+        return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._avalanche_dep, 
+                self._zeromq_dep, self._xercesc_dep]
     def _write_env_file(self):
         """ Diff geant env file and no need to patch rat."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
@@ -57,13 +56,12 @@ class RatReleasePost3(rat.RatRelease):
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
                                                           "lib"))
 
-class RatReleasePre4(rat.RatRelease):
+class RatRelease3(rat.RatRelease):
     """ Base package installer for rat release 3."""
-    def __init__(self, name, system, root_dep, scons_dep, geant_dep, clhep_dep, curl_dep, \
+    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, \
                      bzip_dep, avalanche_dep, zeromq_dep, xercesc_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatReleasePre4, self).__init__(name, system, root_dep, scons_dep, tar_name)
-        self._geant_dep = geant_dep
+        super(RatRelease3, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
         self._clhep_dep = clhep_dep
         self._curl_dep = curl_dep
         self._bzip_dep = bzip_dep
@@ -72,8 +70,8 @@ class RatReleasePre4(rat.RatRelease):
         self._xercesc_dep = xercesc_dep
     def _get_dependencies(self):
         """ Return the extra dependencies."""
-        return [self._geant_dep, self._clhep_dep, self._curl_dep, self._bzip_dep, \
-                    self._avalanche_dep, self._zeromq_dep, self._xercesc_dep]
+        return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._avalanche_dep, \
+                    self._zeromq_dep, self._xercesc_dep]
     def _write_env_file(self):
         """ Add the extra info to the env file."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "env")
@@ -101,22 +99,23 @@ class RatReleasePre4(rat.RatRelease):
             text = externals_file.read()
             externals_file.close()
             externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "w")
-            text = text.replace("ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
+            text = text.replace("ext_deps['bz2']['path'] = None", 
+                                "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
             externals_file.write(text)
             externals_file.close()
 
-class RatReleasePre3(rat.RatRelease):
+class RatRelease2(rat.RatRelease):
     """ Base package installer for rat release 2."""
-    def __init__(self, name, system, root_dep, scons_dep, geant_dep, clhep_dep, curl_dep, bzip_dep, tar_name):
+    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, bzip_dep, 
+                 tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatReleasePre3, self).__init__(name, system, root_dep, scons_dep, tar_name)
-        self._geant_dep = geant_dep
+        super(RatRelease2, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
         self._clhep_dep = clhep_dep
         self._curl_dep = curl_dep
         self._bzip_dep = bzip_dep
     def _get_dependencies(self):
         """ Return the extra dependencies."""
-        return [self._geant_dep, self._clhep_dep, self._curl_dep, self._bzip_dep]
+        return [self._clhep_dep, self._curl_dep, self._bzip_dep]
     def _write_env_file(self):
         """ Add the extra info to the env file."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "env")
@@ -133,20 +132,21 @@ class RatReleasePre3(rat.RatRelease):
             text = externals_file.read()
             exterbalsFile.close()
             externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "w")
-            text = text.replace("ext_deps['bz2']['path'] = None", "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
+            text = text.replace("ext_deps['bz2']['path'] = None", 
+                                "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
             externals_file.write(text)
             externals_file.close()
 
-class RatReleasePre2(rat.RatRelease):
+class RatRelease0and1(rat.RatRelease):
     """ Base package installer for rat releases 0, 1."""
-    def __init__(self, name, system, root_dep, scons_dep, geant_dep, clhep_dep, tar_name):
+    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatReleasePre2, self).__init__(name, system, root_dep, scons_dep, tar_name)
-        self._geant_dep = geant_dep
+        super(RatRelease0and1, self).__init__(name, system, root_dep, geant_dep, scons_dep, 
+                                              tar_name)
         self._clhep_dep = clhep_dep
     def _get_dependencies(self):
         """ Return the extra dependencies."""
-        return [self._geant_dep, self._clhep_dep]
+        return [self._clhep_dep]
     def _write_env_file(self):
         """ Add the extra info to the env file."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "env")

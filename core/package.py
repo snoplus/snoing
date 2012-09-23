@@ -17,6 +17,7 @@ class Package( object ):
         """ Construct the package with a name and the system installation information."""
         self._name = name
         self._system = system
+        self._install_path = None
     def get_name(self):
         """ Return the package name."""
         return self._name

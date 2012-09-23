@@ -222,8 +222,12 @@ class System(object):
             return self._test_compile(headers, ["-l%s" % library])
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
-        libs = self.execute_command(config, ["--libs"]).strip('\n').split(' ')
-        includes = self.execute_command(config, ["--includes"]).strip('\n').split(' ')
+        process = subprocess.Popen([config, "--libs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, error = process.communicate()
+        libs = output.strip('\n').split(' ')
+        process = subprocess.Popen([config, "--includes"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, error = process.communicate()
+        includes = output.strip('\n').split(' ')
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):
         """ Change the path into a global path and ensure the path exists."""

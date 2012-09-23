@@ -17,9 +17,6 @@ class ConditionalLibraryPackage(conditionalpackage.ConditionalPackage):
         super(ConditionalLibraryPackage, self).__init__(name, system)
         self._library = library
         self._headers = headers
-        return
     def _is_system_installed( self ):
         """ Check if library is available on the system."""
-        installed, output = self._system.test_library( self._library, self._headers )
-        self._check_pipe += output
-        return installed
+        self._installed = self._system.test_library( self._library, self._headers )

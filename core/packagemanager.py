@@ -66,7 +66,8 @@ class PackageManager(object):
             package.install()
             self._logger.package_installed(package_name)
         except snoing_exceptions.SystemException, e:
-            self._logger.error("Error")
+            self._logger.error(e.args[0])
+            self._logger.detail(e.Detail)
         return package.get_install_path()
     def install_package_dependencies(self, package_name):
         """ Install the dependencies for named package."""
@@ -87,7 +88,8 @@ class PackageManager(object):
         try:
             package.Update()
         except snoing_exceptions.SystemException, e:
-            self._logger.error("eror")
+            self._logger.error(e.args[0])
+            self._logger.detail(e.Detail)
         for dependent_name in self._package_dependents(package_name):
             self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):

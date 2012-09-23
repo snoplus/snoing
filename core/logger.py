@@ -57,6 +57,7 @@ class Logger(object):
     def error(self, error_message):
         """ Notify that an error has occurred."""
         self._write_local("%s\n" % error_message)
+        self._verbose = True # Switch to verbose on error
     def command(self, command_message):
         """ Notify which command is being executed."""
         self._write_local("%s\n" % command_message)

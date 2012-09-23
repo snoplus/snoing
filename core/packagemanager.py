@@ -11,7 +11,7 @@
 import package
 import localpackage
 import inspect
-import exceptions
+import snoing_exceptions
 import types
 import os
 
@@ -48,7 +48,7 @@ class PackageManager(object):
         False.
         """
         self._check_package(package_name)
-        return self._packages[package_name].is_installled()
+        return self._packages[package_name].is_installed()
     def install_package(self, package_name):
         """ Install a package, installing all it's dependencies first."""
         if self.check_installed(package_name):
@@ -56,7 +56,7 @@ class PackageManager(object):
         package = self._packages[package_name]
         self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
-            raise exceptions.PackageException("Package cannot be installed by snoing", package_name)
+            raise snoing_exceptions.PackageException("Package cannot be installed by snoing", package_name)
         dependencies = self._install_dependencies(package)
         package.set_dependency_paths(dependencies)
         try:
@@ -64,9 +64,9 @@ class PackageManager(object):
             self._logger.package_downloaded(package_name)
             package.install()
             self._logger.package_installed(package_name)
-        except exceptions.SystemException, e:
+        except snoing_exceptions.SystemException, e:
             self._logger.error("Error")
-        return self.get_install_path()
+        return package.get_install_path()
     def install_package_dependencies(self, package_name):
         """ Install the dependencies for named package."""
         self._check_package(package_name) # Check package_name exists...
@@ -78,25 +78,25 @@ class PackageManager(object):
         package = self._packages[package_name]
         self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
-            raise exceptions.PackageException("Package cannot be updated by snoing", package_name)
+            raise snoing_exceptions.PackageException("Package cannot be updated by snoing", package_name)
         if package.is_updated(): # Nothing todo if already updated
             return
         dependencies = self._install_dependencies( package )
         package.set_dependency_paths(dependencies)
         try:
             package.Update()
-        except exceptions.SystemException, e:
+        except snoing_exceptions.SystemException, e:
             self._logger.error("eror")
         for dependent_name in self._package_dependents(package_name):
             self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):
         """ Remove a package, don't remove if force is False and packages depend on package_name."""
         if not self.check_installed(package_name):
-            raise exceptions.PackageException("Cannot remove, not installed.", package_name)
+            raise snoing_exceptions.PackageException("Cannot remove, not installed.", package_name)
         package = self._packages[package_name]
         if not force:
             for dependent_name in self._package_dependents(package_name):
-                raise exceptions.PackageException("Cannot remove as %s depends on it." % \
+                raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
                                                       dependent_name, package_name)
         # If get here then package can be deleted
         package.remove()
@@ -125,14 +125,14 @@ class PackageManager(object):
     def _check_package(self, package_name):
         """ Check a package with package_name exists."""
         if not package_name in self._packages.iterkeys():
-            raise exceptions.PackageException("Package doesn't exist.", package_name)
+            raise snoing_exceptions.PackageException("Package doesn't exist.", package_name)
         self._packages[package_name].check_state()
     def _check_mode(self, package):
         """ Check the package install mode is compatible with the system."""
         if isinstance(package, localpackage.LocalPackage):
             if package.get_install_mode() is not None and \
                     package.get_install_mode() != self._system.get_install_mode():
-                raise exceptions.PackageException(("Package install mode is incompatible with the "
+                raise snoing_exceptions.PackageException(("Package install mode is incompatible with the "
                                                    "system"),
                                                   package.get_name())
     def _install_dependencies(self, package):
@@ -143,14 +143,14 @@ class PackageManager(object):
             # at least one is installed.
             if isinstance(dependency, types.ListType): # Multiple optional dependencies
                 for opt_dependency in dependency:
-                    if self.check_package(opt_dependency): # Great found one!
+                    if self.check_installed(opt_dependency): # Great found one!
                         dependency_paths[opt_dependency] = \
                             self._packages[opt_dependency].get_install_path()
                         break
                 else: # No optional dependency is installed, thus install the first
                     dependency_paths[dependency[0]] = self.install_package(dependency[0])
             else: # Just a single dependency
-                if self.check_package(dependency):
+                if self.check_installed(dependency):
                     dependency_paths[dependency] = self._packages[dependency].get_install_path()
                 else: # Must install it
                     dependency_paths[dependency] = self.install_package(dependency)

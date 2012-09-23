@@ -20,7 +20,7 @@ class System(object):
     executed.
     """
     Mac, Linux = range(2)
-    def __init__(self, logger, cache_path, install_path, install_mode=None, arguments=None):
+    def __init__(self, logger, cache_path, install_path, install_mode=None, arguments=[]):
         """ Initialise with a logger for output and a prefered cache and install path. The 
         install_mode is optional, None is no install mode required. The arguments are extra 
         arguments applied to all configure script calls (package specific).
@@ -94,7 +94,7 @@ class System(object):
         if cwd is None:
             cwd = self.get_install_path()
         args.extend(self._arguments)
-        self.execute_command(command, args, cwd, env, verbose)
+        return self.execute_command(command, args, cwd, env, verbose)
     def execute_command(self, command, args=[], cwd=None, env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""
         if cwd is None:
@@ -107,11 +107,13 @@ class System(object):
         shell_command = [command] + args
         process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = command + ' '.join( args ) + '\n'
+        output = command + ' '.join(args) + '\n'
+        self._logger.command(command + ' '.join(args))
         if verbose:
-            for line in iter( process.stdout.readline, "" ):
-                sys.stdout.write( '\n' + line[:-1] )
+            for line in iter(process.stdout.readline, ""):
+                sys.stdout.write('\n' + line[:-1])
                 sys.stdout.flush()
+                self._logger.detail(line[:-1])
                 output += '\n' + line[:-1]
             process.wait()
         else:
@@ -122,7 +124,7 @@ class System(object):
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
                                              output)
         return output
-    def execute_complex_command(command, verbose=False):
+    def execute_complex_command(self, command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 
         environment is assumed to be set in the commands.
         """
@@ -133,7 +135,7 @@ class System(object):
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
         os.remove( file_name )
         return output
-    def download_file(url, username=None, password=None, token=None, file_name=None):
+    def download_file(self, url, username=None, password=None, token=None, file_name=None):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
         file_name.
@@ -150,7 +152,7 @@ class System(object):
         local_file = open(os.path.join(self.get_cache_path(), file_name), 'wb')
         try:
             remote_file = urllib2.urlopen(url_request)
-            download_size = int(remoteFile.info().getheaders("Content-Length")[0])
+            download_size = int(remote_file.info().getheaders("Content-Length")[0])
             local_file.write(remote_file.read())
             local_file.close()
             remote_file.close()
@@ -158,7 +160,7 @@ class System(object):
             os.remove(local_file)
             raise snoing_exceptions.SystemException("Download error", url)
         return "Downloaded %i bytes\n" % download_size
-    def untar_file(file_name, target_path, strip=0):
+    def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
         if strip == 0: # Untar directly into target
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
@@ -167,7 +169,8 @@ class System(object):
         else: # Must extract to temp target then copy strip directory to real target 
             temp_dir = os.path.join(self.get_cache_path(), "temp")
             if os.path.exists(temp_dir): # Delete temp if it exits
-                shutil.remove(temp_dir)
+                shutil.rmtree(temp_dir)
+            temp_dir = self.build_path(temp_dir)
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
             tar_file.extractall(temp_dir)
             tar_file.close()
@@ -176,7 +179,7 @@ class System(object):
                 sub_folders = os.listdir(copy_dir)
                 if 'pax_global_header' in sub_folders:
                     sub_folders.remove('pax_global_header')
-                copy_dir = os.path.join(copy_dir, subFolders[0])
+                copy_dir = os.path.join(copy_dir, sub_folders[0])
             shutil.copytree(copy_dir, target_path)
             shutil.rmtree(temp_dir)
         return "Extracted %s to %s" % (file_name, target_path)

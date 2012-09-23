@@ -7,6 +7,7 @@
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
+import sys
 import optparse
 import textlogger
 import installmode
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     default_file.close()
 
     # Now create the logger, direct logging to snoing.log file
-    logger = textlogger.TextLogger(os.path.join(os.path.dirname(__file__), "snoing.log"))
+    logger = textlogger.TextLogger(os.path.join(os.path.dirname(__file__), "snoing.log"), options.verbose)
     # Now create the system
     if options.grid and options.graphical:
         print_error_message()
@@ -84,8 +85,13 @@ if __name__ == "__main__":
         install_mode = installmode.Graphical
     else:
         install_mode = installmode.Normal
+    # Sort out the extra arguments
+    if options.arguments is not None:
+        opt_args = options.arguments.split()
+    else:
+        opt_args = []
     try:
-        install_system = system.System(logger, options.cache_path, options.install_path, install_mode, options.arguments)
+        install_system = system.System(logger, options.cache_path, options.install_path, install_mode, opt_args)
     except snoing_exceptions.SystemException, e:
         print_error_message()
     # Now create the package manage and populate it
@@ -115,19 +121,19 @@ if __name__ == "__main__":
             if len(args) != 0:
                 package_name = args[0]
             if options.query: # Wish to query the package
-                Log.Info( "Checking package %s install status" % package_name )
+                logger.info( "Checking package %s install status" % package_name )
                 if package_manager.CheckPackage( package_name ):
                     Log.Result( "Installed" )
                 else:
                     Log.Warn( "Not Installed" )
             elif options.remove or options.force_remove: # Wish to remove the package
-                package_manager.RemovePackage( package_name, options.force_remove )
+                package_manager.remove_package( package_name, options.force_remove )
             elif options.dependency: # Wish to install only the dependencies
-                package_manager.InstallDependencies( package_name )
+                package_manager.install_dependencies( package_name )
             elif options.progress: # Wish to update the package
-                package_manager.UpdatePackage( package_name )
+                package_manager.update_package( package_name )
             else: # Wish to install the package
-                package_manager.InstallPackage( package_name )
+                package_manager.install_package( package_name )
     except snoing_exceptions.PackageException, e:
-        print e
-        PrintErrorMessage()
+        print e.Package, ":", e
+        print_error_message()

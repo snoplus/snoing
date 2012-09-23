@@ -12,6 +12,7 @@
 import localpackage
 import installmode
 import os
+import system
 
 class Root(localpackage.LocalPackage):
     """ Base root installer, different versions only have different names."""
@@ -40,8 +41,8 @@ class Root(localpackage.LocalPackage):
         self._download_pipe += self._system.download_file("ftp://root.cern.ch/root/" + self._tar_name)
     def _install(self):
         """ Install root."""
-        self._install_pipe += PackageUtil.UnTarFile(self._tar_name, self.GetInstallPath(), 1)
-        if self._system.get_os_type == system.Mac and os.path.exists('/usr/X11/lib'):
+        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        if self._system.get_os_type == system.System.Mac and os.path.exists('/usr/X11/lib'):
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', 
                     '--with-x11-libdir=/usr/X11/lib','--with-xft-libdir=/usr/X11/lib',
                     '--with-xext-libdir=/usr/X11/lib']
@@ -50,5 +51,5 @@ class Root(localpackage.LocalPackage):
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python']
-        self._install_pipe += self._system.configure_command( args=args, cwd=self.get_install_path())
+        self._install_pipe += self._system.configure_command(args=args, cwd=self.get_install_path())
         self._install_pipe += self._system.execute_command('make', cwd=self.get_install_path())

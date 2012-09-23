@@ -62,14 +62,14 @@ class LocalPackage(package.Package):
             return 
         # Try installation, will raise exception if fails
         self._install()
-        self._set_state(Installed)
+        self._set_state(LocalPackage.Installed)
     def download(self):
         """ Full download process."""
         self.check_state() # Check the state first, saves effort
         if self.is_downloaded(): # Already downloaded, don't try again
             return
         self._download()
-        self._set_state(Downloaded)
+        self._set_state(LocalPackage.Downloaded)
     def update(self):
         """ Update the package install, usually deletes and reinstalls..."""
         self.check_state()
@@ -77,7 +77,7 @@ class LocalPackage(package.Package):
             self.install()
         else:
             self._update()
-        self._set_satte(Updated)
+        self._set_state(LocalPackage.Updated)
     def remove(self):
         """ Default is to delete the directory, derived classes should add extra."""
         self._system.remove(self.get_install_path())

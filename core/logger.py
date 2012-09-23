@@ -13,9 +13,10 @@ class Logger(object):
     """ Update with pacakages state change information, and convey information to a
     file.
     """
-    def __init__(self, local):
+    def __init__(self, local, verbose=False):
         """ Save the file paths and setup the install folder file if needed."""
         self._local_file = local
+        self._verbose = verbose
         if os.path.exists(self._local_file):
             os.remove(self._local_file)
     def set_install_path(self, install):
@@ -56,6 +57,12 @@ class Logger(object):
     def error(self, error_message):
         """ Notify that an error has occurred."""
         self._write_local("%s\n" % error_message)
+    def command(self, command_message):
+        """ Notify which command is being executed."""
+        self._write_local("%s\n" % command_message)
+    def detail(self, detail_message):
+        """ Notify some detail."""
+        self._write_local("%s\n" % detail_message)
     def _write_local(self, text):
         """ Write information to the local file."""
         file_ = open(self._local_file, "a")

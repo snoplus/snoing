@@ -13,6 +13,7 @@ HEADER = '\033[95m'
 OKBLUE = '\033[94m'
 OKGREEN = '\033[92m'
 WARNING = '\033[93m'
+COMMAND = '\033[96m'
 FAIL = '\033[91m'
 END = '\033[0m'
 
@@ -20,9 +21,9 @@ class TextLogger(logger.Logger):
     """ Update with pacakages state change information, and convey information to the
     screen in different colours :).
     """
-    def __init__(self, local):
+    def __init__(self, local, verbose=False):
         """ Call the base class init."""
-        super(TextLogger, self).__init__(local)
+        super(TextLogger, self).__init__(local, verbose)
     def package_registered(self, package_name):
         """ Notify that a package has been registered."""
         print HEADER + ("Package %s registered." % package_name) + END
@@ -55,3 +56,13 @@ class TextLogger(logger.Logger):
         """ Notify that an error has occurred."""
         print FAIL + error_message + END
         super(TextLogger, self).error(error_message)
+    def command(self, command_message):
+        """ Notify which command is being executed."""
+        if self._verbose:
+            print "\t" + COMMAND + command_message + END
+        super(TextLogger, self).command(command_message)
+    def detail(self, detail_message):
+        """ Notify some detail."""
+        if self._verbose:
+            print detail_message
+        super(TextLogger, self).detail(detail_message)

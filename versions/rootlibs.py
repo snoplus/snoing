@@ -41,13 +41,13 @@ class X11(librarypackage.LibraryPackage):
     """ Package for the x11-dev library."""
     def __init__(self, system):
         super(X11, self).__init__("X11", system, "Install X11-dev on this system.", 
-                                  "X11", "X11/Xlib.h")
+                                  "X11", ["X11/Xlib.h"])
 
 class Xpm(librarypackage.LibraryPackage):
     """ Package for the xpm-dev library."""
     def __init__(self, system):
         super(Xpm, self).__init__("Xpm", system, "Install Xpm-dev on this system.", 
-                                  "Xpm", "X11/xpm.h")
+                                  "Xpm", ["X11/xpm.h"])
 
 class Xft(librarypackage.LibraryPackage):
     """ Package for the xft-dev library."""
@@ -59,4 +59,4 @@ class Xext(librarypackage.LibraryPackage):
     """ Package for the xext-dev library."""
     def __init__(self, system):
         super(Xext, self).__init__("Xext", system, "Install the X11 extensions dev on this system.", 
-                                   "Xext", "X11/extensions/shape.h")
+                                   "Xext", ["X11/extensions/shape.h"])

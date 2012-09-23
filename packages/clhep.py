@@ -31,7 +31,7 @@ class Clhep(localpackage.LocalPackage):
             "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/" + self._tar_name)
     def _install(self):
         """ Install clhep."""
-        self._install_pipe += self._system.untar_file(self._tar_name, self.GetInstallPath(), 2)
+        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 2)
         self._install_pipe += self._system.execute_command('./configure', 
                                                            ['--prefix=%s' % self.get_install_path()], 
                                                            cwd=self.get_install_path())
@@ -56,7 +56,6 @@ class ClhepPost2110(Clhep):
         cmake_command = "cmake"
         if self._dependency_paths["cmake"] is not None: # Special cmake installed
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
-        self._install_pipe += self._system.execute_command(cmake_command, cmake_opts, cwd=self.GetInstallPath())
-        self._install_pipe += self._system.execute_command("make", cwd=self.GetInstallPath())
-        self._install_pipe += self._system.execute_command("make", ['install'], cwd=self.GetInstallPath())
-        return
+        self._install_pipe += self._system.execute_command(cmake_command, cmake_opts, cwd=self.get_install_path())
+        self._install_pipe += self._system.execute_command("make", cwd=self.get_install_path())
+        self._install_pipe += self._system.execute_command("make", ['install'], cwd=self.get_install_path())

@@ -11,6 +11,7 @@
 import localpackage
 import installmode
 import os
+import shutil
 
 class Geant4Post5(localpackage.LocalPackage):
     """ Base geant4 installer for post 4.9.5 geant versions. This is sooooo much nicer"""
@@ -112,7 +113,6 @@ class Geant4Pre5(localpackage.LocalPackage):
                                            os.path.join(self.get_install_path(), "lib/" + sys)) and \
             self._system.library_exists("libG4UIbasic", 
                                         os.path.join(self.get_install_path(), "lib/" + sys))
-####################################################################################################
     def _download(self):
         """ Derived classes should override this to download the package."""
         self._download_pipe += self._system.download_file(
@@ -121,34 +121,44 @@ class Geant4Pre5(localpackage.LocalPackage):
             self._download_pipe += self._system.download_file(
                 "http://geant4.web.cern.ch/geant4/support/source/" + tar)
     def _install(self):
-        """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
-        import shutil
+        """ Derived classes should override this to install the package, should install only when 
+        finished. Return True on success.
+        """
         sys = os.uname()[0] + "-g++"
-        self._install_pipe += PackageUtil.UnTarFile(self._tar_name, self.get_install_path(), 1)
-        for dataTar in self._data_tars:
-            self._install_pipe += PackageUtil.UnTarFile(dataTar, os.path.join(self.get_install_path(), "data"), 0)
-        self.WriteGeant4ConfigFile()
-        self._install_pipe += PackageUtil.ExecuteSimpleCommand('./Configure', ['-incflags', '-build', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.get_install_path())
-        self._install_pipe += PackageUtil.ExecuteSimpleCommand('./Configure', ['-incflags', '-install', '-d', '-e', '-f', "geant4-snoing-config.sh"], None, self.get_install_path())
+        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        for tar in self._data_tars:
+            self._install_pipe += self._system.untar_file(tar, os.path.join(self.get_install_path(), 
+                                                                            "data"), 0)
+        self.write_geant4_config_file()
+        self._install_pipe += self._system.configure_command('./Configure', 
+                                                             ['-incflags', '-build', '-d', '-e', 
+                                                              '-f', "geant4-snoing-config.sh"], 
+                                                             cwd=self.get_install_path())
+        self._install_pipe += self._system.configure_command('./Configure', 
+                                                             ['-incflags', '-install', '-d', '-e', 
+                                                              '-f', "geant4-snoing-config.sh"], 
+                                                             cwd=self.get_install_path())
         try:
-            self._install_pipe += PackageUtil.ExecuteSimpleCommand('./Configure', [], None, self.get_install_path())
+            self._install_pipe += self._system.configure_command('./Configure', 
+                                                                 cwd=self.get_install_path())
         except Exception: # Geant4 configure always fails, it is annoying
             pass
         if not os.path.exists(os.path.join(self.get_install_path(),'env.sh')):
-            shutil.copy(os.path.join(self.get_install_path(),'.config/bin/'+sys+'/env.sh'),os.path.join(self.get_install_path(),'env.sh'))
-            shutil.copy(os.path.join(self.get_install_path(),'.config/bin/'+sys+'/env.csh'),os.path.join(self.get_install_path(),'env.csh'))
-        return 
-    def WriteGeant4ConfigFile(self):
+            shutil.copy(os.path.join(self.get_install_path(), '.config/bin/' + sys + '/env.sh'), 
+                        os.path.join(self.get_install_path(),'env.sh'))
+            shutil.copy(os.path.join(self.get_install_path(), '.config/bin/' + sys + '/env.csh'), 
+                        os.path.join(self.get_install_path(),'env.csh'))
+    def write_geant4_config_file(self):
         """ Write the relevant geant4 configuration file, nasty function."""
-        clhepPath = self._DependencyPaths[self._clhep_dep]
+        clhep_path = self._dependency_paths[self._clhep_dep]
         sys = os.uname()[0]
-        configText = "g4clhep_base_dir='%s'\ng4clhep_include_dir='%s'\ng4clhep_lib_dir='%s'\ng4data='%s'\ng4install='%s'\ng4osname='%s'\ng4system='%s'\n" % (clhepPath, os.path.join(clhepPath, "include"), os.path.join(clhepPath, "lib"), os.path.join(self.get_install_path(), "data"), self.get_install_path(), sys, sys + "-g++")
-        configText += "g4clhep_lib='CLHEP'\ng4compiler='g++'\ng4debug='n'\nd_portable='define'\ng4global='n'\ng4granular='y'\ng4include=''\ng4includes_flag='y'\ng4lib_build_shared='y'\ng4lib_build_static='y'\ng4lib_use_granular='y'\ng4lib_use_shared='n'\ng4lib_use_static='y'\ng4make='make'\ng4ui_build_gag_session='y'\ng4ui_build_terminal_session='y'\ng4ui_build_win32_session='n'\ng4ui_build_xaw_session='n'\ng4ui_use_gag='y'\ng4ui_use_tcsh='y'\ng4ui_use_terminal='y'\ng4ui_use_win32='n'\ng4ui_use_xaw='n'\ng4vis_build_oiwin32_driver='n'\ng4vis_build_oix_driver='n'\ng4vis_build_openglwin32_driver='n'\ng4vis_use_oiwin32='n'\ng4vis_use_oix='n'\ng4vis_use_openglwin32='n'\ng4w_use_g3tog4='n'\ng4wanalysis_build=''\ng4wanalysis_build_jas=''\ng4wanalysis_build_lab=''\ng4wanalysis_build_lizard=''\ng4wanalysis_use='n'\ng4wanalysis_use_jas=''\ng4wanalysis_use_lab=''\ng4wanalysis_use_lizard=''\ng4wlib_build_g3tog4='n'\n"
-        xercesPath = self._DependencyPaths[self._xerces_dep]
-        if PackageUtil.kGraphical:
-            configText += "g4ui_build_xm_session='y'\ng4ui_use_xm='y'\ng4vis_build_asciitree_driver='y'\ng4vis_build_dawn_driver='y'\ng4vis_build_dawnfile_driver='y'\ng4vis_build_openglx_driver='y'\ng4vis_build_openglxm_driver='y'\ng4vis_build_raytracer_driver='y'\ng4vis_build_vrml_driver='y'\ng4vis_build_vrmlfile_driver='y'\ng4vis_oglhome='/usr'\noglhome='/usr'\ng4vis_use_asciitree='y'\ng4vis_use_dawn='y'\ng4vis_use_dawnfile='y'\ng4vis_use_openglx='y'\ng4vis_use_openglxm='y'\ng4vis_use_raytracer='y'\ng4vis_use_vrml='y'\ng4vis_use_vrmlfile='y'\ng4lib_build_gdml='y'\ng4gdml_xercesc_root='%s'\nwith_xercesc_root='%s'" % (xercesPath, xercesPath)
+        config_text = "g4clhep_base_dir='%s'\ng4clhep_include_dir='%s'\ng4clhep_lib_dir='%s'\ng4data='%s'\ng4install='%s'\ng4osname='%s'\ng4system='%s'\n" % (clhep_path, os.path.join(clhep_path, "include"), os.path.join(clhep_path, "lib"), os.path.join(self.get_install_path(), "data"), self.get_install_path(), sys, sys + "-g++")
+        config_text += "g4clhep_lib='CLHEP'\ng4compiler='g++'\ng4debug='n'\nd_portable='define'\ng4global='n'\ng4granular='y'\ng4include=''\ng4includes_flag='y'\ng4lib_build_shared='y'\ng4lib_build_static='y'\ng4lib_use_granular='y'\ng4lib_use_shared='n'\ng4lib_use_static='y'\ng4make='make'\ng4ui_build_gag_session='y'\ng4ui_build_terminal_session='y'\ng4ui_build_win32_session='n'\ng4ui_build_xaw_session='n'\ng4ui_use_gag='y'\ng4ui_use_tcsh='y'\ng4ui_use_terminal='y'\ng4ui_use_win32='n'\ng4ui_use_xaw='n'\ng4vis_build_oiwin32_driver='n'\ng4vis_build_oix_driver='n'\ng4vis_build_openglwin32_driver='n'\ng4vis_use_oiwin32='n'\ng4vis_use_oix='n'\ng4vis_use_openglwin32='n'\ng4w_use_g3tog4='n'\ng4wanalysis_build=''\ng4wanalysis_build_jas=''\ng4wanalysis_build_lab=''\ng4wanalysis_build_lizard=''\ng4wanalysis_use='n'\ng4wanalysis_use_jas=''\ng4wanalysis_use_lab=''\ng4wanalysis_use_lizard=''\ng4wlib_build_g3tog4='n'\n"
+        xerces_path = self._dependency_paths[self._xerces_dep]
+        if self._system.get_install_mode() == installmode.Graphical:
+            config_text += "g4ui_build_xm_session='y'\ng4ui_use_xm='y'\ng4vis_build_asciitree_driver='y'\ng4vis_build_dawn_driver='y'\ng4vis_build_dawnfile_driver='y'\ng4vis_build_openglx_driver='y'\ng4vis_build_openglxm_driver='y'\ng4vis_build_raytracer_driver='y'\ng4vis_build_vrml_driver='y'\ng4vis_build_vrmlfile_driver='y'\ng4vis_oglhome='/usr'\noglhome='/usr'\ng4vis_use_asciitree='y'\ng4vis_use_dawn='y'\ng4vis_use_dawnfile='y'\ng4vis_use_openglx='y'\ng4vis_use_openglxm='y'\ng4vis_use_raytracer='y'\ng4vis_use_vrml='y'\ng4vis_use_vrmlfile='y'\ng4lib_build_gdml='y'\ng4gdml_xercesc_root='%s'\nwith_xercesc_root='%s'" % (xerces_path, xerces_path)
         else:
-            configText += "g4ui_build_xm_session='n'\ng4ui_use_xm='n'\ng4vis_build_asciitree_driver='n'\ng4vis_build_dawn_driver='n'\ng4vis_build_dawnfile_driver='n'\ng4vis_build_openglx_driver='n'\ng4vis_build_openglxm_driver='n'\ng4vis_build_raytracer_driver='n'\ng4vis_build_vrml_driver='n'\ng4vis_build_vrmlfile_driver='n'\ng4vis_oglhome=''\ng4vis_use_asciitree='n'\ng4vis_use_dawn='n'\ng4vis_use_dawnfile='n'\ng4vis_use_openglx='n'\ng4vis_use_openglxm='n'\ng4vis_use_raytracer='n'\ng4vis_use_vrml='n'\ng4vis_use_vrmlfile='n'\ng4vis_none='1'\ng4lib_build_gdml='y'\ng4gdml_xercesc_root='%s'\nwith_xercesc_root='%s'" % (xercesPath, xercesPath)
+            config_text += "g4ui_build_xm_session='n'\ng4ui_use_xm='n'\ng4vis_build_asciitree_driver='n'\ng4vis_build_dawn_driver='n'\ng4vis_build_dawnfile_driver='n'\ng4vis_build_openglx_driver='n'\ng4vis_build_openglxm_driver='n'\ng4vis_build_raytracer_driver='n'\ng4vis_build_vrml_driver='n'\ng4vis_build_vrmlfile_driver='n'\ng4vis_oglhome=''\ng4vis_use_asciitree='n'\ng4vis_use_dawn='n'\ng4vis_use_dawnfile='n'\ng4vis_use_openglx='n'\ng4vis_use_openglxm='n'\ng4vis_use_raytracer='n'\ng4vis_use_vrml='n'\ng4vis_use_vrmlfile='n'\ng4vis_none='1'\ng4lib_build_gdml='y'\ng4gdml_xercesc_root='%s'\nwith_xercesc_root='%s'" % (xerces_path, xerces_path)
         configFile = open(os.path.join(self.get_install_path(), "geant4-snoing-config.sh"), "w")
-        configFile.write(configText)
+        configFile.write(config_text)
         configFile.close()

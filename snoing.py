@@ -121,11 +121,11 @@ if __name__ == "__main__":
             if len(args) != 0:
                 package_name = args[0]
             if options.query: # Wish to query the package
-                logger.info( "Checking package %s install status" % package_name )
-                if package_manager.CheckPackage( package_name ):
-                    Log.Result( "Installed" )
+                logger.set_state("Checking package %s install status" % package_name)
+                if package_manager.check_installed(package_name):
+                    logger.package_installed(package_name)
                 else:
-                    Log.Warn( "Not Installed" )
+                    logger.error(package_name)
             elif options.remove or options.force_remove: # Wish to remove the package
                 package_manager.remove_package( package_name, options.force_remove )
             elif options.dependency: # Wish to install only the dependencies

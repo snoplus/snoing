@@ -35,25 +35,25 @@ class LocalPackage(package.Package):
         """ Set the dependency path dictionary."""
         self._dependency_paths = paths
     # State functions
-    def set_state(self, state):
+    def _set_state(self, state):
         """ Set the current package state."""
         self._state = state
     def is_downloaded(self):
         """ Return package is downloaded."""
-        return self._state >= Downloaded
+        return self._state >= LocalPackage.Downloaded
     def is_installed(self):
         """ Check and return if package is installed."""
-        return self._state >= Installed
+        return self._state >= LocalPackage.Installed
     def is_updated(self):
         """ No way of checking, only updated if mode is 3."""
-        return self._state >= Updated
+        return self._state >= LocalPackage.Updated
     # Overhead methods, mostly do checking then call the related _XXX functions
     def check_state(self):
         """ Check if the package is downloaded and/or installed."""
         if self._is_downloaded():
-            self._set_state(Downloaded)
+            self._set_state(LocalPackage.Downloaded)
         if self._is_installed():
-            self._set_state(Installed)
+            self._set_state(LocalPackage.Installed)
     def install(self):
         """ Full install process."""
         self.check_state() # Check the state first, saves effort

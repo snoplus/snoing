@@ -13,7 +13,7 @@ import localpackage
 import installmode
 import os
 
-class Root(LocalPackage.LocalPackage):
+class Root(localpackage.LocalPackage):
     """ Base root installer, different versions only have different names."""
     def __init__(self, name, system, tar_name):
         """ Initialise the root package."""

@@ -9,6 +9,7 @@
 # Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import package
+import localpackage
 import inspect
 import exceptions
 import types
@@ -26,6 +27,10 @@ class PackageManager(object):
         instance = package(self._system)
         self._logger.package_registered(instance.get_name())
         instance.check_state()
+        if isinstance(instance, localpackage.LocalPackage) and instance.is_downloaded():
+            self._logger.package_downloaded(instance.get_name())
+        if instance.is_installed():
+            self._logger.package_installed(instance.get_name())
         self._packages[instance.get_name()] = instance
     def register_packages(self, path):
         """ Register all the packages in the path. """
@@ -55,7 +60,10 @@ class PackageManager(object):
         dependencies = self._install_dependencies(package)
         package.set_dependency_paths(dependencies)
         try:
+            package.download()
+            self._logger.package_downloaded(package_name)
             package.install()
+            self._logger.package_installed(package_name)
         except exceptions.SystemException, e:
             self._logger.error("Error")
         return self.get_install_path()
@@ -106,6 +114,12 @@ class PackageManager(object):
         """ Update all the installed packages."""
         for package_name in self._packages.iterkeys():
             self.update_package(package_name)
+    def authenticate(self, username, token):
+        """ Pass the authentication information over to the packages that need it."""
+        pass
+        #for package in self._packages.iteritems():
+        #    if isinstance(package, rat.RatRelease):
+        #        ...
 ####################################################################################################
     # Internal functions
     def _check_package(self, package_name):

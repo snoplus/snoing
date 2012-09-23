@@ -71,6 +71,7 @@ class System(object):
                 self._serialise(settings_path)
         self._install_mode = install_mode
         # All good if we get here
+        self._logger.set_install_path(os.path.join(self.get_install_path(), "snoing.log"))
         self._logger.info("System ready.")
 ####################################################################################################
     # Functions that are publically useful and available

@@ -32,4 +32,4 @@ class PythonDev24(librarypackage.LibraryPackage):
     """ Package for python dev 2.4, default on Sl5, doesn't have python-config."""
     def __init__(self, system):
         super(PythonDev24, self).__init__("python-dev-2.4", system, 
-                                          "Install python dev(el) on this system.", ["python2.4"])
+                                          "Install python dev(el) on this system.", "python2.4")

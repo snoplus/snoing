@@ -20,44 +20,44 @@ class OpenGL(librarypackage.LibraryPackage):
     """ Package for the pthread library."""
     def __init__(self, system_):
         super(OpenGL, self).__init__("opengl", system_, "Install openGL on this system.", "GL", 
-                                     "GL/gl.h")
+                                     ["GL/gl.h"])
 
 class Xlib(librarypackage.LibraryPackage):
     """ Package for the pthread library. 
     I'm not sure this is a real thing, just a X11 header file?"""
     def __init__(self, system_):
         super(Xlib, self).__init__("xlib", system_, "Install xlib on this system.", "X11", 
-                                   "X11/Xlib.h")
+                                   ["X11/Xlib.h"])
 
 class XRandR(librarypackage.LibraryPackage):
     """ Package for the pthread library."""
     def __init__(self, system_):
         super(XRandR, self).__init__("xrandr", system_, "Install libXrandr on this system.", 
-                                     "Xrandr", "X11/extensions/Xrandr.h")
+                                     "Xrandr", ["X11/extensions/Xrandr.h"])
 
 class Freetype(librarypackage.LibraryPackage):
     """ Package for the freetype library."""
     def __init__(self, system_):
         super(Freetype, self).__init__("freetype", system_, "Install freetype dev on this system.", 
-                                       "freetype")#, "freetype.h")
+                                       "freetype")#, ["freetype.h"])
 
 class Glew(librarypackage.LibraryPackage):
     """ Package for the glew library."""
     def __init__(self, system_):
         super(Glew, self).__init__("glew", system_, "Install glew on this system.", "GLEW", 
-                                   "GL/glew.h")
+                                   ["GL/glew.h"])
 
 class JPEG(librarypackage.LibraryPackage):
     """ Package for the pthread library."""
     def __init__(self, system_):
         super(JPEG, self).__init__("jpeg", system_, "Install jpeg dev on this system.", 
-                                   "jpeg")#, "jpeglib.h")
+                                   "jpeg")#, ["jpeglib.h"])
 
 class SndFile(librarypackage.LibraryPackage):
     """ Package for the SNDFILE library."""
     def __init__(self, system_):
         super(SndFile, self).__init__("sndfile", system_, "Install sndfile dev on this system.", 
-                                      "sndfile", "sndfile.h")
+                                      "sndfile", ["sndfile.h"])
 
 class OpenAL(librarypackage.LibraryPackage):
     """ Package for the openAL library."""
@@ -66,11 +66,12 @@ class OpenAL(librarypackage.LibraryPackage):
             if os.path.exists("/sw/include/OpenAL/alure.h"):
                 super(OpenAL, self).__init__("openal", system_, 
                                              "Install openAL dev on this system.", "alure", 
-                                             "OpenAL/alure.h")
+                                             ["OpenAL/alure.h"])
             else:
                 super(OpenAL, self).__init__("openal", system_, 
                                              "Instal openAL on this system.", "OpenAL", 
-                                             "OpenAL.framework/Headers/al.h")
+                                             ["OpenAL.framework/Headers/al.h"])
         else:
             super(OpenAL, self).__init__("openal", system_, 
-                                         "Install openAL dev on this system.", "openal", "AL/al.h")
+                                         "Install openAL dev on this system.", "openal", 
+                                         ["AL/al.h"])

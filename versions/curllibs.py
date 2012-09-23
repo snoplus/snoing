@@ -13,4 +13,5 @@ import librarypackage
 class Uuid(librarypackage.LibraryPackage):
     """ Package for the universal ids, needed by curl development library."""
     def __init__(self, system):
-        super(Uuid, self).__init__("uuid", system, "Install uuid-dev on this system.", "uuid", "uuid/uuid.h")
+        super(Uuid, self).__init__("uuid", system, "Install uuid-dev on this system.", "uuid", 
+                                   ["uuid/uuid.h"])

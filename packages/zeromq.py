@@ -14,7 +14,7 @@ class Zeromq(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Zeromq install package."""
     def __init__(self, name, system, tar_name):
         """ Initlaise the ZMQ packages."""
-        super(Zeromq, self).__init__(name, system, "zmq", "zmq.h")
+        super(Zeromq, self).__init__(name, system, "zmq", ["zmq.h"])
         self._tar_name = tar_name
     def get_dependencies(self):
         """ Return the dependencies."""

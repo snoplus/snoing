@@ -118,7 +118,9 @@ class System(object):
             process.wait()
         else:
             output, error = process.communicate()
-        output += "\n%s" % error
+        if output != "" or error != "":
+            output += "\n%s" % error
+            self._logger.detail(output)
         # After process has finished
         if process.returncode != 0:
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
@@ -132,6 +134,7 @@ class System(object):
         command_file = open(file_name, "w")
         command_file.write(command)
         command_file.close()
+        self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
         os.remove( file_name )
         return output

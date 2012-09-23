@@ -15,7 +15,7 @@ class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Base bzip2 installer package."""
     def __init__(self, name, system, tar_name):
         """ Initialise bzip2 with the tar_name."""
-        super( Bzip2, self ).__init__(name, system, "bz2", "bzlib.h")
+        super( Bzip2, self ).__init__(name, system, "bz2", ["bzlib.h"])
         self._tar_name = tar_name
     def get_dependencies(self):
         """ Return the required dependencies."""

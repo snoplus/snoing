@@ -17,9 +17,6 @@ class Package( object ):
         """ Construct the package with a name and the system installation information."""
         self._name = name
         self._system = system
-        self._check_pipe = "" # Logging information for any checks
-        self._install_path = "" # Location of the installation
-        return
     def get_name(self):
         """ Return the package name."""
         return self._name

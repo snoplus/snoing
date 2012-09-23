@@ -19,6 +19,4 @@ class LibraryPackage(systempackage.SystemPackage):
         self._headers = headers
     def check_state(self):
         """ Need to test the library linking and inclusion of the header."""
-        installed, self._check_pipe = self._system.test_library(self._library, self._headers)
-        if installed:
-            self._installed = True
+        self._installed = self._system.test_library(self._library, self._headers)

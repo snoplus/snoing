@@ -19,7 +19,6 @@ class SystemPackage( package.Package ):
         super(SystemPackage, self).__init__(name,system)
         self._help_text = help_text
         self._installed = False
-        return
     def get_help_text(self):
         """ Return the package help text."""
         return self._help_text

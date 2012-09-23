@@ -26,14 +26,12 @@ class Zeromq(conditionallibrarypackage.ConditionalLibraryPackage):
         return self._system.library_exists("libzmq", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
         """ Download zmq."""
-        self._download_pipe += self._system.download_file("http://download.zeromq.org/" + \
-                                                              self._tar_name)
+        self._system.download_file("http://download.zeromq.org/" + self._tar_name)
     def _install(self):
         """ Install zmq."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
-        self._install_pipe += self._system.untar_file(self._tar_name, source_path, 1)
-        self._install_pipe += self._system.execute_command("./configure", cwd=source_path)
-        self._install_pipe += self._system.execute_command("make", cwd=source_path)
-        self._install_pipe += self._system.execute_command("make", 
-                                                           ["install", "prefix=%s" % self.get_install_path()], 
-                                                           cwd=source_path)
+        self._system.untar_file(self._tar_name, source_path, 1)
+        self._system.execute_command("./configure", cwd=source_path)
+        self._system.execute_command("make", cwd=source_path)
+        self._system.execute_command("make", ["install", "prefix=%s" % self.get_install_path()], 
+                                     cwd=source_path)

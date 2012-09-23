@@ -22,8 +22,6 @@ class Xm(systempackage.SystemPackage):
                 flags = [ "-I%s" % "/sw/include/Xm", "-L%s" % "/sw/lib" ]
             elif os.path.exists("/usr/OpenMotif"):
                 flags = [ "-I%s" % "/usr/OpenMotif/include", "-L%s" % "/usr/OpenMotif/lib" ]
-            installed, self._check_pipe = self._system._test_compile(["Xm.h"], flags)
-            self._installed = installed
+            self._installed = self._system._test_compile(["Xm.h"], flags)
         else:
-            installed, self._check_pipe = self._system.test_library("Xm", ["Xm/Xm.h"])
-            self._installed = installed
+            self._installed = self._system.test_library("Xm", ["Xm/Xm.h"])

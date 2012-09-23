@@ -35,7 +35,7 @@ class Avalanche(localpackage.LocalPackage):
                 "-I%s/include" % self._dependency_paths[self._zeromq_dep],
                 "-L%s/lib" % self._dependency_paths[self._curl_dep],
                 "-I%s/include" % self._dependency_paths[self._curl_dep]]
-        self._install_pipe += self._system.execute_command("make", args, env, self._lib_path)
+        self._system.execute_command("make", args, env, self._lib_path)
 
 class AvalancheRelease(Avalanche):
     """ Base class for release versions."""
@@ -49,7 +49,7 @@ class AvalancheRelease(Avalanche):
         return self._system.file_exists(self._tar_name)
     def _download( self ):
         """ Download avalanche release."""
-        self._DownloadPipe += self._system.download_file("https://github.com/mastbaum/avalanche/tarball/" \
+        self._system.download_file("https://github.com/mastbaum/avalanche/tarball/" \
                                                              + self._tar_name)
     def _install( self ):
         """ Untar then call base installer."""

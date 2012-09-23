@@ -22,7 +22,7 @@ class AvalancheDev(avalanche.Avalanche):
     def _Download( self ):
         """ Download avalanche (git clone)."""
         args = ["clone", "git@github.com:mastbaum/avalanche.git",  self.get_install_path()]
-        self._download_pipe += self._system.execute_command("git", args)
+        self._system.execute_command("git", args)
 
 class AvalancheV1(avalanche.AvalancheRelease):
     def __init__(self, system):

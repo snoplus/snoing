@@ -53,7 +53,7 @@ class Rat(localpackage.LocalPackage):
         command_text = """#!/bin/bash\nsource %s\ncd %s\n./configure\nsource env.sh\nscons""" % \
             (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), 
              self.get_install_path())
-        self._install_pipe += self._system.execute_complex_command(command_text)
+        self._system.execute_complex_command(command_text)
     def _remove(self):
         """ Delete the env files as well."""
         os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
@@ -90,16 +90,16 @@ class RatRelease(Rat):
     def _download(self):
         """ Derived classes should override this to download the package. Return True on success."""
         if self._token is not None:
-            self._download_pipe += self._system.download_file(
+            self._system.download_file(
                 "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, token = self._Token)
         else:
             print "Github password:"
             password = getpass.getpass()
-            self._download_pipe += self._system.download_file(
+            self._system.download_file(
                 "https://github.com/snoplus/rat/tarball/" + self._tar_name, self._username, password)
     def _install(self):
         """ Release installs must untar first."""
-        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         super(RatRelease, self)._install()
     def authenticate(self, username, token):
         """ Set the username or token  required for github downloads."""

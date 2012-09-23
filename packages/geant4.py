@@ -41,12 +41,12 @@ class Geant4Post5(localpackage.LocalPackage):
         return installed
     def _download(self):
         """ Derived classes should override this to download the package."""
-        self._download_pipe += self._system.download_file(
+        self._system.download_file(
             "http://geant4.web.cern.ch/geant4/support/source/" + self._tar_name)
     def _install(self):
         """ Install geant4, using cmake."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
-        PackageUtil.UnTarFile(self._tar_name, source_path, 1)
+        self._system.untar_file(self._tar_name, source_path, 1)
         self._patch_timeout()
         if not os.path.exists(self.GetInstallPath()):
             os.makedirs(self.GetInstallPath())
@@ -67,11 +67,9 @@ class Geant4Post5(localpackage.LocalPackage):
         cmake_command = "cmake"
         if self._dependency_paths["cmake"] is not None: # Special cmake installed
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
-        self._install_pipe += self._system.execute_command(cmake_command, cmake_opts, env, 
-                                                          self.get_install_path())
-        self._install_pipe += self._system.execute_command("make", [], env, self.get_install_path())
-        self._install_pipe += self._system.execute_command("make", ['install'], env, 
-                                                          self.get_install_path())
+        self._system.execute_command(cmake_command, cmake_opts, env, self.get_install_path())
+        self._system.execute_command("make", [], env, self.get_install_path())
+        self._system.execute_command("make", ['install'], env, self.get_install_path())
     def _patch_timeout(self):
         """ Patch the cmake scripts to increase the timeout limit, geant4.9.5.p01 fix."""
         file_path = os.path.join(self._system.get_install_path(), 
@@ -115,32 +113,27 @@ class Geant4Pre5(localpackage.LocalPackage):
                                         os.path.join(self.get_install_path(), "lib/" + sys))
     def _download(self):
         """ Derived classes should override this to download the package."""
-        self._download_pipe += self._system.download_file(
+        self._system.download_file(
             "http://geant4.web.cern.ch/geant4/support/source/" + self._tar_name)
         for tar in self._data_tars:
-            self._download_pipe += self._system.download_file(
-                "http://geant4.web.cern.ch/geant4/support/source/" + tar)
+            self._system.download_file("http://geant4.web.cern.ch/geant4/support/source/" + tar)
     def _install(self):
         """ Derived classes should override this to install the package, should install only when 
         finished. Return True on success.
         """
         sys = os.uname()[0] + "-g++"
-        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         for tar in self._data_tars:
-            self._install_pipe += self._system.untar_file(tar, os.path.join(self.get_install_path(), 
-                                                                            "data"), 0)
+            self._system.untar_file(tar, os.path.join(self.get_install_path(), "data"), 0)
         self.write_geant4_config_file()
-        self._install_pipe += self._system.configure_command('./Configure', 
-                                                             ['-incflags', '-build', '-d', '-e', 
-                                                              '-f', "geant4-snoing-config.sh"], 
-                                                             cwd=self.get_install_path())
-        self._install_pipe += self._system.configure_command('./Configure', 
-                                                             ['-incflags', '-install', '-d', '-e', 
-                                                              '-f', "geant4-snoing-config.sh"], 
-                                                             cwd=self.get_install_path())
+        self._system.configure_command('./Configure', ['-incflags', '-build', '-d', '-e', 
+                                                       '-f', "geant4-snoing-config.sh"], 
+                                       cwd=self.get_install_path())
+        self._system.configure_command('./Configure', ['-incflags', '-install', '-d', '-e', 
+                                                       '-f', "geant4-snoing-config.sh"], 
+                                       cwd=self.get_install_path())
         try:
-            self._install_pipe += self._system.configure_command('./Configure', 
-                                                                 cwd=self.get_install_path())
+            self._system.configure_command('./Configure', cwd=self.get_install_path())
         except Exception: # Geant4 configure always fails, it is annoying
             pass
         if not os.path.exists(os.path.join(self.get_install_path(),'env.sh')):

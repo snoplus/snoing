@@ -36,7 +36,7 @@ class Sfml(localpackage.LocalPackage):
         return installed
     def _download(self):
         """ Download the tar file."""
-        self._download_pipe += self._system.download_file(
+        self._system.download_file(
             "https://github.com/LaurentGomila/SFML/tarball/" + self._tar_name)
     def _install(self):
         """ Install sfml."""
@@ -44,7 +44,6 @@ class Sfml(localpackage.LocalPackage):
         cmake_command = "cmake"
         if self._dependency_paths["cmake"] is not None: # Special cmake installed
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
-        self._install_pipe += self._system.execute_command(cmake_command, 
-                                                           ["-DCMAKE_INSTALL_PREFIX:PATH=$PWD"], 
-                                                           cwd=self.get_install_path())
-        self._install_pipe += self._system.execute_command("make", cwd=self.get_install_path())
+        self._system.execute_command(cmake_command, ["-DCMAKE_INSTALL_PREFIX:PATH=$PWD"], 
+                                     cwd=self.get_install_path())
+        self._system.execute_command("make", cwd=self.get_install_path())

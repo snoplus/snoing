@@ -29,12 +29,10 @@ class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
             self._system.library_exists("bz2", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
         """ Download the tar file."""
-        self._download_pipe += self._system.download_file("http://www.bzip.org/1.0.6/" + self._tar_name)
-    def _Install( self ):
+        self._system.download_file("http://www.bzip.org/1.0.6/" + self._tar_name)
+    def _install( self ):
         """ Install bzip2."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
-        self._install_pipe += self._system.execute_command("make", ["-f", "Makefile-libbz2_so"], 
-                                                           cwd=self.get_install_path())
-        self._install_pipe += self._system.execute_command("make", 
-                                                           ["install", "PREFIX=" + self.get_install_path()], 
-                                                           cwd=self.get_install_path())
+        self._system.execute_command("make", ["-f", "Makefile-libbz2_so"], cwd=self.get_install_path())
+        self._system.execute_command("make", ["install", "PREFIX=" + self.get_install_path()], 
+                                     cwd=self.get_install_path())

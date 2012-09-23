@@ -31,14 +31,12 @@ class Curl(conditionallibrarypackage.ConditionalLibraryPackage):
         return header and lib and config
     def _download(self):
         """ Downloads a curl tarball from the curl website."""
-        self._download_pipe += self._system.download_file(
-            "http://curl.haxx.se/download/" + self._tar_name)
+        self._system.download_file("http://curl.haxx.se/download/" + self._tar_name)
     def _install(self):
-        """ Derived classes should override this to install the package, should install only when finished."""
-        source_path = os.path.join(PackageUtil.kInstallPath, "%s-source" % self._name)
-        self._install_pipe += self._system.untar_file(self._tar_name, source_path, 1)
-        self._install_pipe += self._system.execute_command("./configure", 
-                                                           ["--prefix=%s" % self.get_install_path()], 
-                                                           cwd=source_path)
-        self._install_pipe += self._system.execute_command("make", cwd=source_path)
-        self._install_pipe += self._system.execute_command("make", ["install"], cwd=source_path)
+        """ Install curl."""
+        source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
+        self._system.untar_file(self._tar_name, source_path, 1)
+        self._system.configure_command(args=["--prefix=%s" % self.get_install_path()], 
+                                       cwd=source_path)
+        self._system.execute_command("make", cwd=source_path)
+        self._system.execute_command("make", ["install"], cwd=source_path)

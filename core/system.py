@@ -94,7 +94,7 @@ class System(object):
         if cwd is None:
             cwd = self.get_install_path()
         args.extend(self._arguments)
-        return self.execute_command(command, args, cwd, env, verbose)
+        self.execute_command(command, args, cwd, env, verbose)
     def execute_command(self, command, args=[], cwd=None, env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""
         if cwd is None:
@@ -125,7 +125,6 @@ class System(object):
         if process.returncode != 0:
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
                                              output)
-        return output
     def execute_complex_command(self, command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 
         environment is assumed to be set in the commands.
@@ -137,7 +136,6 @@ class System(object):
         self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
         os.remove( file_name )
-        return output
     def download_file(self, url, username=None, password=None, token=None, file_name=None):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
@@ -154,6 +152,7 @@ class System(object):
             file_name = url.split('/')[-1]
         local_file = open(os.path.join(self.get_cache_path(), file_name), 'wb')
         try:
+            self._logger.command("wget " + url)
             remote_file = urllib2.urlopen(url_request)
             download_size = int(remote_file.info().getheaders("Content-Length")[0])
             local_file.write(remote_file.read())
@@ -162,9 +161,10 @@ class System(object):
         except urllib2.URLError, e: # Server not available
             os.remove(local_file)
             raise snoing_exceptions.SystemException("Download error", url)
-        return "Downloaded %i bytes\n" % download_size
+        self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
+        self._logger.command("untar " + file_name)
         if strip == 0: # Untar directly into target
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
             tar_file.extractall(target_path)
@@ -185,7 +185,6 @@ class System(object):
                 copy_dir = os.path.join(copy_dir, sub_folders[0])
             shutil.copytree(copy_dir, target_path)
             shutil.rmtree(temp_dir)
-        return "Extracted %s to %s" % (file_name, target_path)
 ####################################################################################################
     # Functions that search the system for things
     def find_library(self, library):
@@ -249,10 +248,11 @@ class System(object):
         try:
             output = self.execute_command("g++", [file_name] + flags)
             os.remove( file_name )
-            return True, output
+            self._logger.detail(output)
+            return True
         except snoing_exceptions.SystemException, e:
             os.remove( file_name )
-            return False, e.Details
+            return False
 
     def _check_clean_environment(self):
         """ Check the environment is clean (mainly no G4 variables)."""

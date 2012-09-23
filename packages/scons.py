@@ -17,7 +17,6 @@ class Scons(localpackage.LocalPackage):
         """ Initialise the scons package."""
         super(Scons, self).__init__(name, system)
         self._tar_name = tar_name
-        return
     # Functions to override
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
@@ -31,5 +30,5 @@ class Scons(localpackage.LocalPackage):
             bool(os.stat(os.path.join(self.get_install_path(), "script/scons")).st_mode & stat.S_IXUSR)
     def _install(self):
         """ Mark the script as executable."""
-        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         os.chmod(os.path.join(self.get_install_path(), "script/scons"), 0755)

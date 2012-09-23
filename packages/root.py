@@ -38,10 +38,10 @@ class Root(localpackage.LocalPackage):
             return os.path.exists(os.path.join(self.get_install_path(), "bin/root"))
     def _download(self):
         """ Download from cern."""
-        self._download_pipe += self._system.download_file("ftp://root.cern.ch/root/" + self._tar_name)
+        self._system.download_file("ftp://root.cern.ch/root/" + self._tar_name)
     def _install(self):
         """ Install root."""
-        self._install_pipe += self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         if self._system.get_os_type == system.System.Mac and os.path.exists('/usr/X11/lib'):
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', 
                     '--with-x11-libdir=/usr/X11/lib','--with-xft-libdir=/usr/X11/lib',
@@ -51,5 +51,5 @@ class Root(localpackage.LocalPackage):
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python']
-        self._install_pipe += self._system.configure_command(args=args, cwd=self.get_install_path())
-        self._install_pipe += self._system.execute_command('make', cwd=self.get_install_path())
+        self._system.configure_command(args=args, cwd=self.get_install_path())
+        self._system.execute_command('make', cwd=self.get_install_path())

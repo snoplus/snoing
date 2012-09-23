@@ -16,7 +16,7 @@ class SCONS210(scons.Scons):
         super(SCONS210, self).__init__("scons-2.1.0", system, "scons-2.1.0.tar.gz")
     def _download(self):
         """ Derived classes should override this to download the package."""
-        self._download_pipe += self._system.download_file(
+        self._system.download_file(
             "http://downloads.sourceforge.net/project/scons/scons/2.1.0/scons-2.1.0.tar.gz")
 
 class SCONS120(scons.Scons):
@@ -26,5 +26,5 @@ class SCONS120(scons.Scons):
         super(SCONS120, self).__init__("scons-1.2.0", system, "scons-1.2.0.tar.gz")
     def _download(self):
         """ Derived classes should override this to download the package."""
-        self._dowload_pipe += self._system.download_file(
+        self._system.download_file(
             "http://downloads.sourceforge.net/project/scons/scons/1.2.0/scons-1.2.0.tar.gz")

@@ -26,7 +26,7 @@ class PythonDev(systempackage.SystemPackage):
         # First check for python config
         if self._system.find_library("python-config") is not None:
             # Now can test for linking
-            self._installed, self._check_pipe = self._system.test_config("python-config", ["Python.h"])
+            self._installed = self._system.test_config("python-config", ["Python.h"])
 
 class PythonDev24(librarypackage.LibraryPackage):
     """ Package for python dev 2.4, default on Sl5, doesn't have python-config."""

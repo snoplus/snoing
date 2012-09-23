@@ -16,11 +16,9 @@ class CommandPackage(systempackage.SystemPackage):
     def __init__(self, name, system, help_text):
         """ Initialise the package."""
         super(CommandPackage, self).__init__(name, system, help_text)
-        return
     def check_state(self):
         """ For a command package, merely need to test if the command exists."""
         location = self._system.find_library(self._name)
         if location is not None:
             self._installed = True
             self._install_path = location
-        return

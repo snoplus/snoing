@@ -19,4 +19,5 @@ class ConditionalLibraryPackage(conditionalpackage.ConditionalPackage):
         self._headers = headers
     def _is_system_installed( self ):
         """ Check if library is available on the system."""
-        self._installed = self._system.test_library( self._library, self._headers )
+        return self._system.test_library(self._library, self._headers)
+        

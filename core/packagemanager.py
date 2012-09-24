@@ -61,6 +61,7 @@ class PackageManager(object):
         dependencies = self._install_dependencies(package)
         package.set_dependency_paths(dependencies)
         try:
+            self._logger.set_state("Downloading")
             package.download()
             self._logger.package_downloaded(package_name)
             self._logger.set_state("Installing")

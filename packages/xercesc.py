@@ -31,7 +31,7 @@ class XercesC(conditionallibrarypackage.ConditionalLibraryPackage):
             "http://mirror.ox.ac.uk/sites/rsync.apache.org//xerces/c/3/sources/" + self._tar_name)
     def _install(self):
         """ Install the 3.1.1 version."""
-        source_path = os.path.join(self._system.get_cache_path(), "%s-source" % self._name)
+        source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self._tar_name, source_path, 1)
         self._system.execute_command("./configure", cwd=source_path)
         self._system.execute_command("make", cwd=source_path)

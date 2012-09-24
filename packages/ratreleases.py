@@ -95,10 +95,10 @@ class RatRelease3(rat.RatRelease):
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
                                                             "lib"))
             # Must patch the rat config/EXTERNALS file if BZIPROOT is present
-            externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "r")
+            externals_file = open(os.path.join(self.get_install_path(), "config/EXTERNAL.scons"), "r")
             text = externals_file.read()
             externals_file.close()
-            externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "w")
+            externals_file = open(os.path.join(self.get_install_path(), "config/EXTERNAL.scons"), "w")
             text = text.replace("ext_deps['bz2']['path'] = None", 
                                 "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
             externals_file.write(text)
@@ -128,10 +128,10 @@ class RatRelease2(rat.RatRelease):
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
                                                             "lib"))
             # Must patch the rat config/EXTERNALS file if BZIPROOT
-            externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "r")
+            externals_file = open(os.path.join(self.get_install_path(), "config/EXTERNAL.scons"), "r")
             text = externals_file.read()
             exterbalsFile.close()
-            externals_file = open(os.path.join(self.GetInstallPath(), "config/EXTERNAL.scons"), "w")
+            externals_file = open(os.path.join(self.get_install_path(), "config/EXTERNAL.scons"), "w")
             text = text.replace("ext_deps['bz2']['path'] = None", 
                                 "ext_deps['bz2']['path'] = os.environ['BZIPROOT']")
             externals_file.write(text)

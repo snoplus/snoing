@@ -39,9 +39,8 @@ class Avalanche(localpackage.LocalPackage):
         """ Install Avalanche."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         env = {"PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin"),
-               "ROOTSYS" : self._dependency_paths[self._Root_dep]}
-        args = ["CXXFLAGS=-L%s/lib" % self._dependency_paths[self._zeromq_dep],
-                "-I%s/include" % self._dependency_paths[self._zeromq_dep],
-                "-L%s/lib" % self._dependency_paths[self._curl_dep],
-                "-I%s/include" % self._dependency_paths[self._curl_dep]]
-        self._system.execute_command("make", args, env, self._lib_path)
+               "ROOTSYS" : self._dependency_paths[self._root_dep]}
+        args = ["CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include" % \
+                    (self._dependency_paths[self._zeromq_dep], self._dependency_paths[self._zeromq_dep],
+                     self._dependency_paths[self._curl_dep], self._dependency_paths[self._curl_dep]) ]
+        self._system.execute_command("make", args, self._lib_path, env)

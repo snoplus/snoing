@@ -98,7 +98,6 @@ if __name__ == "__main__":
     package_manager = packagemanager.PackageManager(install_system, logger)
     package_manager.register_packages(os.path.join(os.path.dirname(__file__), "versions"))
     package_manager.authenticate(options.username, options.token)
-
     # Default action is to assume installing, check for other actions
     try:
         if options.all: # Wish to act on all packages

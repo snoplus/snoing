@@ -63,9 +63,9 @@ class Rat(localpackage.LocalPackage):
                                                        "lib"))
         self._env_file.append_library_path(os.path.join(self._dependency_paths[self._root_dep], 
                                                         "lib"))
-        self._env_file.add_final_source(self.get_install_path(), "env")
+        self._env_file.add_post_source(self.get_install_path(), "env")
         self._write_env_file()
-        self._env_file.write_env_files(self._system.get_install_path(), "env_%s" % self._name)
+        self._env_file.write(self._system.get_install_path(), "env_%s" % self._name)
     # Functions that must be implemented by sub classes
     def _write_env_file(self):
         """ Sub classes should add parts to the env file."""
@@ -90,8 +90,7 @@ class RatRelease(Rat):
                 "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, 
                 token = self._Token)
         else:
-            print "Github password:"
-            password = getpass.getpass()
+            password = getpass.getpass("github password:")
             self._system.download_file(
                 "https://github.com/snoplus/rat/tarball/" + self._tar_name, self._username, password)
     def _install(self):

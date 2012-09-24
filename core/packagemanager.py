@@ -63,11 +63,12 @@ class PackageManager(object):
         try:
             package.download()
             self._logger.package_downloaded(package_name)
+            self._logger.set_state("Installing")
             package.install()
             self._logger.package_installed(package_name)
         except snoing_exceptions.SystemException, e:
             self._logger.error(e.args[0])
-            self._logger.detail(e.Detail)
+            self._logger.detail(e.Details)
         return package.get_install_path()
     def install_package_dependencies(self, package_name):
         """ Install the dependencies for named package."""
@@ -86,10 +87,11 @@ class PackageManager(object):
         dependencies = self._install_dependencies( package )
         package.set_dependency_paths(dependencies)
         try:
+            self._logger.set_state("Updating")
             package.Update()
         except snoing_exceptions.SystemException, e:
             self._logger.error(e.args[0])
-            self._logger.detail(e.Detail)
+            self._logger.detail(e.Details)
         for dependent_name in self._package_dependents(package_name):
             self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):
@@ -102,6 +104,7 @@ class PackageManager(object):
                 raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
                                                       dependent_name, package_name)
         # If get here then package can be deleted
+        self._logger.set_state("Removing")
         package.remove()
 ####################################################################################################
     # Functions that act on all packages
@@ -119,7 +122,7 @@ class PackageManager(object):
             self.update_package(package_name)
     def authenticate(self, username, token):
         """ Pass the authentication information over to the packages that need it."""
-        for package in self._packages.iteritems():
+        for package in self._packages.itervalues():
             if isinstance(package, rat.RatRelease):
                 package.authenticate(username, token)
 ####################################################################################################

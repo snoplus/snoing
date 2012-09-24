@@ -14,6 +14,7 @@ import urllib2
 import tarfile
 import shutil
 import pickle
+import base64
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -101,13 +102,13 @@ class System(object):
             cwd = self.get_install_path()
         # Firstly setup the environment
         local_env = os.environ.copy()
-        for key in env:
+        for key in env.iterkeys():
             self._append_environment( key, env[key], local_env )
         # Now open and run the shell_command
         shell_command = [command] + args
         process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = command + ' '.join(args) + '\n'
+        output = command + ' ' + ' '.join(args) + '\n'
         self._logger.command(command + ' '.join(args))
         if verbose:
             for line in iter(process.stdout.readline, ""):
@@ -150,7 +151,8 @@ class System(object):
             url_request.add_header("Authorization", "token %s" % token)
         if file_name is None:
             file_name = url.split('/')[-1]
-        local_file = open(os.path.join(self.get_cache_path(), file_name), 'wb')
+        file_path = os.path.join(self.get_cache_path(), file_name)
+        local_file = open(file_path, 'wb')
         try:
             self._logger.command("wget " + url)
             remote_file = urllib2.urlopen(url_request)
@@ -159,7 +161,7 @@ class System(object):
             local_file.close()
             remote_file.close()
         except urllib2.URLError, e: # Server not available
-            os.remove(local_file)
+            os.remove(file_path)
             raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):

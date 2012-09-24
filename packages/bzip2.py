@@ -26,7 +26,7 @@ class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
     def _is_installed(self):
         """ Has bzip2 been installed."""
         return self._system.file_exists("bzlib.h", os.path.join(self.get_install_path(), "include")) and \
-            self._system.library_exists("bz2", os.path.join(self.get_install_path(), "lib"))
+            self._system.library_exists("libbz2", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
         """ Download the tar file."""
         self._system.download_file("http://www.bzip.org/1.0.6/" + self._tar_name)

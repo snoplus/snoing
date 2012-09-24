@@ -10,11 +10,11 @@
 import conditionalpackage
 import os
 
-class Cmake(ConditionalPackage.ConditionalPackage):
+class Cmake(conditionalpackage.ConditionalPackage):
     """ Cmake install package."""
-    def __init__(self, system, tar_name):
+    def __init__(self, name, system, tar_name):
         """ Initlaise the Cmake package."""
-        super(Cmake, self).__init__("cmake", system)
+        super(Cmake, self).__init__(name, system)
         self._tar_name = tar_name
     def get_dependencies(self):
         """ Return the dependencies."""

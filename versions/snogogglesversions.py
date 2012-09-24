@@ -15,7 +15,7 @@ class SnogogglesDev(snogoggles.Snogoggles):
     """ Installs development version. """
     def __init__(self, system):
         """ Initializes snogoggles package. """
-        super(SnogogglesDev, self).__init__("snogoggles-dev", syste, "scons-2.1.0", 
+        super(SnogogglesDev, self).__init__("snogoggles-dev", system, "scons-2.1.0", 
                                             "geant4.9.5.p01", "clhep-2.1.1.0", "rat-dev", 
                                             "root-5.32.04", "sfml-2.0-rc", "xerces-c-3.1.1", 
                                             "avalanche-1", "zeromq-2.2.0", "curl-7.26.0", 

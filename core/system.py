@@ -15,6 +15,7 @@ import tarfile
 import shutil
 import pickle
 import base64
+import sys
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -72,6 +73,9 @@ class System(object):
         # All good if we get here
         self._logger.set_install_path(os.path.join(self.get_install_path(), "snoing.log"))
         self._logger.info("System ready.")
+        self._logger.info("Caching to " + self._cache_path)
+        self._logger.info("Installing to " + self._install_path)
+        self._logger.info("System is " + ' '.join(os.uname()))
 ####################################################################################################
     # Functions that are publically useful and available
     def get_cache_path(self):
@@ -101,12 +105,13 @@ class System(object):
         # Firstly setup the environment
         local_env = os.environ.copy()
         for key in env.iterkeys():
-            self._append_environment( key, env[key], local_env )
+            self._append_environment(key, env[key], local_env)
         # Now open and run the shell_command
         shell_command = [command] + args
         process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = command + ' ' + ' '.join(args) + '\n'
+        error = ""
         self._logger.command(command + ' '.join(args))
         if verbose:
             for line in iter(process.stdout.readline, ""):

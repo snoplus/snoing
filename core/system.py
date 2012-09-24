@@ -64,12 +64,10 @@ class System(object):
         self._install_mode = self._deserialise(settings_path)
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
-                self._logger.error("Settings mismatch")
-                raise snoing_exceptions.SystemException("Install mode mismatch.", 
-                                                 "Install folder is mode %i, user selected mode %i"\
-                                                     % (self._install_mode, install_mode) )
-            else:
-                self._serialise(settings_path)
+                raise snoing_exceptions.InstallModeException("Install mode mismatch.", 
+                                                             self._install_mode, install_mode)
+        else:
+            self._serialise(settings_path, install_mode)
         self._install_mode = install_mode
         # All good if we get here
         self._logger.set_install_path(os.path.join(self.get_install_path(), "snoing.log"))

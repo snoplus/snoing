@@ -15,16 +15,16 @@ import rat
 
 class RatRelease4(rat.RatRelease):
     """ Base package installer for rat release 4."""
-    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, \
-                     bzip_dep, avalanche_dep, zeromq_dep, xercesc_dep, tar_name):
+    def __init__(self, name, system, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease4, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
-        self._clhep_dep = clhep_dep
-        self._curl_dep = curl_dep
-        self._bzip_dep = bzip_dep
-        self._avalanche_dep = avalanche_dep
-        self._zeromq_dep = zeromq_dep
-        self._xercesc_dep = xercesc_dep
+        super(RatRelease4, self).__init__(name, system, "root-5.32.04", "geant4.9.5.p01", "scons-2.1.0",
+                                          tar_name)
+        self._clhep_dep = "clhep-2.1.1.0"
+        self._curl_dep = "curl-7.26.0"
+        self._bzip_dep = "bzip2-1.0.6"
+        self._avalanche_dep = "avalanche-1"
+        self._zeromq_dep = "zeromq-2.2.0"
+        self._xercesc_dep = "xerces-c-3.1.1"
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._avalanche_dep, 
@@ -58,16 +58,16 @@ class RatRelease4(rat.RatRelease):
 
 class RatRelease3(rat.RatRelease):
     """ Base package installer for rat release 3."""
-    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, \
-                     bzip_dep, avalanche_dep, zeromq_dep, xercesc_dep, tar_name):
+    def __init__(self, name, system, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease3, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
-        self._clhep_dep = clhep_dep
-        self._curl_dep = curl_dep
-        self._bzip_dep = bzip_dep
-        self._avalanche_dep = avalanche_dep
-        self._zeromq_dep = zeromq_dep
-        self._xercesc_dep = xercesc_dep
+        super(RatRelease3, self).__init__(name, system, "root-5.32.04", "geant4.9.4.p01", "scons-2.1.0",
+                                          tar_name)
+        self._clhep_dep = "clhep-2.1.0.1"
+        self._curl_dep = "curl-7.26.0"
+        self._bzip_dep = "bzip2-1.0.6"
+        self._avalanche_dep = "avalanche-1"
+        self._zeromq_dep = "zeromq-2.2.0"
+        self._xercesc_dep = "xerces-c-3.1.1"
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._avalanche_dep, \
@@ -106,13 +106,13 @@ class RatRelease3(rat.RatRelease):
 
 class RatRelease2(rat.RatRelease):
     """ Base package installer for rat release 2."""
-    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, curl_dep, bzip_dep, 
-                 tar_name):
+    def __init__(self, name, system, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease2, self).__init__(name, system, root_dep, geant_dep, scons_dep, tar_name)
-        self._clhep_dep = clhep_dep
-        self._curl_dep = curl_dep
-        self._bzip_dep = bzip_dep
+        super(RatRelease2, self).__init__(name, system, "root-5.28.00", "geant4.9.4.p01", "scons-2.1.0", 
+                                          tar_name)
+        self._clhep_dep = "clhep-2.1.0.1"
+        self._curl_dep = "curl-7.26.0"
+        self._bzip_dep = "bzip2-1.0.6"
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return [self._clhep_dep, self._curl_dep, self._bzip_dep]
@@ -139,11 +139,11 @@ class RatRelease2(rat.RatRelease):
 
 class RatRelease0and1(rat.RatRelease):
     """ Base package installer for rat releases 0, 1."""
-    def __init__(self, name, system, root_dep, geant_dep, scons_dep, clhep_dep, tar_name):
+    def __init__(self, name, system, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease0and1, self).__init__(name, system, root_dep, geant_dep, scons_dep, 
-                                              tar_name)
-        self._clhep_dep = clhep_dep
+        super(RatRelease0and1, self).__init__(name, system, "root-5.24.00", "geant4.9.2.p02", 
+                                              "scons-1.2.0", tar_name)
+        self._clhep_dep = "clhep-2.0.4.2"
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return [self._clhep_dep]

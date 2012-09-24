@@ -23,3 +23,10 @@ class PackageException(Exception):
         Exception.__init__(self, message)
         self.Package = package
 
+class InstallModeException(Exception):
+    """ A custom exception for mismatched install modes."""
+    def __init__(self, message, system_mode, command_mode):
+        """ Call the base class constructor and save mode details."""
+        Exception.__init__(self, message)
+        self.SystemMode = system_mode
+        self.CommandMode = command_mode

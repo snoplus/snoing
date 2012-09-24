@@ -117,13 +117,15 @@ class System(object):
             process.wait()
         else:
             output, error = process.communicate()
-        if output != "" or error != "":
-            output += "\n%s" % error
+        if output != "":
             self._logger.detail(output)
+        if error != "":
+            self._logger.detail(error)
         # After process has finished
         if process.returncode != 0:
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
                                              output)
+        return output # Very useful for library checking
     def execute_complex_command(self, command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 
         environment is assumed to be set in the commands.
@@ -189,10 +191,8 @@ class System(object):
     # Functions that search the system for things
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
-        command = "whereis " + library
-        process = subprocess.Popen(args = command, shell = True, stdout=subprocess.PIPE)
-        x, y = process.communicate()
-        location = x.split( ':' )
+        output = self.execute_command("whereis", [library])
+        location = output.split(':')
         if len(location)==1:
             if location[0] == "\n" or location[0] == "":
                 return None
@@ -222,11 +222,9 @@ class System(object):
             return self._test_compile(headers, ["-l%s" % library])
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
-        process = subprocess.Popen([config, "--libs"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate()
+        output = self.execute_command(config, ['--libs'])
         libs = output.strip('\n').split(' ')
-        process = subprocess.Popen([config, "--includes"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate()
+        output = self.execute_command(config, ['--includes'])
         includes = output.strip('\n').split(' ')
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):

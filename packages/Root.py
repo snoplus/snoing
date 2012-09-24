@@ -38,9 +38,7 @@ class Root( LocalPackage.LocalPackage ):
         """ Derived classes should override this to install the package, should install only when finished. Return True on success."""
         self._InstallPipe += PackageUtil.UnTarFile( self._TarName, self.GetInstallPath(), 1 )
         sys =  os.uname()[0]
-        if sys == 'Darwin' and os.path.exists('/usr/X11/lib'):            
-            self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--with-x11-libdir=/usr/X11/lib','--with-xft-libdir=/usr/X11/lib','--with-xext-libdir=/usr/X11/lib'] + PackageUtil.arguments, None, self.GetInstallPath() )
-        elif PackageUtil.kGrid:
+        if PackageUtil.kGrid:
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--disable-castor', '--disable-rfio', '--disable-x11'] + PackageUtil.arguments, None, self.GetInstallPath() )
         else:
             self._InstallPipe += PackageUtil.ExecuteSimpleCommand( './configure', ['--enable-minuit2', '--enable-roofit',  '--enable-python'] + PackageUtil.arguments, None, self.GetInstallPath() )

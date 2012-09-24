@@ -113,7 +113,7 @@ class RatDevelopment(Rat):
                 "zeromq-2.2.0", "xerces-c-3.1.1" ]
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
-        os.path.exists(self.get_install_path())
+        return os.path.exists(self.get_install_path())
     def _download(self):
         """ Git clone rat-dev."""
         self._system.execute_command("git", ["clone", "git@github.com:snoplus/rat.git",  

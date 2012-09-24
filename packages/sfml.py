@@ -18,7 +18,7 @@ class Sfml(localpackage.LocalPackage):
         """ Initialise sfml with the tar_name."""
         super(Sfml, self).__init__(name, system)
         self._tar_name = tar_name
-        self.set_install_mode(installmode.Graphical)
+        self.set_install_mode(installmode.Graphical) # Only graphical installation
     def get_dependencies(self):
         """ Return the required dependencies."""
         return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "jpeg", 

@@ -93,7 +93,7 @@ if __name__ == "__main__":
     try:
         install_system = system.System(logger, options.cache_path, options.install_path, install_mode, opt_args)
     except snoing_exceptions.InstallModeException, e:
-        print e.args[0], "Install path is", installmode.Text[e.SystemMode], "You choose", installmode.Text[e.CommandMode]
+        print e.args[0], "Install path is", installmode.Text[e.SystemMode], "you've chosen", installmode.Text[e.CommandMode]
         print_error_message()
     # Now create the package manage and populate it
     package_manager = packagemanager.PackageManager(install_system, logger)

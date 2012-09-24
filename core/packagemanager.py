@@ -89,7 +89,7 @@ class PackageManager(object):
         package.set_dependency_paths(dependencies)
         try:
             self._logger.set_state("Updating")
-            package.Update()
+            package.update()
         except snoing_exceptions.SystemException, e:
             self._logger.error(e.args[0])
             self._logger.detail(e.Details)
@@ -166,7 +166,7 @@ class PackageManager(object):
         """ Yield the name of any packages that are dependent on package_name."""
         # Now update all packages that depend on this one
         for test_name, test_package in self._packages.iteritems():
-            if not isinstance(package, localpackage.LocalPackage): # Nothing todo
+            if not isinstance(test_package, localpackage.LocalPackage): # Nothing todo
                 continue
             # If test package has this package as a dependency then update the test package
             for dependency in test_package.get_dependencies():

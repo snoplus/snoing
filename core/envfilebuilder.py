@@ -35,6 +35,10 @@ class EnvFileBuilder( object ):
         """ Add an environment variable."""
         self._bash_text += "export %s=%s\n" % (key, value)
         self._csh_text += "setenv %s %s\n" % (key, value)
+    def add_command(self, command):
+        """ Add a command."""
+        self._bash_text += "%s\n" % command
+        self._csh_text += "%s\n" % command
     def append_library_path(self, path):
         """ Append a path to the library path."""
         self._library_path += "%s:" % path

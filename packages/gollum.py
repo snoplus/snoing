@@ -28,8 +28,10 @@ class Gollum(conditionalpackage.ConditionalPackage):
         return self._system.file_exists("gollum", os.path.join(self.get_install_path(), "bin"))
     def _install(self):
         """ Install gollum via ruby gems."""
-        self._system.execute_command("gem", ["install", "gollum", "-i %s" % self.get_install_path()], cwd=self.get_install_path())
+        self._system.execute_command("gem", 
+                                     ["install", "gollum", "-i", self.get_install_path()])
     def remove(self):
         """ Must first uninstall via gems."""
-        self._system.execute_command("gem", ["uninstall", "gollum", "-i %s" % self.get_install_path()], cwd=self.get_install_path())
+        self._system.execute_command("gem", 
+                                     ["uninstall", "gollum", "-x", "-i", self.get_install_path()])
         self._system.remove(self.get_install_path())

@@ -26,16 +26,20 @@ class Wiki(localpackage.LocalPackage):
     def _is_installed(self):
         """ Check if installed, look for library."""
         return self._system.file_exists("Home.md", self.get_install_path())
-    def _download( self ):
+    def _download(self):
         """ Nothing to do."""
         pass
+    def _remove(self):
+        """ Delete the env files."""
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
     def _install(self):
         """ Install the wiki."""
-        self._system.execute_command("git", ["clone %s" % self._git_url, self.get_install_path()])
+        self._system.execute_command("git", ["clone", self._git_url, self.get_install_path()])
         self._env_file.add_environment("GEM_PATH", self._dependency_paths["gollum"])
         self._env_file.append_path(os.path.join(self._dependency_paths["gollum"], "bin"))
         self._env_file.add_command("cd %s" % self.get_install_path())
-        self._env_file.add_command("gollum")
+        self._env_file.add_command("gollum &")
         self._env_file.add_command("sleep 30")
         self._env_file.add_command("xdg-open http://localhost:4567")
         self._env_file.add_command("fg")

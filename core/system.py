@@ -112,7 +112,7 @@ class System(object):
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = command + ' ' + ' '.join(args) + '\n'
         error = ""
-        self._logger.command(command + ' '.join(args))
+        self._logger.command(command + ' ' + ' '.join(args))
         if verbose:
             for line in iter(process.stdout.readline, ""):
                 sys.stdout.write('\n' + line[:-1])
@@ -192,6 +192,9 @@ class System(object):
                 copy_dir = os.path.join(copy_dir, sub_folders[0])
             shutil.copytree(copy_dir, target_path)
             shutil.rmtree(temp_dir)
+    def remove(self, path):
+        """ Remove a directory."""
+        shutil.rmtree(path)
 ####################################################################################################
     # Functions that search the system for things
     def find_library(self, library):

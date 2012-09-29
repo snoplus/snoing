@@ -37,8 +37,8 @@ class EnvFileBuilder( object ):
         self._csh_text += "setenv %s %s\n" % (key, value)
     def add_command(self, command):
         """ Add a command."""
-        self._bash_text += "%s\n" % command
-        self._csh_text += "%s\n" % command
+        self._bash_post_text += "%s\n" % command
+        self._csh_post_text += "%s\n" % command
     def append_library_path(self, path):
         """ Append a path to the library path."""
         self._library_path += "%s:" % path
@@ -58,18 +58,20 @@ class EnvFileBuilder( object ):
         self._bash_text += "export PATH=%s:$PATH\n" % self._path
         self._csh_text += "setenv PATH %s:${PATH}\n" % self._path
         # Next add the python path
-        self._bash_text += "export PYTHONPATH=%s:$PYTHONPATH\n" % self._python_path
-        self._csh_text += ("if(${?PYTHONPATH}) then\nsetenv PYTHONPATH %s:${PYTHONPATH}\nelse\n"
-                           "setenv PYTHONPATH %s\nendif\n") % (self._python_path, self._python_path)
+        if self._python_path is not "":
+            self._bash_text += "export PYTHONPATH=%s:$PYTHONPATH\n" % self._python_path
+            self._csh_text += ("if(${?PYTHONPATH}) then\nsetenv PYTHONPATH %s:${PYTHONPATH}\nelse\n"
+                               "setenv PYTHONPATH %s\nendif\n") % (self._python_path, self._python_path)
         # Next add the libraries (Harder for cshell)
-        self._bash_text += "export LD_LIBRARY_PATH=%s:$LD_LIBRARY_PATH\n" % self._library_path
-        self._bash_text += "export DYLD_LIBRARY_PATH=%s:$DYLD_LIBRARY_PATH\n" % self._library_path
-        self._csh_text += ("if(${?LD_LIBRARY_PATH}) then\nsetenv LD_LIBRARY_PATH %s:"
-                           "${LD_LIBRARY_PATH}\nelse\nsetenv LD_LIBRARY_PATH %s\nendif\n") % \
-                           (self._library_path, self._library_path)
-        self._csh_text += ("if(${?DYLD_LIBRARY_PATH}) then\nsetenv DYLD_LIBRARY_PATH %s:"
-                           "${DYLD_LIBRARY_PATH}\nelse\nsetenv DYLD_LIBRARY_PATH %s\nendif\n") % \
-                           (self._library_path, self._library_path)
+        if self._library_path is not "":
+            self._bash_text += "export LD_LIBRARY_PATH=%s:$LD_LIBRARY_PATH\n" % self._library_path
+            self._bash_text += "export DYLD_LIBRARY_PATH=%s:$DYLD_LIBRARY_PATH\n" % self._library_path
+            self._csh_text += ("if(${?LD_LIBRARY_PATH}) then\nsetenv LD_LIBRARY_PATH %s:"
+                               "${LD_LIBRARY_PATH}\nelse\nsetenv LD_LIBRARY_PATH %s\nendif\n") % \
+                               (self._library_path, self._library_path)
+            self._csh_text += ("if(${?DYLD_LIBRARY_PATH}) then\nsetenv DYLD_LIBRARY_PATH %s:"
+                               "${DYLD_LIBRARY_PATH}\nelse\nsetenv DYLD_LIBRARY_PATH %s\nendif\n") % \
+                               (self._library_path, self._library_path)
         # Finnally add the rat
         self._bash_text += self._bash_post_text
         self._csh_text += self._csh_post_text

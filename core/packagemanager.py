@@ -102,8 +102,9 @@ class PackageManager(object):
         package = self._packages[package_name]
         if not force:
             for dependent_name in self._package_dependents(package_name):
-                raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
-                                                      dependent_name, package_name)
+                if self.check_installed(dependent_name):
+                    raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
+                                                                 dependent_name, package_name)
         # If get here then package can be deleted
         self._logger.set_state("Removing")
         package.remove()
@@ -170,7 +171,7 @@ class PackageManager(object):
                 continue
             # If test package has this package as a dependency then update the test package
             for dependency in test_package.get_dependencies():
-                if isinstance( dependency, types.ListType ): # deal with optional dependencies
+                if isinstance(dependency, types.ListType): # deal with optional dependencies
                     if package_name in dependency:
                         yield test_name
                 elif dependency == package_name:

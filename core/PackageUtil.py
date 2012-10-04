@@ -10,6 +10,7 @@ import os
 import shutil
 import base64
 import sys
+import snoing_tarfile
 
 kCachePath = ""
 kInstallPath = ""
@@ -100,6 +101,7 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
     global kCachePath, kInstallPath, kVerbose
     if strip == 0: # Can untar directly into target
         tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
+        tarFile.__class__ = snoing_tarfile.TarFile
         tarFile.extractall( targetPath )
         tarFile.close()
     else: # Must untar to temp then to target, note target cannot already exist!
@@ -107,7 +109,8 @@ def UnTarFile( tarFileName, targetPath, strip = 0 ):
         tempDirectory = os.path.join( kCachePath, "temp" )
         if os.path.exists( tempDirectory ): # Must be an empty temp directory
             shutil.rmtree( tempDirectory )
-        tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ) )
+        tarFile = tarfile.open( os.path.join( kCachePath, tarFileName ))
+        tarFile.__class__ = snoing_tarfile.TarFile
         tarFile.extractall( tempDirectory )
         tarFile.close()
         # Now choose how many components to strip

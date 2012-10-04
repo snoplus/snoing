@@ -23,5 +23,5 @@ class SCONS120( Scons.Scons ):
         return
     def _Download( self ):
         """ Derived classes should override this to download the package."""
-        self._DowloadPipe += PackageUtil.DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/1.2.0/scons-1.2.0.tar.gz" )
+        self._DownloadPipe += PackageUtil.DownloadFile( "http://downloads.sourceforge.net/project/scons/scons/1.2.0/scons-1.2.0.tar.gz" )
         return

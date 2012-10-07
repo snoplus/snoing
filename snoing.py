@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 # Author P G Jones - 12/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # SNO+ package manager
-import PackageManager
+import sys
+try:
+    import PackageManager
+except ImportError:
+    print "Error: Source the snoing environment file."
+    sys.exit(1)
+    
 import os
 import inspect
 import PackageUtil
 import Rat
 import Log
 import Util
-import sys
 import Exceptions
 
 class snoing( PackageManager.PackageManager ):

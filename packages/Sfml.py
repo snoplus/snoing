@@ -16,7 +16,7 @@ class Sfml( LocalPackage.LocalPackage ):
 
     def GetDependencies( self ):
         """ Return the required dependencies."""
-        return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "jpeg", "sndfile", "openal"]
+        return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "glut", "jpeg", "sndfile", "openal"]
     def _IsDownloaded( self ):
         """ Has the tar file been downloaded."""
         return os.path.exists( os.path.join( PackageUtil.kCachePath, self._TarName ) )

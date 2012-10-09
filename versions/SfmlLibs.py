@@ -42,6 +42,12 @@ class Glew( LibraryPackage.LibraryPackage ):
         super( Glew, self ).__init__( "glew", "Install glew on this system.", "GLEW", "GL/glew.h" )
         return
 
+class Glut( LibraryPackage.LibraryPackage ):
+    """ Package for the glew library."""
+    def __init__( self ):
+        super( Glut, self ).__init__( "glut", "Install glut on this system.", "glut" )
+        return
+
 class JPEG( LibraryPackage.LibraryPackage ):
     """ Package for the pthread library."""
     def __init__( self ):

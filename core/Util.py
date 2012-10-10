@@ -59,11 +59,11 @@ def CheckSystem():
         try:
             finkLoc = PackageUtil.ExecuteSimpleCommand("which",["fink"],None,os.getcwd())
         except Exceptions.PackageException:
-            finkLoc = None
+            finkLoc = ""
         try:
             portLoc = PackageUtil.ExecuteSimpleCommand("which",["port"],None,os.getcwd())
         except Exceptions.PackageException:    
-            portLoc = None
+            portLoc = ""
         finkDir = None
         if finkLoc!="" and portLoc!="":
             Log.Warn("Both fink and macports installed, going with fink in dir: %s"%finkLoc)

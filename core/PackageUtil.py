@@ -36,7 +36,7 @@ def DownloadFile( url, username = None, password = None, token = None, fileName 
         remoteFile = urllib2.urlopen( urlRequest )
     except urllib2.URLError, e: # Server not available
         print e
-        raise Exceptions.PackageException( "Server not available." )
+        raise Exceptions.PackageException( "Download error","Server not available: %s %s"%(e,url) )
     localFile = open( tempFile, 'wb')
     try:
         downloadSize = int( remoteFile.info().getheaders("Content-Length")[0] )

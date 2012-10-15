@@ -172,6 +172,8 @@ class System(object):
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
         self._logger.command("untar " + file_name)
+        if os.path.exists(target_path):
+            shutitl.rmtree(target_path)
         if strip == 0: # Untar directly into target
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
             tar_file.extractall(target_path)

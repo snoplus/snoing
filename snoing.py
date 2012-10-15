@@ -125,7 +125,7 @@ if __name__ == "__main__":
                 if package_manager.check_installed(package_name):
                     logger.package_installed(package_name)
                 else:
-                    logger.error(package_name)
+                    logger.error(package_name + " is not installed")
             elif options.remove or options.force_remove: # Wish to remove the package
                 package_manager.remove_package( package_name, options.force_remove )
             elif options.dependency: # Wish to install only the dependencies

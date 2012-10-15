@@ -34,3 +34,7 @@ class RatTools(localpackage.LocalPackage):
                "ROOTSYS" : self._dependency_paths[self._root_dep]}
         ratzdab_path = os.path.join(self.get_install_path(), "ratzdab")
         self._system.execute_command("make", [], ratzdab_path, env)
+    def _update(self):
+        """ Special updater for rat-tools, just git pull then install again."""
+        self._system.execute_command("git", ["pull"], self.get_install_path()], verbose=True)
+        self._install()

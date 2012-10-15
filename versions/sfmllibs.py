@@ -41,6 +41,11 @@ class Freetype(librarypackage.LibraryPackage):
         super(Freetype, self).__init__("freetype", system_, "Install freetype dev on this system.", 
                                        "freetype")#, ["freetype.h"])
 
+class Glut(librarypackage.LibraryPackage):
+    """ Package for the glew library."""
+    def __init__(self, system_):
+        super(Glut, self).__init__("glut", system_, "Install glut on this system.", "glut")
+
 class Glew(librarypackage.LibraryPackage):
     """ Package for the glew library."""
     def __init__(self, system_):

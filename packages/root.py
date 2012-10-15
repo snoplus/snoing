@@ -42,11 +42,7 @@ class Root(localpackage.LocalPackage):
     def _install(self):
         """ Install root."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
-        if self._system.get_os_type == system.System.Mac and os.path.exists('/usr/X11/lib'):
-            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', 
-                    '--with-x11-libdir=/usr/X11/lib','--with-xft-libdir=/usr/X11/lib',
-                    '--with-xext-libdir=/usr/X11/lib']
-        elif self._system.get_install_mode() == installmode.Grid:
+        if self._system.get_install_mode() == installmode.Grid:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', 
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:

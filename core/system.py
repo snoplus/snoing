@@ -16,6 +16,7 @@ import shutil
 import pickle
 import base64
 import sys
+import snoing_tarfile
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -176,6 +177,7 @@ class System(object):
             shutil.rmtree(target_path)
         if strip == 0: # Untar directly into target
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
+            tarFile.__class__ = snoing_tarfile.TarFile
             tar_file.extractall(target_path)
             tar_file.close()
         else: # Must extract to temp target then copy strip directory to real target 
@@ -184,6 +186,7 @@ class System(object):
                 shutil.rmtree(temp_dir)
             temp_dir = self.build_path(temp_dir)
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
+            tarFile.__class__ = snoing_tarfile.TarFile
             tar_file.extractall(temp_dir)
             tar_file.close()
             copy_dir = temp_dir

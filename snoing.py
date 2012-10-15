@@ -8,12 +8,16 @@
 # Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import sys
+try:
+    import packagemanager
+except ImportError:
+    print "Error: Source the snoing environment file."
+    sys.exit(1)
 import optparse
 import textlogger
 import installmode
 import snoing_exceptions
 import system
-import packagemanager
 import os
 import pickle
 

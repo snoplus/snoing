@@ -36,5 +36,5 @@ class RatTools(localpackage.LocalPackage):
         self._system.execute_command("make", [], ratzdab_path, env)
     def _update(self):
         """ Special updater for rat-tools, just git pull then install again."""
-        self._system.execute_command("git", ["pull"], self.get_install_path()], verbose=True)
+        self._system.execute_command("git", ["pull"], cwd=self.get_install_path(), verbose=True)
         self._install()

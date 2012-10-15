@@ -111,7 +111,7 @@ class System(object):
         shell_command = [command] + args
         process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = command + ' ' + ' '.join(args) + '\n'
+        output = ""
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))
         if verbose or self._logger.is_verbose():

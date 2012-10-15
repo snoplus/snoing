@@ -47,7 +47,7 @@ class Geant4Post5(localpackage.LocalPackage):
         """ Install geant4, using cmake."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self._tar_name, source_path, 1)
-        self._patch_timeout()
+        #self._patch_timeout()
         if not os.path.exists(self.get_install_path()):
             os.makedirs(self.get_install_path())
         cmake_opts = ["-DCMAKE_INSTALL_PREFIX=%s" % self.get_install_path(), 

@@ -19,6 +19,9 @@ class Logger(object):
         self._verbose = verbose
         if os.path.exists(self._local_file):
             os.remove(self._local_file)
+    def is_verbose(self):
+        """ Return true if verbose."""
+        return self._verbose
     def set_install_path(self, install):
         """ Set the install file path name."""
         self._install_file = install

@@ -114,7 +114,7 @@ class System(object):
         output = command + ' ' + ' '.join(args) + '\n'
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))
-        if verbose:
+        if verbose or self._logger.is_verbose():
             for line in iter(process.stdout.readline, ""):
                 sys.stdout.write('\n' + line[:-1])
                 sys.stdout.flush()

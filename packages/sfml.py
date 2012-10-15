@@ -21,7 +21,7 @@ class Sfml(localpackage.LocalPackage):
         self.set_install_mode(installmode.Graphical) # Only graphical installation
     def get_dependencies(self):
         """ Return the required dependencies."""
-        return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "jpeg", 
+        return ["cmake", "pthread", "opengl", "xlib", "xrandr", "freetype", "glew", "glut", "jpeg", 
                 "sndfile", "openal"]
     def _is_downloaded(self):
         """ Has the tar file been downloaded."""

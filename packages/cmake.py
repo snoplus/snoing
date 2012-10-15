@@ -24,13 +24,15 @@ class Cmake(conditionalpackage.ConditionalPackage):
         if self._system.find_library(self._name) is not None: # A version of cmake exists
             version_string = self._system.execute_command("cmake", ["--version"]).split()[2]
             version_numbers = version_string.split(".")
-            if version_numbers[0] < 2: # No good
+            # Check cmake 2.8.1 or above is installed
+            if int(version_numbers[0]) < 2: # No good
                 return False
-            elif len(version_numbers) == 2 and version_numbers[0] == 2 and version_numbers[1] >= 9: # >2.9 great
-                return True
-            elif len(version_numbers) == 3 and version_numbers[0] == 2 and version_numbers[1] == 8 and \
-                    version_numbers[2] >= 1: # Good
-                return True
+            elif len(version_numbers) == 2 and int(version_numbers[0]) == 2 and \
+                    int(version_numbers[1]) < 8: # <2.8 bad
+                return False
+            elif len(version_numbers) == 3 and int(version_numbers[0]) == 2 and \
+                    int(version_numbers[1]) == 8 and int(version_numbers[2]) < 1: 
+                return False
             else: # All others are good
                 return True
     def _is_downloaded(self):

@@ -16,6 +16,7 @@ import shutil
 import pickle
 import base64
 import sys
+import snoing_tarfile
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -110,10 +111,10 @@ class System(object):
         shell_command = [command] + args
         process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = command + ' ' + ' '.join(args) + '\n'
+        output = ""
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))
-        if verbose:
+        if verbose or self._logger.is_verbose():
             for line in iter(process.stdout.readline, ""):
                 sys.stdout.write('\n' + line[:-1])
                 sys.stdout.flush()
@@ -172,8 +173,11 @@ class System(object):
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
         self._logger.command("untar " + file_name)
+        if os.path.exists(target_path):
+            shutil.rmtree(target_path)
         if strip == 0: # Untar directly into target
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
+            tar_file.__class__ = snoing_tarfile.TarFile
             tar_file.extractall(target_path)
             tar_file.close()
         else: # Must extract to temp target then copy strip directory to real target 
@@ -182,6 +186,7 @@ class System(object):
                 shutil.rmtree(temp_dir)
             temp_dir = self.build_path(temp_dir)
             tar_file = tarfile.open(os.path.join(self.get_cache_path(), file_name))
+            tar_file.__class__ = snoing_tarfile.TarFile
             tar_file.extractall(temp_dir)
             tar_file.close()
             copy_dir = temp_dir

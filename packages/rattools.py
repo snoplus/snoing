@@ -17,7 +17,7 @@ class RatTools(localpackage.LocalPackage):
         super(RatTools, self).__init__(name, system)
     def get_dependencies(self):
         """ Depends on rat-dev and root."""
-        return ["rat-dev", root_dep]
+        return ["rat-dev", self._root_dep]
     def _is_downloaded(self):
         """ Check if downloaded."""
         return os.path.exists(self.get_install_path())

@@ -32,6 +32,10 @@ if __name__ == "__main__":
         default_file = open(default_file_path, "r")
         defaults = pickle.load(default_file)
         default_file.close()
+        try:
+            a = defaults['cache_path']
+        except KeyError, e:
+            defaults = {"cache_path" : defaults['cache'], "install_path" : defaults['install']}
     else: # No defaults to load, thus create
         defaults = {"cache_path" : "cache", "install_path" : "install"}
     # First build the options and parse the calling command

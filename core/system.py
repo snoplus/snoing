@@ -17,6 +17,7 @@ import pickle
 import base64
 import sys
 import snoing_tarfile
+import installmode
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -64,6 +65,11 @@ class System(object):
         # Check the install mode status of the install_path
         settings_path = os.path.join(self._install_path, "snoing.pkl")
         self._install_mode = self._deserialise(settings_path)
+        if isinstance(self._install_mode, dict):
+            if self._install_mode['Graphical'] == 1:
+                self._install_mode = installmode.Graphical
+            elif self._install_mode['Grid'] == 1:
+                self._install_mode = installmode.Grid
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
                 raise snoing_exceptions.InstallModeException("Install mode mismatch.", 

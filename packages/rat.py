@@ -85,7 +85,9 @@ class RatRelease(Rat):
         return self._system.file_exists(self._tar_name)
     def _download(self):
         """ Derived classes should override this to download the package. Return True on success."""
-        if self._token is not None:
+        if self._token is None and self._username is None:
+            raise Exception("No username or token supplied for github authentication.")
+        elif self._token is not None:
             self._system.download_file(
                 "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, 
                 token = self._Token)

@@ -28,10 +28,10 @@ class Cmake(conditionalpackage.ConditionalPackage):
             if int(version_numbers[0]) < 2: # No good
                 return False
             elif len(version_numbers) == 2 and int(version_numbers[0]) == 2 and \
-                    int(version_numbers[1]) < 8: # <2.8 bad
+                    int(version_numbers[1][0]) < 8: # <2.8 bad
                 return False
             elif len(version_numbers) == 3 and int(version_numbers[0]) == 2 and \
-                    int(version_numbers[1]) == 8 and int(version_numbers[2]) < 1: 
+                    int(version_numbers[1]) == 8 and int(version_numbers[2][0]) < 1: 
                 return False
             else: # All others are good
                 return True

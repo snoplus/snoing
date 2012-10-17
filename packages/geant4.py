@@ -57,7 +57,7 @@ class Geant4Post5(localpackage.LocalPackage):
                       "-DCLHEP_CONFIG_EXECUTABLE=%s" % \
                           os.path.join(self._dependency_paths[self._clhep_dep], "bin/clhep-config")]
         # Now set the environment, if needed
-        env = None
+        env = {}
         if self._system.get_install_mode() == installmode.Graphical:
             cmake_opts.extend(["-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", 
                                "-DGEANT4_USE_RAYTRACER_X11=ON" ])

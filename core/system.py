@@ -136,7 +136,7 @@ class System(object):
         # After process has finished
         if process.returncode != 0:
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
-                                             output)
+                                                    output)
         return output # Very useful for library checking
     def execute_complex_command(self, command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 
@@ -211,6 +211,7 @@ class System(object):
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
         output = self.execute_command("whereis", [library])
+        output = output.split('\n')[1]
         location = output.split(':')
         if len(location)==1:
             if location[0] == "\n" or location[0] == "":
@@ -218,7 +219,7 @@ class System(object):
             else:
                 return location[0]
         else:
-            if location[1] == "\n":
+            if location[1] == "\n" or location[1] == "":
                 return None
             else:
                 return location[1]

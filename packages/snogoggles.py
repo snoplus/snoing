@@ -35,9 +35,10 @@ class Snogoggles(localpackage.LocalPackage):
         self._env_file = envfilebuilder.EnvFileBuilder("#snogoggles environment\n")
     def get_dependencies(self):
         """ Return the required dependencies."""
-        dependencies = ["python", "python-dev", self._scons_dep, self._geant_dep, self._clhep_dep, self._rat_dep, \
-                            self._root_dep, self._sfml_dep, self._xercesc_dep, self._avalanche_dep, \
-                            self._zeromq_dep, self._curl_dep, self._bzip_dep]
+        dependencies = ["python", "python-dev", "rattools-dev", self._scons_dep, self._geant_dep, 
+                        self._clhep_dep, self._rat_dep, self._root_dep, self._sfml_dep, 
+                        self._xercesc_dep, self._avalanche_dep, self._zeromq_dep, self._curl_dep, 
+                        self._bzip_dep]
         return dependencies
     def _is_downloaded(self):
         """ Check if downloaded."""
@@ -71,6 +72,7 @@ class Snogoggles(localpackage.LocalPackage):
 
         self._env_file.add_environment("VIEWERROOT", self.get_install_path())
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
+        self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("SFMLROOT", self._dependency_paths[self._sfml_dep])
         self._env_file.add_environment("GLEWROOT", os.path.join(self._dependency_paths[self._sfml_dep], "extlibs"))
         self._env_file.add_environment("AVALANCHEROOT", self._dependency_paths[self._avalanche_dep])

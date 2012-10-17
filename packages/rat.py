@@ -26,7 +26,7 @@ class Rat(localpackage.LocalPackage):
         self._geant_dep = geant_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["python", ["python-dev", "python-dev-2.4"], 
+        dependencies = ["python", ["python-dev", "python-dev-2.4"], "rattools-dev",
                         self._geant_dep, self._scons_dep, self._root_dep]
         dependencies.extend(self._get_dependencies())
         return dependencies
@@ -57,6 +57,7 @@ class Rat(localpackage.LocalPackage):
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
+        self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("RAT_SCONS", self._dependency_paths[self._scons_dep])
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
         self._env_file.append_python_path(os.path.join(self._dependency_paths[self._root_dep], 

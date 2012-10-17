@@ -217,7 +217,8 @@ class System(object):
                 return None
         else:
             output = self.execute_command("whereis", [library])
-        output = output.split('\n')[1]
+        if output[0] == '\n': # Verbose mode annoyance
+            output = output.split('\n')[1]
         location = output.split(':')
         if len(location)==1:
             if location[0] == "\n" or location[0] == "":

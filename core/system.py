@@ -42,7 +42,7 @@ class System(object):
             ports_path = self.find_library("port")
             mac_dir = None
             if fink_path is not None and ports_path is not None: # Both fink and ports exist
-                self._logger.warn("Both Fink and Ports exist, will use fink.")
+                self._logger.info("Both Fink and Ports exist, will use fink.")
                 mac_dir = fink_path.strip().replace("/bin/fink","")
             elif fink_path is not None:
                 mac_dir = fink_path.strip().replace("/bin/fink","")
@@ -210,7 +210,13 @@ class System(object):
     # Functions that search the system for things
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
-        output = self.execute_command("whereis", [library])
+        if self._os_type==System.Mac:
+            try:
+                output = self.execute_command("which", [library])
+            except:
+                return None
+        else:
+            output = self.execute_command("whereis", [library])
         output = output.split('\n')[1]
         location = output.split(':')
         if len(location)==1:

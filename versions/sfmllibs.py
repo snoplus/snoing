@@ -9,6 +9,7 @@
 ####################################################################################################
 import librarypackage
 import system
+import os
 
 class Pthread(librarypackage.LibraryPackage):
     """ Package for the pthread library."""

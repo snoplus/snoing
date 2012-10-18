@@ -24,11 +24,11 @@ class RatTools(localpackage.LocalPackage):
         return os.path.exists(self.get_install_path())
     def _is_installed(self):
         """ RATZDAB wont install on macs."""
-        if self._system.get_os_type == system.System.Mac:
+        if self._system.get_os_type() == system.System.Mac:
             return self._system.file_exists('README.md',os.path.join(self.get_install_path(),'README.md'))
         else:
             return self._system.library_exists("libratzdab", os.path.join(self.get_install_path(), 
-                                                                          "lib"))
+                                                                          "ratzdab", "lib"))
     def _download(self):
         """ Git clone rat-dev."""
         self._system.execute_command("git", ["clone", "git@github.com:snoplus/rat-tools.git",

@@ -27,8 +27,8 @@ class RatTools(localpackage.LocalPackage):
         if self._system.get_os_type == system.System.Mac:
             return self._system.file_exists('README.md',os.path.join(self.get_install_path(),'README.md'))
         else:
-            return self._system.file_exists('zdab2root',os.path.join(self.get_install_path(),
-                                                                     os.path.join('ratzdab','bin')))
+            return self._system.library_exists("libratzdab", os.path.join(self.get_install_path(), 
+                                                                          "lib"))
     def _download(self):
         """ Git clone rat-dev."""
         self._system.execute_command("git", ["clone", "git@github.com:snoplus/rat-tools.git",
@@ -37,7 +37,8 @@ class RatTools(localpackage.LocalPackage):
     def _install(self):
         """ Install RATZDAB, except on macs."""
         env = {"RATROOT" : self._dependency_paths["rat-dev"],
-               "ROOTSYS" : self._dependency_paths[self._root_dep]}
+               "ROOTSYS" : self._dependency_paths[self._root_dep],
+               "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib")}
         ratzdab_path = os.path.join(self.get_install_path(), "ratzdab")
         if self._system.get_os_type() == system.System.Mac:
             return

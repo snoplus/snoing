@@ -125,7 +125,7 @@ class System(object):
                 sys.stdout.write('\n' + line[:-1])
                 sys.stdout.flush()
                 self._logger.detail(line[:-1])
-                output += '\n' + line[:-1]
+                output += line[:-1] + '\n'
             process.wait()
         else:
             output, error = process.communicate()
@@ -217,8 +217,6 @@ class System(object):
                 return None
         else:
             output = self.execute_command("whereis", [library])
-        if output[0] == '\n': # Verbose mode annoyance
-            output = output.split('\n')[1]
         location = output.split(':')
         if len(location)==1:
             if location[0] == "\n" or location[0] == "":

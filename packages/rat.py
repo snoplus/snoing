@@ -26,7 +26,7 @@ class Rat(localpackage.LocalPackage):
         self._geant_dep = geant_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["python", ["python-dev", "python-dev-2.4"], #"rattools-dev",
+        dependencies = ["python", ["python-dev", "python-dev-2.4"],
                         self._geant_dep, self._scons_dep, self._root_dep]
         dependencies.extend(self._get_dependencies())
         return dependencies
@@ -57,7 +57,6 @@ class Rat(localpackage.LocalPackage):
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
-        #self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("RAT_SCONS", self._dependency_paths[self._scons_dep])
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
         self._env_file.append_python_path(os.path.join(self._dependency_paths[self._root_dep], 
@@ -112,8 +111,7 @@ class RatDevelopment(Rat):
         super(RatDevelopment, self).__init__(name, system, "root-5.32.04", "geant4.9.5.p01", "scons-2.1.0")
     def _get_dependencies(self):
         """ Return the extra dependencies."""
-        return ["clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", "avalanche-1",
-                "zeromq-2.2.0", "xerces-c-3.1.1" ]
+        return ["clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", "xerces-c-3.1.1" ]
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return os.path.exists(self.get_install_path())
@@ -126,17 +124,12 @@ class RatDevelopment(Rat):
         """ Write the environment file required for the current rat-dev."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
         self._env_file.append_library_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "lib"))
-        self._env_file.add_environment("AVALANCHEROOT", self._dependency_paths["avalanche-1"])
-        if self._dependency_paths["zeromq-2.2.0"] is not None: # Conditional Package
-            self._env_file.add_environment("ZEROMQROOT", self._dependency_paths["zeromq-2.2.0"])
-            self._env_file.append_library_path(os.path.join(self._dependency_paths["zeromq-2.2.0"], "lib"))
         if self._dependency_paths["xerces-c-3.1.1"] is not None: # Conditional Package
             self._env_file.add_environment("XERCESCROOT", self._dependency_paths["xerces-c-3.1.1"])
             self._env_file.append_library_path(os.path.join(self._dependency_paths["xerces-c-3.1.1"], "lib"))
             self._env_file.append_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._geant_dep], "bin"))
         self._env_file.append_library_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "lib"))
-        self._env_file.append_library_path(os.path.join(self._dependency_paths["avalanche-1"], "lib/cpp"))
         if self._dependency_paths["curl-7.26.0"] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths["curl-7.26.0"], "bin"))
         if self._dependency_paths["bzip2-1.0.6"] is not None: # Conditional Package

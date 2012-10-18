@@ -36,7 +36,7 @@ class Avalanche(localpackage.LocalPackage):
                "RATZDAB_ROOT" : os.path.join(self._dependency_paths["rattools-dev"], "ratzdab"),
                "PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin"),
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib")}
-        self._system.execute_command("make", [], env=env)
+        self._system.execute_command("make", [], self.get_install_path(), env=env)
     def _update(self):
         """ Special updater for rat-tools, just git pull then install again."""
         self._system.execute_command("git", ["pull"], cwd=self.get_install_path(), verbose=True)

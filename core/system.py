@@ -47,7 +47,7 @@ class System(object):
             elif fink_path is not None:
                 mac_dir = fink_path.strip().replace("/bin/fink","")
             elif ports_path is not None:
-                mac_dir = fink_path.strip().replace("/bin/port","")
+                mac_dir = ports_path.strip().replace("/bin/port","")
             if mac_dir is not None: # A special mac path exists, add to environment
                 self._append_environment("PATH", os.path.join(mac_dir,"bin"))
                 self._append_environment("LIBRARY_PATH", os.path.join(mac_dir,"lib"))

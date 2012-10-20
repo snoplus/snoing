@@ -11,13 +11,14 @@ import os
 
 class Avalanche(localpackage.LocalPackage):
     """ Base class for avalanche."""
-    def __init__(self, name, system, root_dep):
+    def __init__(self, name, system, root_dep, curl_dep):
         """ Initialise avalanche."""
         self._root_dep = root_dep
+        self._curl_dep = curl_dep
         super(Avalanche, self).__init__(name, system)
     def get_dependencies(self):
         """ Depends on rat-dev and root."""
-        return ["rat-dev", "rattools-dev", self._root_dep]
+        return ["rat-dev", "rattools-dev", self._root_dep, self._curl_dep]
     def _is_downloaded(self):
         """ Check if downloaded."""
         return os.path.exists(self.get_install_path())
@@ -26,7 +27,7 @@ class Avalanche(localpackage.LocalPackage):
                                                                         "lib"))
     def _download(self):
         """ Git clone rat-dev."""
-        self._system.execute_command("git", ["clone", "git@github.com:mastbaum/avalanche.git",
+        self._system.execute_command("git", ["clone", "git@github.com:pgjones/avalanche.git", # Switch back to mastbaum soon...
                                              self.get_install_path()],
                                      verbose=True)
     def _install(self):
@@ -34,7 +35,8 @@ class Avalanche(localpackage.LocalPackage):
         env = {"RATROOT" : self._dependency_paths["rat-dev"],
                "ROOTSYS" : self._dependency_paths[self._root_dep],
                "RATZDAB_ROOT" : os.path.join(self._dependency_paths["rattools-dev"], "ratzdab"),
-               "PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin"),
+               "PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin") + ":" + 
+               os.path.join(self._dependency_paths[self._curl_dep], "bin"),
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib")}
         self._system.execute_command("make", [], self.get_install_path(), env=env)
     def _update(self):

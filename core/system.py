@@ -136,7 +136,7 @@ class System(object):
         # After process has finished
         if process.returncode != 0:
             raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
-                                                    output)
+                                                    output + error)
         return output # Very useful for library checking
     def execute_complex_command(self, command, verbose=False):
         """ Execute a multiple line bash command, writes to a temp bash file then executes it. The 

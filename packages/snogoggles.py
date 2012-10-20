@@ -17,7 +17,7 @@ import envfilebuilder
 class Snogoggles(localpackage.LocalPackage):
     """ Base snogoggles installer for snogoggles."""
     def __init__(self, name, system, scons_dep, geant4_dep, clhep_dep, rat_dep, root_dep,
-                 sfml_dep, xercesc_dep, avalanche_dep, curl_dep, bzip_dep):
+                 sfml_dep, xercesc_dep, curl_dep, bzip_dep):
         """ Initialise snogoggles."""
         super(Snogoggles, self).__init__(name, system)
         self.set_install_mode(installmode.Graphical) # Only graphical installation
@@ -28,7 +28,6 @@ class Snogoggles(localpackage.LocalPackage):
         self._root_dep = root_dep
         self._sfml_dep = sfml_dep
         self._xercesc_dep = xercesc_dep
-        self._avalanche_dep = avalanche_dep
         self._curl_dep = curl_dep
         self._bzip_dep = bzip_dep
         self._env_file = envfilebuilder.EnvFileBuilder("#snogoggles environment\n")
@@ -36,7 +35,7 @@ class Snogoggles(localpackage.LocalPackage):
         """ Return the required dependencies."""
         dependencies = ["python", "python-dev", "rattools-dev", self._scons_dep, self._geant_dep, 
                         self._clhep_dep, self._rat_dep, self._root_dep, self._sfml_dep, 
-                        self._xercesc_dep, self._avalanche_dep, self._curl_dep, self._bzip_dep]
+                        self._xercesc_dep, self._curl_dep, self._bzip_dep]
         return dependencies
     def _is_downloaded(self):
         """ Check if downloaded."""
@@ -73,7 +72,6 @@ class Snogoggles(localpackage.LocalPackage):
         self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("SFMLROOT", self._dependency_paths[self._sfml_dep])
         self._env_file.add_environment("GLEWROOT", os.path.join(self._dependency_paths[self._sfml_dep], "extlibs"))
-        self._env_file.add_environment("AVALANCHEROOT", self._dependency_paths[self._avalanche_dep])
         if self._dependency_paths[self._xercesc_dep] is not None: # Conditional Package
             self._env_file.add_environment("XERCESCROOT", self._dependency_paths[self._xercesc_dep])
         if self._dependency_paths[self._bzip_dep] is not None:
@@ -90,5 +88,5 @@ class Snogoggles(localpackage.LocalPackage):
 
         # Library path is always after the environment exports/setenvs
         self._env_file.append_library_path(os.path.join(self._dependency_paths[self._clhep_dep], "lib"))
-        self._env_file.append_library_path("$ROOTSYS/lib:$RATTOOLS/ratzdab/lib:$AVALANCHEROOT/lib:$SFMLROOT/lib:$XERCESCROOT/lib:$GLEWROOT/lib")
+        self._env_file.append_library_path("$ROOTSYS/lib:$RATTOOLS/ratzdab/lib:$SFMLROOT/lib:$XERCESCROOT/lib:$GLEWROOT/lib")
         self._env_file.write(self._system.get_install_path(), "env_%s" % self._name)

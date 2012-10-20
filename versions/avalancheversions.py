@@ -13,4 +13,4 @@ import avalanche
 class AvalancheDev(avalanche.Avalanche):
     def __init__(self, system):
         """ Initialise dev version."""
-        super(AvalancheDev, self).__init__("avalanche-dev", system, "root-5.32.04")
+        super(AvalancheDev, self).__init__("avalanche-dev", system, "root-5.32.04", "curl-7.26.0")

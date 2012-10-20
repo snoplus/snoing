@@ -75,7 +75,8 @@ class Snogoggles(localpackage.LocalPackage):
 
         self._env_file.add_environment("VIEWERROOT", self.get_install_path())
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
-        self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
+        if self._system.get_os_type() is not system.System.Mac:
+            self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("SFMLROOT", self._dependency_paths[self._sfml_dep])
         self._env_file.add_environment("GLEWROOT", os.path.join(self._dependency_paths[self._sfml_dep], "extlibs"))
         if self._dependency_paths[self._xercesc_dep] is not None: # Conditional Package

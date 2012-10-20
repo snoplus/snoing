@@ -13,6 +13,7 @@ import localpackage
 import installmode
 import os
 import envfilebuilder
+import system
 
 class Snogoggles(localpackage.LocalPackage):
     """ Base snogoggles installer for snogoggles."""

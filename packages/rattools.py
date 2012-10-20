@@ -31,8 +31,6 @@ class RatTools(localpackage.LocalPackage):
                "ROOTSYS" : self._dependency_paths[self._root_dep],
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib")}
         ratzdab_path = os.path.join(self.get_install_path(), "ratzdab")
-        if self._system.get_os_type() == system.System.Mac:
-            return
         self._system.execute_command("make", [], ratzdab_path, env)
     def get_dependencies(self):
         """ Depends on rat-dev and root."""

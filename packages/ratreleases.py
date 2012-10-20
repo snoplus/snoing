@@ -45,9 +45,9 @@ class RatRelease4(rat.RatRelease):
                                                           "lib"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._clhep_dep], "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._geant_dep], "bin"))
-        self._env_file.append_libraryPath(os.path.join(self._dependency_paths[self._clhep_dep], 
+        self._env_file.append_library_path(os.path.join(self._dependency_paths[self._clhep_dep], 
                                                        "lib"))
-        self._env_file.append_libraryPath(os.path.join(self._dependency_paths[self._avalanche_dep], 
+        self._env_file.append_library_path(os.path.join(self._dependency_paths[self._avalanche_dep], 
                                                        "lib/cpp"))
         if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))

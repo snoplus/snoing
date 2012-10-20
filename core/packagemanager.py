@@ -15,6 +15,7 @@ import snoing_exceptions
 import types
 import os
 import rat
+import rattools
 
 class PackageManager(object):
     """ Manages a dictionary of packages for installation on the system."""
@@ -127,7 +128,7 @@ class PackageManager(object):
     def authenticate(self, username, token):
         """ Pass the authentication information over to the packages that need it."""
         for package in self._packages.itervalues():
-            if isinstance(package, rat.RatRelease):
+            if isinstance(package, rat.RatRelease) or isinstance(package, rattools.RatToolsRelease):
                 package.authenticate(username, token)
 ####################################################################################################
     # Internal functions

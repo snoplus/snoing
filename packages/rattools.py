@@ -27,6 +27,8 @@ class RatTools(localpackage.LocalPackage):
                                                                           "ratzdab", "lib"))
     def _install(self):
         """ Install RATZDAB, except on macs."""
+        if self._system.get_os_type() == system.System.Mac:
+            return True
         env = {"RATROOT" : self._dependency_paths[self._rat_dep],
                "ROOTSYS" : self._dependency_paths[self._root_dep],
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib"),

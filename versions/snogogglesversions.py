@@ -17,5 +17,5 @@ class SnogogglesDev(snogoggles.Snogoggles):
         """ Initializes snogoggles package. """
         super(SnogogglesDev, self).__init__("snogoggles-dev", system, "scons-2.1.0", 
                                             "geant4.9.5.p01", "clhep-2.1.1.0", "rat-dev", 
-                                            "root-5.32.04", "sfml-2.0-rc", "xerces-c-3.1.1", 
+                                            "root-5.34.02", "sfml-2.0-rc", "xerces-c-3.1.1", 
                                             "curl-7.26.0", "bzip2-1.0.6")

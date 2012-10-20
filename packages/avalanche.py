@@ -43,3 +43,38 @@ class Avalanche(localpackage.LocalPackage):
         """ Special updater for rat-tools, just git pull then install again."""
         self._system.execute_command("git", ["pull"], cwd=self.get_install_path(), verbose=True)
         self._install()
+
+class AvalancheOld(localpackage.LocalPackage):
+    """ Base class for old style release versions."""
+    def __init__(self, name, system, zmq_dep, root_dep, curl_dep, tar_name):
+        """ Initialise avalanche with the tarName."""
+        super(AvalancheOld, self).__init__(name, system)
+        self._tar_name = tar_name
+        self._zeromq_dep = zmq_dep
+        self._root_dep = root_dep
+        self._curl_dep = curl_dep
+    def get_dependencies( self ):
+        """ Return the required dependencies."""
+        return [self._zeromq_dep, self._root_dep, self._curl_dep]
+    def _is_installed( self ):
+        """ Check if installed."""
+        return self._system.library_exists("libavalanche", 
+                                           os.path.join(self.get_install_path(), "lib/cpp"))
+    def _is_downloaded( self ):
+        """ Check if downloaded."""
+        return self._system.file_exists(self._tar_name)
+    def _download( self ):
+        """ Download avalanche (git clone)."""
+        self._system.download_file("https://github.com/mastbaum/avalanche/tarball/" + self._tar_name)
+    def _install( self ):
+        """ Untar then call base installer."""
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
+        env = {"PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin"),
+               "ROOTSYS" : self._dependency_paths[self._root_dep]}
+        curl = self._dependency_paths[self._curl_dep] # Shorten the text
+        zmq = self._dependency_paths[self._zeromq_dep] # Shorten the text
+        self._system.execute_command("make", 
+                                     ['CXXFLAGS=-L%s/lib -I%s/include -L%s/lib -I%s/include' % 
+                                      (zmq, zmq, curl, curl)],
+                                     cwd=os.path.join(self.get_install_path(), "lib/cpp"),
+                                     env=env)

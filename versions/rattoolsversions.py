@@ -7,7 +7,6 @@
 # Author P G Jones - 15/10/2012 <p.g.jones@qmul.ac.uk> : First revision
 ####################################################################################################
 import rattools
-import rattoolsreleases
 
 class RatToolsDev(rattools.RatToolsDevelopment):
     def __init__(self, system):

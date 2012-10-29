@@ -67,7 +67,7 @@ class Geant4Post5(localpackage.LocalPackage):
         cmake_command = "cmake"
         if self._dependency_paths["cmake"] is not None: # Special cmake installed
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
-        self._system.execute_command(cmake_command, cmake_opts, self.get_install_path(), env)
+        self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), env)
         self._system.execute_command("make", [], self.get_install_path(), env)
         self._system.execute_command("make", ['install'], self.get_install_path(), env)
     def _patch_timeout(self):

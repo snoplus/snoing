@@ -19,9 +19,9 @@ class Xm(systempackage.SystemPackage):
         """ Check the Xm state, slightly more involved on macs."""
         if self._system.get_os_type() == system.System.Mac:
             if os.path.exists("/sw/include/Xm"):
-                flags = [ "-I%s" % "/sw/include/Xm", "-L%s" % "/sw/lib" ]
+                flags = [ "-I%s" % "/sw/include", "-L%s" % "/sw/lib" ]
             elif os.path.exists("/usr/OpenMotif"):
                 flags = [ "-I%s" % "/usr/OpenMotif/include", "-L%s" % "/usr/OpenMotif/lib" ]
-            self._installed = self._system._test_compile(["Xm.h"], flags)
+            self._installed = self._system._test_compile(["Xm/Xm.h"], flags)
         else:
             self._installed = self._system.test_library("Xm", ["Xm/Xm.h"])

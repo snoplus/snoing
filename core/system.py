@@ -70,6 +70,8 @@ class System(object):
                 self._install_mode = installmode.Graphical
             elif self._install_mode['Grid'] == 1:
                 self._install_mode = installmode.Grid
+            else:
+                self._install_mode = installmode.Normal
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
                 raise snoing_exceptions.InstallModeException("Install mode mismatch.", 

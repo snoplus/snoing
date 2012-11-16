@@ -288,8 +288,8 @@ class System(object):
         for env in os.environ.itervalues():
             inenv = env.find('G4')
             if inenv!=-1:
-                self._logger.error("System not clean")
-                raise snoing_exceptions.SystemException("System not clean", env)
+                self._logger.error("System environment variables for geant4 already set, these cannot be set before running snoing.")
+                raise snoing_exceptions.SystemException("System environment variables for geant4 already set, these cannot be set before running snoing.", env)
     def _serialise(self, path, data):
         """ Pickle data to path."""
         data_file = open(path, "w")

@@ -108,7 +108,7 @@ class RatDevelopment(Rat):
     """ Base rat installer for rat-dev."""
     def __init__(self, name, system):
         """ Initialise rat with the tar_name."""
-        super(RatDevelopment, self).__init__(name, system, "root-5.32.04", "geant4.9.5.p01", "scons-2.1.0")
+        super(RatDevelopment, self).__init__(name, system, "root-5.34.02", "geant4.9.5.p01", "scons-2.1.0")
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return ["clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", "xerces-c-3.1.1" ]

@@ -42,8 +42,12 @@ class System(object):
             ports_path = self.find_library("port")
             mac_dir = None
             if fink_path is not None and ports_path is not None: # Both fink and ports exist
-                self._logger.info("Both Fink and Ports exist, will use fink.")
-                mac_dir = fink_path.strip().replace("/bin/fink","")
+                self._logger.info("Both Fink and Ports exist")
+                fink = raw_input("Use fink (f) or ports (p)?")
+                if fink == 'f' or fink == 'F':
+                    mac_dir = fink_path.strip().replace("/bin/fink","")
+                else:
+                    mac_dir = ports_path.strip().replace("/bin/port","")
             elif fink_path is not None:
                 mac_dir = fink_path.strip().replace("/bin/fink","")
             elif ports_path is not None:

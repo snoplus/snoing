@@ -10,6 +10,7 @@ import localpackage
 import os
 import system
 import getpass
+import envfilebuilder
 
 class RatTools(localpackage.LocalPackage):
     """ Base class for rat-tools."""
@@ -35,9 +36,22 @@ class RatTools(localpackage.LocalPackage):
                "PATH" : os.path.join(self._dependency_paths[self._root_dep], "bin")}
         ratzdab_path = os.path.join(self.get_install_path(), "ratzdab")
         self._system.execute_command("make", [], ratzdab_path, env)
+        self.write_env_file()
     def get_dependencies(self):
         """ Depends on rat-dev and root."""
         return [self._rat_dep, self._root_dep]
+    def write_env_file(self):
+        """ Write the environment file."""
+        env = envfilebuilder.EnvFileBuilder("# Ratzdab environment.\n")
+        env.add_environment("RATROOT", self._dependency_paths[self._rat_dep])
+        env.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
+        env.append_library_path("$ROOTSYS/lib:%s" % os.path.join(self.get_install_path(), "ratzdab/lib"))
+        env.append_path("$ROOTSYS/bin:%s" % os.path.join(self.get_install_path(), "ratzdab/bin"))
+        env.write(self._system.get_install_path(), "env_%s" % self._name)
+    def _remove(self):
+        """ Delete the env files as well."""
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
 
 class RatToolsDevelopment(RatTools):
     '''RatTools development class'''

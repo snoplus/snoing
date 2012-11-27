@@ -42,8 +42,12 @@ class System(object):
             ports_path = self.find_library("port")
             mac_dir = None
             if fink_path is not None and ports_path is not None: # Both fink and ports exist
-                self._logger.info("Both Fink and Ports exist, will use fink.")
-                mac_dir = fink_path.strip().replace("/bin/fink","")
+                self._logger.info("Both Fink and Ports exist")
+                fink = raw_input("Use fink (f) or ports (p)?")
+                if fink == 'f' or fink == 'F':
+                    mac_dir = fink_path.strip().replace("/bin/fink","")
+                else:
+                    mac_dir = ports_path.strip().replace("/bin/port","")
             elif fink_path is not None:
                 mac_dir = fink_path.strip().replace("/bin/fink","")
             elif ports_path is not None:
@@ -70,6 +74,8 @@ class System(object):
                 self._install_mode = installmode.Graphical
             elif self._install_mode['Grid'] == 1:
                 self._install_mode = installmode.Grid
+            else:
+                self._install_mode = installmode.Normal
         if self._install_mode is not None: # Settings exist for install path
             if self._install_mode is not install_mode: # Existing settings do not match
                 raise snoing_exceptions.InstallModeException("Install mode mismatch.", 
@@ -286,8 +292,8 @@ class System(object):
         for env in os.environ.itervalues():
             inenv = env.find('G4')
             if inenv!=-1:
-                self._logger.error("System not clean")
-                raise snoing_exceptions.SystemException("System not clean", env)
+                self._logger.error("System environment variables for geant4 already set, these cannot be set before running snoing.")
+                raise snoing_exceptions.SystemException("System environment variables for geant4 already set, these cannot be set before running snoing.", env)
     def _serialise(self, path, data):
         """ Pickle data to path."""
         data_file = open(path, "w")

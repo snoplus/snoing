@@ -15,9 +15,9 @@ import rat
 
 class RatRelease4(rat.RatRelease):
     """ Base package installer for rat release 4."""
-    def __init__(self, name, system, tar_name):
+    def __init__(self, name, system, root_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease4, self).__init__(name, system, "root-5.32.04", "geant4.9.5.p01", "scons-2.1.0",
+        super(RatRelease4, self).__init__(name, system, root_dep, "geant4.9.5.p01", "scons-2.1.0",
                                           tar_name)
         self._clhep_dep = "clhep-2.1.1.0"
         self._curl_dep = "curl-7.26.0"

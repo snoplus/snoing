@@ -77,7 +77,7 @@ class Geant4Post5(localpackage.LocalPackage):
         cmake_file = open(file_path, "r")
         text = cmake_file.read()
         cmake_file.close()
-        text = text.replace("PREFIX", "TIMEOUT 1800\n        PREFIX")
+        text = text.replace("PREFIX", "TIMEOUT 10000\n        PREFIX")
         cmake_file = open(file_path, "w")
         cmake_file.write(text)
         cmake_file.close()

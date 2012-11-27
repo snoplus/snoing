@@ -90,7 +90,7 @@ class RatRelease(Rat):
         elif self._token is not None:
             self._system.download_file(
                 "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, 
-                token = self._Token)
+                token = self._token)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(

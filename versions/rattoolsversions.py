@@ -11,7 +11,7 @@ import rattools
 class RatToolsDev(rattools.RatToolsDevelopment):
     def __init__(self, system):
         """ Initialise dev version."""
-        super(RatToolsDev, self).__init__("rattools-dev", system, "root-5.32.04")
+        super(RatToolsDev, self).__init__("rattools-dev", system, "root-5.34.02")
 
 class RatTools1(rattools.RatToolsRelease):
     def __init__(self, system):

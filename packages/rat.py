@@ -127,7 +127,7 @@ class RatDevelopment(Rat):
         if self._dependency_paths["xerces-c-3.1.1"] is not None: # Conditional Package
             self._env_file.add_environment("XERCESCROOT", self._dependency_paths["xerces-c-3.1.1"])
             self._env_file.append_library_path(os.path.join(self._dependency_paths["xerces-c-3.1.1"], "lib"))
-            self._env_file.append_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "bin"))
+        self._env_file.append_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._geant_dep], "bin"))
         self._env_file.append_library_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "lib"))
         if self._dependency_paths["curl-7.26.0"] is not None: # Conditional Package

@@ -61,8 +61,12 @@ class Snogoggles(localpackage.LocalPackage):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         self._remove()
         self.write_env_file()
-        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons" % \
-            (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
+        if self._system.get_os_type() == system.System.Mac:
+            command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons zdab=0" % \
+                (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
+        else:
+            command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons" % \
+                (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
         self._system.execute_complex_command(command_text, verbose=True)
     def _remove(self):
         """ Delete the env files as well."""

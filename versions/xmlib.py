@@ -18,6 +18,7 @@ class Xm(systempackage.SystemPackage):
     def check_state(self):
         """ Check the Xm state, slightly more involved on macs."""
         if self._system.get_os_type() == system.System.Mac:
+            flags = []
             if os.path.exists("/sw/include/Xm"):
                 flags = [ "-I%s" % "/sw/include", "-L%s" % "/sw/lib" ]
             elif os.path.exists("/usr/OpenMotif"):

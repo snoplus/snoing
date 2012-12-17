@@ -289,6 +289,9 @@ class System(object):
 
     def _check_clean_environment(self):
         """ Check the environment is clean (mainly no G4 variables)."""
+        if "ROOTSYS" in os.environ:
+            self._logger.error("System environment variables for root already set, these cannot be set before running snoing.")
+            raise snoing_exceptions.SystemException("System environment variables for root already set, these cannot be set before running snoing.", os.environ["ROOTSYS"])
         for env in os.environ.itervalues():
             inenv = env.find('G4')
             if inenv!=-1:

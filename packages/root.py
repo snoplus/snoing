@@ -43,9 +43,9 @@ class Root(localpackage.LocalPackage):
         """ Install root."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         if self._system.get_install_mode() == installmode.Grid:
-            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', 
+            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore',
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:
-            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python']
+            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore']
         self._system.configure_command(args=args, cwd=self.get_install_path())
         self._system.execute_command('make', cwd=self.get_install_path())

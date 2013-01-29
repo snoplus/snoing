@@ -58,7 +58,7 @@ class PackageManager(object):
         package = self._packages[package_name]
         self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
-            raise snoing_exceptions.PackageException("Package cannot be installed by snoing", package_name)
+            raise snoing_exceptions.PackageException("Package cannot be installed by snoing. " + package.get_help_text(), package_name)
         dependencies = self._install_dependencies(package)
         package.set_dependency_paths(dependencies)
         try:
@@ -84,7 +84,7 @@ class PackageManager(object):
         package = self._packages[package_name]
         self._check_mode(package)
         if not isinstance(package, localpackage.LocalPackage):
-            raise snoing_exceptions.PackageException("Package cannot be updated by snoing", package_name)
+            raise snoing_exceptions.PackageException("Package cannot be updated by snoing. " + package.get_help_text(), package_name)
         if package.is_updated(): # Nothing todo if already updated
             return
         dependencies = self._install_dependencies( package )
@@ -143,8 +143,8 @@ class PackageManager(object):
             if package.get_install_mode() is not None and \
                     package.get_install_mode() != self._system.get_install_mode():
                 raise snoing_exceptions.PackageException(("Package install mode is incompatible with the "
-                                                   "system"),
-                                                  package.get_name())
+                                                          "system"),
+                                                         package.get_name())
     def _install_dependencies(self, package):
         """ Install the dependencies (if required)."""
         dependency_paths = {} # Dictionary of dependency paths

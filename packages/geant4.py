@@ -67,7 +67,7 @@ class Geant4Post5(localpackage.LocalPackage):
         cmake_command = "cmake"
         if self._dependency_paths["cmake"] is not None: # Special cmake installed
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
-        self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), env)
+        self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), env, config_type="geant4")
         self._system.execute_command("make", [], self.get_install_path(), env)
         self._system.execute_command("make", ['install'], self.get_install_path(), env)
     def _patch_timeout(self):
@@ -128,12 +128,12 @@ class Geant4Pre5(localpackage.LocalPackage):
         self.write_geant4_config_file()
         self._system.configure_command('./Configure', ['-incflags', '-build', '-d', '-e', 
                                                        '-f', "geant4-snoing-config.sh"], 
-                                       cwd=self.get_install_path())
+                                       cwd=self.get_install_path(), config_type="geant4")
         self._system.configure_command('./Configure', ['-incflags', '-install', '-d', '-e', 
                                                        '-f', "geant4-snoing-config.sh"], 
-                                       cwd=self.get_install_path())
+                                       cwd=self.get_install_path(), config_type="geant4")
         try:
-            self._system.configure_command('./Configure', cwd=self.get_install_path())
+            self._system.configure_command('./Configure', cwd=self.get_install_path(), config_type="geant4")
         except Exception: # Geant4 configure always fails, it is annoying
             pass
         if not os.path.exists(os.path.join(self.get_install_path(),'env.sh')):

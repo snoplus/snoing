@@ -47,7 +47,9 @@ if __name__ == "__main__":
     parser.add_option("-v", action="store_true", dest="verbose", help="Verbose Install?", 
                       default=False)
     parser.add_option("-a", action="store_true", dest="all", help="All packages?")
-    parser.add_option("-A", type="string", dest="arguments", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--Ac", type="string", dest="curl_arguments", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--Ar", type="string", dest="root_arguments", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--Ag", type="string", dest="geant4_arguments", help=optparse.SUPPRESS_HELP)
 
     installerGroup = optparse.OptionGroup(parser, "Optional Install modes", 
                                           ("Default snoing action is to install non graphically, i.e."
@@ -94,10 +96,13 @@ if __name__ == "__main__":
     else:
         install_mode = installmode.Normal
     # Sort out the extra arguments
-    if options.arguments is not None:
-        opt_args = options.arguments.split()
-    else:
-        opt_args = []
+    opt_args = {"root":[],"geant4":[],"curl":[]}
+    if options.root_arguments is not None:
+        opt_args["root"] = options.root_arguments.split()
+    if options.geant4_arguments is not None:
+        opt_args["geant4"] = options.geant4_arguments.split()
+    if options.curl_arguments is not None:
+        opt_args["curl"] = options.curl_arguments.split()
     try:
         install_system = system.System(logger, options.cache_path, options.install_path, install_mode, opt_args)
     except snoing_exceptions.InstallModeException, e:

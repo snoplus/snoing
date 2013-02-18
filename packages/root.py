@@ -47,5 +47,5 @@ class Root(localpackage.LocalPackage):
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python']
-        self._system.configure_command(args=args, cwd=self.get_install_path())
+        self._system.configure_command(args=args, cwd=self.get_install_path(), config_type="root")
         self._system.execute_command('make', cwd=self.get_install_path())

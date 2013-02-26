@@ -51,6 +51,7 @@ class RatRelease4(rat.RatRelease):
                                                        "lib/cpp"))
         if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
         if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
             self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
@@ -90,6 +91,7 @@ class RatRelease3(rat.RatRelease):
                                                         "lib/cpp"))
         if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
         if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
             self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
@@ -123,6 +125,7 @@ class RatRelease2(rat.RatRelease):
                                                         "lib"))
         if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
         if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
             self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 

@@ -39,6 +39,7 @@ class Avalanche(localpackage.LocalPackage):
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib")}
         if self._dependency_paths[self._curl_dep] is not None: # Conditional package
             env["PATH"] += ":" + os.path.join(self._dependency_paths[self._curl_dep], "bin")
+            env["LD_LIBRARY_PATH"] += ":" + os.path.join(self._dependency_paths[self._curl_dep], "lib")
         self._system.execute_command("make", [], self.get_install_path(), env=env)
     def _update(self):
         """ Special updater for rat-tools, just git pull then install again."""

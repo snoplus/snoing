@@ -132,6 +132,7 @@ class RatDevelopment(Rat):
         self._env_file.append_library_path(os.path.join(self._dependency_paths["clhep-2.1.1.0"], "lib"))
         if self._dependency_paths["curl-7.26.0"] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths["curl-7.26.0"], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths["curl-7.26.0"], "lib"))
         if self._dependency_paths["bzip2-1.0.6"] is not None: # Conditional Package
             self._env_file.add_environment("BZIPROOT", self._dependency_paths["bzip2-1.0.6"])
             self._env_file.append_library_path(os.path.join(self._dependency_paths["bzip2-1.0.6"], "lib"))

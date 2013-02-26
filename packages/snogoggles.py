@@ -90,6 +90,7 @@ class Snogoggles(localpackage.LocalPackage):
 
         if self._dependency_paths[self._curl_dep] is not None:
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependence_paths[self._curl_dep], "lib"))
         self._env_file.append_path(os.path.join(self.get_install_path(), "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._clhep_dep], "bin"))

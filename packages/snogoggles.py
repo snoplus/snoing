@@ -31,7 +31,6 @@ class Snogoggles(localpackage.LocalPackage):
         self._xercesc_dep = xercesc_dep
         self._curl_dep = curl_dep
         self._bzip_dep = bzip_dep
-        self._env_file = envfilebuilder.EnvFileBuilder("#snogoggles environment\n")
     def get_dependencies(self):
         """ Return the required dependencies."""
         dependencies = ["python", "python-dev", self._scons_dep, self._geant_dep, 
@@ -61,12 +60,8 @@ class Snogoggles(localpackage.LocalPackage):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         self._remove()
         self.write_env_file()
-        if self._system.get_os_type() == system.System.Mac:
-            command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons zdab=0" % \
-                (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
-        else:
-            command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons" % \
-                (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
+        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\nscons -c\nscons" % \
+            (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name ), self.get_install_path())
         self._system.execute_complex_command(command_text, verbose=True)
     def _remove(self):
         """ Delete the env files as well."""
@@ -74,6 +69,7 @@ class Snogoggles(localpackage.LocalPackage):
         os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
+        self._env_file = envfilebuilder.EnvFileBuilder("#snogoggles environment\n")
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
         self._env_file.add_source(self._dependency_paths[self._rat_dep], "env")
 
@@ -90,7 +86,7 @@ class Snogoggles(localpackage.LocalPackage):
 
         if self._dependency_paths[self._curl_dep] is not None:
             self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
-            self._env_file.append_library_path(os.path.join(self._dependence_paths[self._curl_dep], "lib"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
         self._env_file.append_path(os.path.join(self.get_install_path(), "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
         self._env_file.append_path(os.path.join(self._dependency_paths[self._clhep_dep], "bin"))

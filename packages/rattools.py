@@ -20,16 +20,11 @@ class RatTools(localpackage.LocalPackage):
         self._rat_dep = rat_dep
         super(RatTools, self).__init__(name, system)
     def _is_installed(self):
-        """ RATZDAB wont install on macs."""
-        if self._system.get_os_type() == system.System.Mac:
-            return self._system.file_exists('README.md',self.get_install_path())
-        else:
-            return self._system.library_exists("libratzdab", os.path.join(self.get_install_path(), 
+        """ Check if the ratzb tool is compiled."""
+        return self._system.library_exists("libratzdab", os.path.join(self.get_install_path(), 
                                                                           "ratzdab", "lib"))
     def _install(self):
-        """ Install RATZDAB, except on macs."""
-        if self._system.get_os_type() == system.System.Mac:
-            return True
+        """ Install RATZDAB."""
         env = {"RATROOT" : self._dependency_paths[self._rat_dep],
                "ROOTSYS" : self._dependency_paths[self._root_dep],
                "LD_LIBRARY_PATH" : os.path.join(self._dependency_paths[self._root_dep], "lib"),

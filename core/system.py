@@ -18,6 +18,7 @@ import base64
 import sys
 import snoing_tarfile
 import installmode
+import exceptions
 
 class System(object):
     """ System object, holds information about the install folder and allows commands to be 
@@ -121,8 +122,12 @@ class System(object):
             self._append_environment(key, env[key], local_env)
         # Now open and run the shell_command
         shell_command = [command] + args
-        process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
-                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except exceptions.OSError:
+            raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
+                                                    output + error)
         output = ""
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))

@@ -24,7 +24,7 @@ class System(object):
     executed.
     """
     Mac, Linux = range(2)
-    def __init__(self, logger, cache_path, install_path, install_mode=None, arguments=[]):
+    def __init__(self, logger, cache_path, install_path, install_mode=None, arguments={}):
         """ Initialise with a logger for output and a prefered cache and install path. The 
         install_mode is optional, None is no install mode required. The arguments are extra 
         arguments applied to all configure script calls (package specific).
@@ -105,11 +105,14 @@ class System(object):
         return self._os_type
 ####################################################################################################
     # Functions that do stuff to the system
-    def configure_command(self, command='./configure', args=[], cwd=None, env={}, verbose=False):
+    def configure_command(self, command='./configure', args=[], cwd=None, env={}, verbose=False, config_type=None):
         """ Execute a configure command, add the extra arguments."""
         if cwd is None:
             cwd = self.get_install_path()
-        args.extend(self._arguments)
+        if config_type in self._arguments:
+            args.extend(self._arguments[config_type])
+        else:
+            self._logger.error('config type %s does not exit!'%(config_type))
         self.execute_command(command, args, cwd, env, verbose)
     def execute_command(self, command, args=[], cwd=None, env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""

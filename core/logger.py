@@ -51,9 +51,9 @@ class Logger(object):
         """ Notify that a package has been updated."""
         self._write_local("Package %s updated.\n" % package_name)
         self._write_install("Package %s updated.\n" % package_name)
-    def set_state(self, state):
+    def set_state(self, state, package_name=""):
         """ Notify the current state."""
-        self._write_local("%s\n" % state)
+        self._write_local("%s %s\n" % (state, package_name)
     def info(self, info_message):
         """ Output some information."""
         self._write_local("%s\n" % info_message)

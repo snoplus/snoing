@@ -62,10 +62,10 @@ class PackageManager(object):
         dependencies = self._install_dependencies(package)
         package.set_dependency_paths(dependencies)
         try:
-            self._logger.set_state("Downloading")
+            self._logger.set_state("Downloading", package_name)
             package.download()
             self._logger.package_downloaded(package_name)
-            self._logger.set_state("Installing")
+            self._logger.set_state("Installing", package_name)
             package.install()
             self._logger.package_installed(package_name)
         except snoing_exceptions.SystemException, e:
@@ -90,7 +90,7 @@ class PackageManager(object):
         dependencies = self._install_dependencies( package )
         package.set_dependency_paths(dependencies)
         try:
-            self._logger.set_state("Updating")
+            self._logger.set_state("Updating", package_name)
             package.update()
         except snoing_exceptions.SystemException, e:
             self._logger.error(e.args[0])
@@ -100,17 +100,20 @@ class PackageManager(object):
             self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):
         """ Remove a package, don't remove if force is False and packages depend on package_name."""
-        if not self.check_installed(package_name):
-            raise snoing_exceptions.PackageException("Cannot remove, not installed.", package_name)
         package = self._packages[package_name]
-        if not force:
-            for dependent_name in self._package_dependents(package_name):
-                if self.check_installed(dependent_name):
-                    raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
-                                                                 dependent_name, package_name)
-        # If get here then package can be deleted
-        self._logger.set_state("Removing")
-        package.remove()
+        self._logger.set_state("Removing", package_name)
+        if force:
+            package.remove()
+        else:
+            if not self.check_installed(package_name):
+                raise snoing_exceptions.PackageException("Cannot remove, not installed.", package_name)
+            if not force:
+                for dependent_name in self._package_dependents(package_name):
+                    if self.check_installed(dependent_name):
+                        raise snoing_exceptions.PackageException("Cannot remove as %s depends on it." % \
+                                                                     dependent_name, package_name)
+                # If get here then package can be deleted
+                package.remove()
 ####################################################################################################
     # Functions that act on all packages
     def check_all_installed(self):

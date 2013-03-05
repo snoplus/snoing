@@ -44,10 +44,10 @@ class TextLogger(logger.Logger):
         """ Notify that a package has been updated."""
         print OKGREEN + ("Package %s updated." % package_name) + END
         super(TextLogger, self).package_updated(package_name)
-    def set_state(self, state):
+    def set_state(self, state, package_name=""):
         """ Notify the current state."""
-        print HEADER + state + END
-        super(TextLogger, self).set_state(state)
+        print HEADER + state + " " + package_name + END
+        super(TextLogger, self).set_state(state, package_name)
     def info(self, info_message):
         """ Output some information."""
         print info_message

@@ -8,4 +8,5 @@ printf "%-50s" "Checking if this is a git repository..."
 git branch &> /dev/null
 test $? -eq 0 && USEGIT=1 || USEGIT=0
 test $USEGIT -eq 1 && printf "yes\nAttempting update via git pull...\n" || printf "no\n"
+test $USEGIT -eq 1 && git remote set-url origin git@github.com:snoplus/snoing.git
 test $USEGIT -eq 1 && git pull

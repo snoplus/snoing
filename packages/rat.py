@@ -138,6 +138,8 @@ class RatDevelopment(Rat):
             self._env_file.append_library_path(os.path.join(self._dependency_paths["bzip2-1.0.6"], "lib"))
     def _update(self):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
+        command_text = "#!/bin/bash\nsource %s\ncd %s\nscons -c" \
+            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
         os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
         os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
         super(RatDevelopment, self).write_env_file()

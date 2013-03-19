@@ -34,14 +34,14 @@ class Rat(localpackage.LocalPackage):
         """ Rat releases and dev share a common install check."""
         # Check rat, root, RATLib and RATDSLib
         sys = os.uname()[0]
-        return self._system.file_exists('rat_%s-g++' % sys, 
+        return self._system.file_exists('rat_%s' % sys, 
                                         os.path.join(self.get_install_path(), "bin")) \
-            and self._system.file_exists('root', 
-                                         os.path.join(self.get_install_path(), "bin")) \
-            and self._system.library_exists("librat_%s-g++" % sys, 
-                                            os.path.join(self.get_install_path(), "lib")) \
-            and self._system.library_exists("libRATEvent_%s-g++" % sys, 
-                                            os.path.join(self.get_install_path(), "lib"))
+               and self._system.file_exists('root', 
+                                            os.path.join(self.get_install_path(), "bin")) \
+               and self._system.library_exists("librat_%s" % sys, 
+                                               os.path.join(self.get_install_path(), "lib")) \
+               and self._system.library_exists("libRATEvent_%s" % sys, 
+                                               os.path.join(self.get_install_path(), "lib"))
     def _install(self):
         """ Install rat, run configure then source environment and scons."""
         self.write_env_file()

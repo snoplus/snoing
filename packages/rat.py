@@ -20,7 +20,6 @@ class Rat(localpackage.LocalPackage):
     def __init__(self, name, system, root_dep, geant_dep, scons_dep):
         """ All Rat installs have the same root and scons dependence."""
         super(Rat, self).__init__(name, system)
-        self._env_file = envfilebuilder.EnvFileBuilder("#rat environment\n")
         self._root_dep = root_dep
         self._scons_dep = scons_dep
         self._geant_dep = geant_dep
@@ -52,10 +51,11 @@ class Rat(localpackage.LocalPackage):
         self._system.execute_complex_command(command_text)
     def _remove(self):
         """ Delete the env files as well."""
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
+        self._env_file = envfilebuilder.EnvFileBuilder("#rat environment\n")
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
         self._env_file.add_environment("RAT_SCONS", self._dependency_paths[self._scons_dep])
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
@@ -140,9 +140,12 @@ class RatDevelopment(Rat):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         command_text = "#!/bin/bash\nsource %s\ncd %s\nscons -c" \
             % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
         super(RatDevelopment, self).write_env_file()
-        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\nsource env.sh\nscons -c\nscons" \
+        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\n" \
+            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
+        self._system.execute_complex_command(command_text, verbose=True)
+        command_text = "#!/bin/bash\nsource %s\ncd %s\nscons\n" \
             % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
         self._system.execute_complex_command(command_text, verbose=True)

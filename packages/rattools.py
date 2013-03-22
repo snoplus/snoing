@@ -45,8 +45,8 @@ class RatTools(localpackage.LocalPackage):
         env.write(self._system.get_install_path(), "env_%s" % self._name)
     def _remove(self):
         """ Delete the env files as well."""
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
 
 class RatToolsDevelopment(RatTools):
     '''RatTools development class'''

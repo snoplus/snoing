@@ -162,7 +162,7 @@ class System(object):
         command_file.close()
         self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
-        os.remove( file_name )
+        self.remove(file_name)
     def download_file(self, url, username=None, password=None, token=None, file_name=None):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
@@ -187,7 +187,7 @@ class System(object):
             local_file.close()
             remote_file.close()
         except urllib2.URLError, e: # Server not available
-            os.remove(file_path)
+            self.remove(file_path)
             raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):
@@ -219,7 +219,12 @@ class System(object):
             shutil.rmtree(temp_dir)
     def remove(self, path):
         """ Remove a directory."""
-        shutil.rmtree(path)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        elif os.path.isfile(path):
+            os.remove(path)
+        else:
+            self._logger.info("Cannot remove %s, does not exist." % path)
 ####################################################################################################
     # Functions that search the system for things
     def find_library(self, library):
@@ -288,11 +293,11 @@ class System(object):
         test_file.close()
         try:
             output = self.execute_command("g++", [file_name] + flags)
-            os.remove( file_name )
+            self.remove(file_name)
             self._logger.detail(output)
             return True
         except snoing_exceptions.SystemException, e:
-            os.remove( file_name )
+            self.remove(file_name)
             return False
 
     def _check_clean_environment(self):

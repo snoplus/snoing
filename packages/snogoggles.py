@@ -33,11 +33,9 @@ class Snogoggles(localpackage.LocalPackage):
         self._bzip_dep = bzip_dep
     def get_dependencies(self):
         """ Return the required dependencies."""
-        dependencies = ["python", "python-dev", self._scons_dep, self._geant_dep, 
+        dependencies = ["python", "python-dev", "rattools-dev", self._scons_dep, self._geant_dep, 
                         self._clhep_dep, self._rat_dep, self._root_dep, self._sfml_dep, 
                         self._xercesc_dep, self._curl_dep, self._bzip_dep]
-        if self._system.get_os_type() is not system.System.Mac:
-            dependencies.append("rattools-dev")
         return dependencies
     def _is_downloaded(self):
         """ Check if downloaded."""
@@ -52,10 +50,7 @@ class Snogoggles(localpackage.LocalPackage):
     def _install(self):
         """ Install Snogoggles."""
         self.write_env_file()
-        if self._system.get_os_type() == system.System.Mac:
-            self._system.execute_complex_command("source env_%s.sh\ncd %s\nscons zdab=0" % (self._name, self.get_install_path()))
-        else:
-            self._system.execute_complex_command("source env_%s.sh\ncd %s\nscons" % (self._name, self.get_install_path()))
+        self._system.execute_complex_command("source env_%s.sh\ncd %s\nscons" % (self._name, self.get_install_path()))
     def _update(self):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         self._remove()
@@ -75,8 +70,7 @@ class Snogoggles(localpackage.LocalPackage):
 
         self._env_file.add_environment("VIEWERROOT", self.get_install_path())
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
-        if self._system.get_os_type() is not system.System.Mac:
-            self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
+        self._env_file.add_environment("RATTOOLS", self._dependency_paths["rattools-dev"])
         self._env_file.add_environment("SFMLROOT", self._dependency_paths[self._sfml_dep])
         self._env_file.add_environment("GLEWROOT", os.path.join(self._dependency_paths[self._sfml_dep], "extlibs"))
         if self._dependency_paths[self._xercesc_dep] is not None: # Conditional Package

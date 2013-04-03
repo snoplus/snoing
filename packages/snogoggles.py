@@ -60,11 +60,8 @@ class Snogoggles(localpackage.LocalPackage):
         self._system.execute_complex_command(command_text, verbose=True)
     def _remove(self):
         """ Delete the env files as well."""
-        try:
-            os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-            os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
-        except OSError:
-            pass
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
         self._env_file = envfilebuilder.EnvFileBuilder("#snogoggles environment\n")

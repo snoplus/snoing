@@ -79,7 +79,8 @@ class RatRelease(Rat):
     def __init__(self, name, system, root_dep, geant_dep, scons_dep, tar_name):
         """ Initialise rat with the tar_name."""
         super(RatRelease, self).__init__(name, system, root_dep, geant_dep, scons_dep)
-        self._tar_name = tar_name
+        self._download_name = tar_name
+        self._tar_name = 'rat_'+tar_name
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return self._system.file_exists(self._tar_name)
@@ -89,12 +90,13 @@ class RatRelease(Rat):
             raise Exception("No username or token supplied for github authentication.")
         elif self._token is not None:
             self._system.download_file(
-                "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, 
-                token = self._token)
+                "https://api.github.com/repos/snoplus/rat/tarball/" + self._download_name, 
+                token = self._token, file_name = self._tar_name)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/rat/tarball/" + self._tar_name, self._username, password)
+                "https://github.com/snoplus/rat/tarball/" + self._download_name, self._username,
+                password, file_name = self._tar_name)
     def _install(self):
         """ Release installs must untar first."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)

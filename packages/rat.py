@@ -80,7 +80,7 @@ class RatRelease(Rat):
         """ Initialise rat with the tar_name."""
         super(RatRelease, self).__init__(name, system, root_dep, geant_dep, scons_dep)
         self._download_name = tar_name
-        self._tar_name = 'rat_'+self._tar_name
+        self._tar_name = 'rat_'+tar_name
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return self._system.file_exists(self._tar_name)

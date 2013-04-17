@@ -72,7 +72,7 @@ class RatToolsRelease(RatTools):
         """ Initialise rat-tools."""
         super(RatToolsRelease, self).__init__(name, system, root_dep, rat_dep)
         self._download_name = tar_name
-        self._tar_name = 'rattools_'+self._tar_name
+        self._tar_name = 'rattools_'+tar_name
     def _download(self):
         """ Download rat-tools snapshot."""
         if self._token is None and self._username is None:

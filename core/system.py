@@ -128,9 +128,9 @@ class System(object):
         try:
             process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except exceptions.OSError:
-            raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
-                                                    output + error)
+        except exceptions.OSError,e:
+            raise snoing_exceptions.SystemException("Command failed: %s"%(command),
+                                                    e)
         output = ""
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))

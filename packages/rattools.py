@@ -71,27 +71,27 @@ class RatToolsRelease(RatTools):
     def __init__(self, name, system, root_dep, rat_dep, tar_name):
         """ Initialise rat-tools."""
         super(RatToolsRelease, self).__init__(name, system, root_dep, rat_dep)
-        self._tar_name = tar_name
-        self._download_name = 'rattools_'+self._tar_name
+        self._download_name = tar_name
+        self._tar_name = 'rattools_'+self._tar_name
     def _download(self):
         """ Download rat-tools snapshot."""
         if self._token is None and self._username is None:
             raise Exception("No username or token supplied for github authentication.")
         elif self._token is not None:
             self._system.download_file(
-                "https://api.github.com/repos/snoplus/rat-tools/tarball/" + self._tar_name, 
-                token = self._token, file_name = self._download_name)
+                "https://api.github.com/repos/snoplus/rat-tools/tarball/" + self._download_name, 
+                token = self._token, file_name = self._tar_name)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/rat-tools/tarball/" + self._tar_name, self._username,
-                password, file_name = self._download_name)
+                "https://github.com/snoplus/rat-tools/tarball/" + self._download_name, self._username,
+                password, file_name = self._tar_name)
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
-        return self._system.file_exists(self._download_name)
+        return self._system.file_exists(self._tar_name)
     def _install(self):
         """ Release installs must untar first."""
-        self._system.untar_file(self._download_name, self.get_install_path(), 1)
+        self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         super(RatToolsRelease, self)._install()
     def authenticate(self, username, token):
         """ Set the username or token  required for github downloads."""

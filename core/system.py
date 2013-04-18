@@ -189,6 +189,9 @@ class System(object):
         except urllib2.URLError, e: # Server not available
             self.remove(file_path)
             raise snoing_exceptions.SystemException("Download error", url)
+        except: # Catch everything else
+            self.remove(file_path)
+            raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""

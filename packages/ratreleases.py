@@ -6,6 +6,7 @@
 # RAT-2 is first curl and bzip one!
 # RAT-3 adds avalanche, xerces and zeromq extra
 # RAT-4 slightly changes the geant dependency
+# RAT-4.2 removes zmq & avalanche dependencies
 #
 # Author P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
@@ -13,12 +14,46 @@
 import os
 import rat
 
-class RatRelease4(rat.RatRelease):
-    """ Base package installer for rat release 4."""
+class RatRelease4Post1(rat.RatRelease):
+    """ Base installer for rat relase 4.20 onwards."""
     def __init__(self, name, system, root_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease4, self).__init__(name, system, root_dep, "geant4.9.5.p01", "scons-2.1.0",
-                                          tar_name)
+        super(RatRelease4Post1, self).__init__(name, system, root_dep, "geant4.9.5.p01", "scons-2.1.0",
+                                               tar_name)
+        self._clhep_dep = "clhep-2.1.1.0"
+        self._curl_dep = "curl-7.26.0"
+        self._bzip_dep = "bzip2-1.0.6"
+        self._xercesc_dep = "xerces-c-3.1.1"
+    def _get_dependencies(self):
+        """ Return the extra dependencies."""
+        return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._xercesc_dep]
+    def _write_env_file(self):
+        """ Diff geant env file and no need to patch rat."""
+        self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
+        self._env_file.append_library_path(os.path.join(self._dependency_paths[self._clhep_dep], 
+                                                        "lib"))
+        if self._dependency_paths[self._xercesc_dep] is not None: # Conditional Package
+            self._env_file.add_environment("XERCESCROOT", self._dependency_paths[self._xercesc_dep])
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._xercesc_dep], 
+                                                          "lib"))
+        self._env_file.append_path(os.path.join(self._dependency_paths[self._clhep_dep], "bin"))
+        self._env_file.append_path(os.path.join(self._dependency_paths[self._geant_dep], "bin"))
+        self._env_file.append_library_path(os.path.join(self._dependency_paths[self._clhep_dep], 
+                                                       "lib"))
+        if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
+            self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
+        if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
+            self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
+                                                          "lib"))
+            
+class RatRelease4Pre2(rat.RatRelease):
+    """ Base installer for rat release 4.00 and 4.10."""
+    def __init__(self, name, system, root_dep, tar_name):
+        """ Initlaise, take extra dependencies."""
+        super(RatRelease4Pre2, self).__init__(name, system, root_dep, "geant4.9.5.p01", "scons-2.1.0",
+                                              tar_name)
         self._clhep_dep = "clhep-2.1.1.0"
         self._curl_dep = "curl-7.26.0"
         self._bzip_dep = "bzip2-1.0.6"
@@ -29,6 +64,18 @@ class RatRelease4(rat.RatRelease):
         """ Return the extra dependencies."""
         return [self._clhep_dep, self._curl_dep, self._bzip_dep, self._avalanche_dep, 
                 self._zeromq_dep, self._xercesc_dep]
+    def _is_installed(self):
+        """ Rat releases and dev share a common install check."""
+        # Check rat, root, RATLib and RATDSLib
+        sys = os.uname()[0]
+        return self._system.file_exists('rat_%s-g++' % sys,
+                                        os.path.join(self.get_install_path(), "bin")) \
+               and self._system.file_exists('root',
+                                            os.path.join(self.get_install_path(), "bin")) \
+               and self._system.library_exists("librat_%s-g++" % sys,
+                                               os.path.join(self.get_install_path(), "lib")) \
+               and self._system.library_exists("libRATEvent_%s-g++" % sys,
+                                               os.path.join(self.get_install_path(), "lib"))
     def _write_env_file(self):
         """ Diff geant env file and no need to patch rat."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
@@ -56,25 +103,7 @@ class RatRelease4(rat.RatRelease):
             self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
                                                           "lib"))
-
-class RatRelease4Pre42(RatRelease4):
-    """ Base package intaller for rat releases 4.0 and 4.1."""
-    def __init__(self, name, system, root_dep, tar_name):
-        """ Initlaise, take extra dependencies."""
-        super(RatRelease4Pre42, self).__init__(name, system, root_dep, tar_name)
-    def _is_installed(self):
-        """ Rat releases and dev share a common install check."""
-        # Check rat, root, RATLib and RATDSLib
-        sys = os.uname()[0]
-        return self._system.file_exists('rat_%s-g++' % sys,
-                                        os.path.join(self.get_install_path(), "bin")) \
-               and self._system.file_exists('root',
-                                            os.path.join(self.get_install_path(), "bin")) \
-               and self._system.library_exists("librat_%s-g++" % sys,
-                                               os.path.join(self.get_install_path(), "lib")) \
-               and self._system.library_exists("libRATEvent_%s-g++" % sys,
-                                               os.path.join(self.get_install_path(), "lib"))
-
+            
 class RatRelease3(rat.RatRelease):
     """ Base package installer for rat release 3."""
     def __init__(self, name, system, tar_name):

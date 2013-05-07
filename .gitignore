@@ -2,3 +2,5 @@
 *~
 *.pyc
 settings.pkl
+install/*
+cache/*

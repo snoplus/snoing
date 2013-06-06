@@ -308,7 +308,7 @@ class System(object):
         if "ROOTSYS" in os.environ:
             self._logger.error("System environment variables for root already set, these cannot be set before running snoing.")
             raise snoing_exceptions.SystemException("System environment variables for root already set, these cannot be set before running snoing.", os.environ["ROOTSYS"])
-        for env in os.environ.itervalues():
+        for env in os.environ.iterkeys():
             inenv = env.find('G4')
             if inenv!=-1:
                 self._logger.error("System environment variables for geant4 already set, these cannot be set before running snoing.")

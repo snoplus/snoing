@@ -67,6 +67,9 @@ class System(object):
                 self._append_environment("CPLUS_INCLUDE_PATH", "/System/Library/Frameworks")
         else: # So much easier for Linux systems....
             self._os_type = System.Linux
+        # Check for g++ now
+        if self.find_library("g++") is None:
+            raise snoing_exceptions.SystemException("No g++", "g++ not found on this system.")
         # Check the install mode status of the install_path
         settings_path = os.path.join(self._install_path, "snoing.pkl")
         self._install_mode = self._deserialise(settings_path)

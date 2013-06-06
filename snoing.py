@@ -110,6 +110,9 @@ if __name__ == "__main__":
         print e.args[0], "The existing installation is ", installmode.Text[e.SystemMode], ". You've requested the installation to be ", installmode.Text[e.CommandMode]
         print "You can install to a new path using the -i option or delete the existing installation and start again."
         print_error_message()
+    except snoing_exceptions.SystemException, e:
+        print e.args[0], ":", e.Details
+        print_error_message()
     # Now create the package manage and populate it
     package_manager = packagemanager.PackageManager(install_system, logger)
     package_manager.register_packages(os.path.join(os.path.dirname(__file__), "versions"))

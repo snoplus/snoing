@@ -273,9 +273,9 @@ class System(object):
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
         output = self.execute_command(config, ['--libs'])
-        libs = output.strip('\n').split(' ')
+        libs = output.strip('\n').split()
         output = self.execute_command(config, ['--includes'])
-        includes = output.strip('\n').split(' ')
+        includes = output.strip('\n').split()
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):
         """ Change the path into a global path and ensure the path exists."""
@@ -292,9 +292,6 @@ class System(object):
         file_text = ""
         for header in headers:
             file_text += "#include <%s>\n" % header
-        for i,flag in enumerate(flags):
-            if flag=='':
-                flags.pop(i)
         file_text += "int main( int a, char* b[] ) { }"
         file_name = os.path.join(self.get_cache_path(), "temp.cc")
         test_file = open(file_name, "w")

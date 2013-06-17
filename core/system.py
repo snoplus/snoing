@@ -292,6 +292,9 @@ class System(object):
         file_text = ""
         for header in headers:
             file_text += "#include <%s>\n" % header
+        for i,flag in enumerate(flags):
+            if flag=='':
+                flags.pop(i)
         file_text += "int main( int a, char* b[] ) { }"
         file_name = os.path.join(self.get_cache_path(), "temp.cc")
         test_file = open(file_name, "w")

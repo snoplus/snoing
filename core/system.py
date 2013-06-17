@@ -273,9 +273,9 @@ class System(object):
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
         output = self.execute_command(config, ['--libs'])
-        libs = output.strip('\n').split(' ')
+        libs = output.strip('\n').split()
         output = self.execute_command(config, ['--includes'])
-        includes = output.strip('\n').split(' ')
+        includes = output.strip('\n').split()
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):
         """ Change the path into a global path and ensure the path exists."""

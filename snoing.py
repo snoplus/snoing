@@ -24,7 +24,7 @@ import pickle
 def print_error_message():
     """Print a standard error message if snoing fails."""
     print "Snoing has failed, please consult the above error messages or the snoing.log file."
-    print "More help available on https://github.com/snoplus/snoing/wiki ."
+    print "More help available in the snoplus companion."
     sys.exit(1)
 
 if __name__ == "__main__":

@@ -48,6 +48,7 @@ if __name__ == "__main__":
     parser.add_option("-v", action="store_true", dest="verbose", help="Verbose Install?", 
                       default=False)
     parser.add_option("-a", action="store_true", dest="all", help="All packages?")
+    parser.add_option("-k", action="store_true", dest="clean", help="Clean temporary files.")
     parser.add_option("--Ac", type="string", dest="curl_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ar", type="string", dest="root_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ag", type="string", dest="geant4_arguments", help=optparse.SUPPRESS_HELP)
@@ -113,6 +114,8 @@ if __name__ == "__main__":
     except snoing_exceptions.SystemException, e:
         print e.args[0], ":", e.Details
         print_error_message()
+    if options.clean:
+        install_system.clean_cache()
     # Now create the package manage and populate it
     package_manager = packagemanager.PackageManager(install_system, logger)
     package_manager.register_packages(os.path.join(os.path.dirname(__file__), "versions"))

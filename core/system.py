@@ -107,6 +107,10 @@ class System(object):
     def get_os_type(self):
         """ Return the system os type."""
         return self._os_type
+    def clean_cache(self):
+        """ Basically delete the cache folder."""
+        self.remove(self.get_cache_path()) # Remove the folder and everything in it
+        self.build_path(self.get_cache_path()) # Folder must exist after
 ####################################################################################################
     # Functions that do stuff to the system
     def configure_command(self, command='./configure', args=[], cwd=None, env={}, verbose=False, config_type=None):

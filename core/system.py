@@ -278,7 +278,7 @@ class System(object):
         """ Test if code can be compiled using a xxx-config command."""
         output = self.execute_command(config, ['--libs'])
         libs = output.strip('\n').split()
-        output = self.execute_command(config, ['--includes'])
+        output = self.execute_command(config, ['--cflags'])
         includes = output.strip('\n').split()
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):

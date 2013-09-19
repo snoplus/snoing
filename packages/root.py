@@ -23,10 +23,10 @@ class Root(localpackage.LocalPackage):
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
         if self._system.get_install_mode() == installmode.Grid:
-            return ["make", "g++", "gcc", "ld", "python", ["python-dev", "python-dev-2.4"]]
+            return ["make", "g++", "gcc", "ld", "python", ["python-dev", "python-dev-2.6"]]
         else:
             return ["make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", 
-                    ["python-dev", "python-dev-2.4"]]
+                    ["python-dev", "python-dev-2.6"]]
     def _is_downloaded(self):
         """ Check the tar ball has been downloaded."""
         return self._system.file_exists(self._tar_name)

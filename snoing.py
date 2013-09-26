@@ -24,7 +24,7 @@ import pickle
 def print_error_message():
     """Print a standard error message if snoing fails."""
     print "Snoing has failed, please consult the above error messages or the snoing.log file."
-    print "More help available on https://github.com/snoplus/snoing/wiki ."
+    print "More help available in the snoplus companion."
     sys.exit(1)
 
 if __name__ == "__main__":
@@ -48,6 +48,7 @@ if __name__ == "__main__":
     parser.add_option("-v", action="store_true", dest="verbose", help="Verbose Install?", 
                       default=False)
     parser.add_option("-a", action="store_true", dest="all", help="All packages?")
+    parser.add_option("-k", action="store_true", dest="clean", help="Clean temporary files.")
     parser.add_option("--Ac", type="string", dest="curl_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ar", type="string", dest="root_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ag", type="string", dest="geant4_arguments", help=optparse.SUPPRESS_HELP)
@@ -107,8 +108,14 @@ if __name__ == "__main__":
     try:
         install_system = system.System(logger, options.cache_path, options.install_path, install_mode, opt_args)
     except snoing_exceptions.InstallModeException, e:
-        print e.args[0], "Install path is", installmode.Text[e.SystemMode], "you've chosen", installmode.Text[e.CommandMode]
+        print e.args[0], "The existing installation is ", installmode.Text[e.SystemMode], ". You've requested the installation to be ", installmode.Text[e.CommandMode]
+        print "You can install to a new path using the -i option or delete the existing installation and start again."
         print_error_message()
+    except snoing_exceptions.SystemException, e:
+        print e.args[0], ":", e.Details
+        print_error_message()
+    if options.clean:
+        install_system.clean_cache()
     # Now create the package manage and populate it
     package_manager = packagemanager.PackageManager(install_system, logger)
     package_manager.register_packages(os.path.join(os.path.dirname(__file__), "versions"))

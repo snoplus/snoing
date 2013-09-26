@@ -45,8 +45,8 @@ class RatTools(localpackage.LocalPackage):
         env.write(self._system.get_install_path(), "env_%s" % self._name)
     def _remove(self):
         """ Delete the env files as well."""
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
 
 class RatToolsDevelopment(RatTools):
     '''RatTools development class'''
@@ -71,19 +71,21 @@ class RatToolsRelease(RatTools):
     def __init__(self, name, system, root_dep, rat_dep, tar_name):
         """ Initialise rat-tools."""
         super(RatToolsRelease, self).__init__(name, system, root_dep, rat_dep)
-        self._tar_name = tar_name
+        self._download_name = tar_name
+        self._tar_name = 'rattools_'+tar_name
     def _download(self):
         """ Download rat-tools snapshot."""
         if self._token is None and self._username is None:
             raise Exception("No username or token supplied for github authentication.")
         elif self._token is not None:
             self._system.download_file(
-                "https://api.github.com/repos/snoplus/rat-tools/tarball/" + self._tar_name, 
-                token = self._token)
+                "https://api.github.com/repos/snoplus/rat-tools/tarball/" + self._download_name, 
+                token = self._token, file_name = self._tar_name)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/rat-tools/tarball/" + self._tar_name, self._username, password)
+                "https://github.com/snoplus/rat-tools/tarball/" + self._download_name, self._username,
+                password, file_name = self._tar_name)
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return self._system.file_exists(self._tar_name)

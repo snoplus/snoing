@@ -20,7 +20,6 @@ class Rat(localpackage.LocalPackage):
     def __init__(self, name, system, root_dep, geant_dep, scons_dep):
         """ All Rat installs have the same root and scons dependence."""
         super(Rat, self).__init__(name, system)
-        self._env_file = envfilebuilder.EnvFileBuilder("#rat environment\n")
         self._root_dep = root_dep
         self._scons_dep = scons_dep
         self._geant_dep = geant_dep
@@ -34,14 +33,14 @@ class Rat(localpackage.LocalPackage):
         """ Rat releases and dev share a common install check."""
         # Check rat, root, RATLib and RATDSLib
         sys = os.uname()[0]
-        return self._system.file_exists('rat_%s-g++' % sys, 
+        return self._system.file_exists('rat_%s' % sys, 
                                         os.path.join(self.get_install_path(), "bin")) \
-            and self._system.file_exists('root', 
-                                         os.path.join(self.get_install_path(), "bin")) \
-            and self._system.library_exists("librat_%s-g++" % sys, 
-                                            os.path.join(self.get_install_path(), "lib")) \
-            and self._system.library_exists("libRATEvent_%s-g++" % sys, 
-                                            os.path.join(self.get_install_path(), "lib"))
+               and self._system.file_exists('root', 
+                                            os.path.join(self.get_install_path(), "bin")) \
+               and self._system.library_exists("librat_%s" % sys, 
+                                               os.path.join(self.get_install_path(), "lib")) \
+               and self._system.library_exists("libRATEvent_%s" % sys, 
+                                               os.path.join(self.get_install_path(), "lib"))
     def _install(self):
         """ Install rat, run configure then source environment and scons."""
         self.write_env_file()
@@ -52,10 +51,11 @@ class Rat(localpackage.LocalPackage):
         self._system.execute_complex_command(command_text)
     def _remove(self):
         """ Delete the env files as well."""
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
+        self._env_file = envfilebuilder.EnvFileBuilder("#rat environment\n")
         self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
         self._env_file.add_environment("RAT_SCONS", self._dependency_paths[self._scons_dep])
         self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
@@ -79,7 +79,8 @@ class RatRelease(Rat):
     def __init__(self, name, system, root_dep, geant_dep, scons_dep, tar_name):
         """ Initialise rat with the tar_name."""
         super(RatRelease, self).__init__(name, system, root_dep, geant_dep, scons_dep)
-        self._tar_name = tar_name
+        self._download_name = tar_name
+        self._tar_name = 'rat_'+tar_name
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return self._system.file_exists(self._tar_name)
@@ -89,12 +90,13 @@ class RatRelease(Rat):
             raise Exception("No username or token supplied for github authentication.")
         elif self._token is not None:
             self._system.download_file(
-                "https://api.github.com/repos/snoplus/rat/tarball/" + self._tar_name, 
-                token = self._token)
+                "https://api.github.com/repos/snoplus/rat/tarball/" + self._download_name, 
+                token = self._token, file_name = self._tar_name)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/rat/tarball/" + self._tar_name, self._username, password)
+                "https://github.com/snoplus/rat/tarball/" + self._download_name, self._username,
+                password, file_name = self._tar_name)
     def _install(self):
         """ Release installs must untar first."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
@@ -108,7 +110,7 @@ class RatDevelopment(Rat):
     """ Base rat installer for rat-dev."""
     def __init__(self, name, system):
         """ Initialise rat with the tar_name."""
-        super(RatDevelopment, self).__init__(name, system, "root-5.34.02", "geant4.9.5.p01", "scons-2.1.0")
+        super(RatDevelopment, self).__init__(name, system, "root-5.34.08", "geant4.9.5.p01", "scons-2.1.0")
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return ["clhep-2.1.1.0", "curl-7.26.0", "bzip2-1.0.6", "xerces-c-3.1.1" ]
@@ -138,9 +140,14 @@ class RatDevelopment(Rat):
             self._env_file.append_library_path(os.path.join(self._dependency_paths["bzip2-1.0.6"], "lib"))
     def _update(self):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
-        os.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
+        command_text = "#!/bin/bash\nsource %s\ncd %s\nscons -c" \
+            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
+        self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
         super(RatDevelopment, self).write_env_file()
-        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\nsource env.sh\nscons -c\nscons" \
+        command_text = "#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\n" \
+            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
+        self._system.execute_complex_command(command_text, verbose=True)
+        command_text = "#!/bin/bash\nsource %s\ncd %s\nscons\n" \
             % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
         self._system.execute_complex_command(command_text, verbose=True)

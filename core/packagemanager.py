@@ -97,7 +97,8 @@ class PackageManager(object):
             self._logger.detail(e.Details)
             raise snoing_exceptions.PackageException("Installation fail", package_name)
         for dependent_name in self._package_dependents(package_name):
-            self.update_package(dependent_name)
+            if self.check_installed(dependent_name): #Best update this package as well
+                self.update_package(dependent_name)
     def remove_package(self, package_name, force=False):
         """ Remove a package, don't remove if force is False and packages depend on package_name."""
         package = self._packages[package_name]

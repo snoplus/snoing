@@ -67,6 +67,9 @@ class System(object):
                 self._append_environment("CPLUS_INCLUDE_PATH", "/System/Library/Frameworks")
         else: # So much easier for Linux systems....
             self._os_type = System.Linux
+        # Check for g++ now
+        if self.find_library("g++") is None:
+            raise snoing_exceptions.SystemException("No g++", "g++ not found on this system.")
         # Check the install mode status of the install_path
         settings_path = os.path.join(self._install_path, "snoing.pkl")
         self._install_mode = self._deserialise(settings_path)
@@ -104,6 +107,10 @@ class System(object):
     def get_os_type(self):
         """ Return the system os type."""
         return self._os_type
+    def clean_cache(self):
+        """ Basically delete the cache folder."""
+        self.remove(self.get_cache_path()) # Remove the folder and everything in it
+        self.build_path(self.get_cache_path()) # Folder must exist after
 ####################################################################################################
     # Functions that do stuff to the system
     def configure_command(self, command='./configure', args=[], cwd=None, env={}, verbose=False, config_type=None):
@@ -128,9 +135,9 @@ class System(object):
         try:
             process = subprocess.Popen(args=shell_command, env=local_env, cwd=cwd, 
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except exceptions.OSError:
-            raise snoing_exceptions.SystemException("Command returned %i" % process.returncode,
-                                                    output + error)
+        except exceptions.OSError,e:
+            raise snoing_exceptions.SystemException("Command failed: %s"%(command),
+                                                    e)
         output = ""
         error = ""
         self._logger.command(command + ' ' + ' '.join(args))
@@ -162,7 +169,7 @@ class System(object):
         command_file.close()
         self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
-        os.remove( file_name )
+        self.remove(file_name)
     def download_file(self, url, username=None, password=None, token=None, file_name=None):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
@@ -187,7 +194,10 @@ class System(object):
             local_file.close()
             remote_file.close()
         except urllib2.URLError, e: # Server not available
-            os.remove(file_path)
+            self.remove(file_path)
+            raise snoing_exceptions.SystemException("Download error", url)
+        except: # Catch everything else
+            self.remove(file_path)
             raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):
@@ -219,7 +229,12 @@ class System(object):
             shutil.rmtree(temp_dir)
     def remove(self, path):
         """ Remove a directory."""
-        shutil.rmtree(path)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        elif os.path.isfile(path):
+            os.remove(path)
+        else:
+            self._logger.info("Cannot remove %s, does not exist." % path)
 ####################################################################################################
     # Functions that search the system for things
     def find_library(self, library):
@@ -262,9 +277,9 @@ class System(object):
     def test_config(self, config, headers=[]):
         """ Test if code can be compiled using a xxx-config command."""
         output = self.execute_command(config, ['--libs'])
-        libs = output.strip('\n').split(' ')
-        output = self.execute_command(config, ['--includes'])
-        includes = output.strip('\n').split(' ')
+        libs = output.strip('\n').split()
+        output = self.execute_command(config, ['--cflags'])
+        includes = output.strip('\n').split()
         return self._test_compile(headers, libs + includes)
     def build_path(self, path):
         """ Change the path into a global path and ensure the path exists."""
@@ -288,11 +303,11 @@ class System(object):
         test_file.close()
         try:
             output = self.execute_command("g++", [file_name] + flags)
-            os.remove( file_name )
+            self.remove(file_name)
             self._logger.detail(output)
             return True
         except snoing_exceptions.SystemException, e:
-            os.remove( file_name )
+            self.remove(file_name)
             return False
 
     def _check_clean_environment(self):
@@ -300,7 +315,7 @@ class System(object):
         if "ROOTSYS" in os.environ:
             self._logger.error("System environment variables for root already set, these cannot be set before running snoing.")
             raise snoing_exceptions.SystemException("System environment variables for root already set, these cannot be set before running snoing.", os.environ["ROOTSYS"])
-        for env in os.environ.itervalues():
+        for env in os.environ.iterkeys():
             inenv = env.find('G4')
             if inenv!=-1:
                 self._logger.error("System environment variables for geant4 already set, these cannot be set before running snoing.")

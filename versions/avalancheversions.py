@@ -10,10 +10,10 @@
 ####################################################################################################
 import avalanche
 
-class AvalancheDev(avalanche.Avalanche):
+class AvalancheV2(avalanche.Avalanche):
     def __init__(self, system):
         """ Initialise dev version."""
-        super(AvalancheDev, self).__init__("avalanche-dev", system, "root-5.34.02", "curl-7.26.0")
+        super(AvalancheV2, self).__init__("avalanche-2", system, "root-5.34.02", "curl-7.26.0")
 
 class AvalancheV1(avalanche.AvalancheOld):
     def __init__(self, system):

@@ -71,10 +71,7 @@ class LocalPackage(package.Package):
     def update(self):
         """ Update the package install, usually deletes and reinstalls..."""
         self.check_state()
-        if not self.is_installed(): # Not installed, no update rather just install
-            self.install()
-        else:
-            self._update()
+        self._update()
         self._set_state(LocalPackage.Updated)
     def remove(self):
         """ Default is to delete the directory, derived classes should add extra."""

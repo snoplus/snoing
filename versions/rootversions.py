@@ -8,8 +8,15 @@
 # Author P G Jones - 13/05/2012 <p.g.jones@qmul.ac.uk> : Added 5.32, 5.28, 5.24 versions (rat v3, v2, v1)
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 #        M Mottram - 20/10/2012 <m.mottram@sussex.ac.uk> : Added 5.34.02
+# Author P G Jones - 02/07/2013 <p.g.jones@qmul.ac.uk> : Added 5.34.08
 ####################################################################################################
 import root
+
+class ROOT53408(root.Root):
+    """ Root 5.34.08, install package."""
+    def __init__(self, system):
+        """ Initiliase the root 5.34.02 package."""
+        super(ROOT53408, self).__init__("root-5.34.08", system, "root_v5.34.08.source.tar.gz")
 
 class ROOT53402(root.Root):
     """ Root 5.34.02, install package."""

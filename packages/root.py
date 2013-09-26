@@ -46,6 +46,6 @@ class Root(localpackage.LocalPackage):
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore',
                     '--disable-castor', '--disable-rfio', '--disable-x11']
         else:
-            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore']
-        self._system.configure_command(args=args, cwd=self.get_install_path())
+            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore','--enable-gdml']
+        self._system.configure_command(args=args, cwd=self.get_install_path(),config_type='root')
         self._system.execute_command('make', cwd=self.get_install_path())

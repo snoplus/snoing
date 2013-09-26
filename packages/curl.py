@@ -18,7 +18,7 @@ class Curl(conditionallibrarypackage.ConditionalLibraryPackage):
         self._tar_name = tar_name
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        return ["uuid"]
+        return [["uuid", "ossp-uuid"]]
     def _is_downloaded(self):
         """ Check if package is downloaded."""
         return self._system.file_exists(self._tar_name)

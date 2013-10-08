@@ -49,6 +49,7 @@ if __name__ == "__main__":
                       default=False)
     parser.add_option("-a", action="store_true", dest="all", help="All packages?")
     parser.add_option("-k", action="store_true", dest="clean", help="Clean temporary files.")
+    parser.add_option("--Wb", type="string", dest="whereis_binary", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ac", type="string", dest="curl_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ar", type="string", dest="root_arguments", help=optparse.SUPPRESS_HELP)
     parser.add_option("--Ag", type="string", dest="geant4_arguments", help=optparse.SUPPRESS_HELP)

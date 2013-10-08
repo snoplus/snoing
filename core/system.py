@@ -239,13 +239,10 @@ class System(object):
     # Functions that search the system for things
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
-        if self._os_type==System.Mac:
-            try:
-                output = self.execute_command("which", [library])
-            except:
-                return None
-        else:
-            output = self.execute_command("whereis", [library])
+        try:
+            output = self.execute_command("which", [library])
+        except:
+            return None
         location = output.split(':')
         if len(location)==1:
             if location[0] == "\n" or location[0] == "":
@@ -253,10 +250,7 @@ class System(object):
             else:
                 return location[0]
         else:
-            if location[1] == "\n" or location[1] == "":
-                return None
-            else:
-                return location[1]
+            raise snoing_exceptions.SystemException("Unexpected: %s"%location)
     def library_exists(self, library, path):
         """ Check that the library exists in the path, will check correct extensions."""
         return os.path.exists(os.path.join(path, library + ".a")) or \

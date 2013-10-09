@@ -242,15 +242,11 @@ class System(object):
         try:
             output = self.execute_command("which", [library])
         except:
+            return None        
+        if location == "\n" or location == "":
             return None
-        location = output.split(':')
-        if len(location)==1:
-            if location[0] == "\n" or location[0] == "":
-                return None
-            else:
-                return location[0]
         else:
-            raise snoing_exceptions.SystemException("Unexpected: %s"%location)
+            return location
     def library_exists(self, library, path):
         """ Check that the library exists in the path, will check correct extensions."""
         return os.path.exists(os.path.join(path, library + ".a")) or \

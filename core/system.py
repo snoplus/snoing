@@ -240,7 +240,7 @@ class System(object):
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
         try:
-            output = self.execute_command("which", [library])
+            location = self.execute_command("which", [library])[0]
         except:
             return None        
         if location == "\n" or location == "":

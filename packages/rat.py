@@ -25,7 +25,7 @@ class Rat(localpackage.LocalPackage):
         self._geant_dep = geant_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["python", ["python-dev", "python-dev-2.4"],
+        dependencies = ["python", ["python-dev", "python-dev-2.4", "python-dev-2.6"],
                         self._geant_dep, self._scons_dep, self._root_dep]
         dependencies.extend(self._get_dependencies())
         return dependencies

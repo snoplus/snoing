@@ -170,7 +170,7 @@ class System(object):
         self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
         self.remove(file_name)
-    def download_file(self, url, username=None, password=None, token=None, file_name=None):
+    def download_file(self, url, username=None, password=None, token=None, file_name=None, retries=0):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
         file_name.
@@ -195,9 +195,15 @@ class System(object):
             remote_file.close()
         except urllib2.URLError, e: # Server not available
             self.remove(file_path)
-            raise snoing_exceptions.SystemException("Download error", url)
+            if retries>0:
+                snoing.logger.detail("Download error (URLError): %s" % e)
+                self.download_file(url, username, password, token, file_name, retries-1)
+            raise snoing_exceptions.SystemException("Download error (URLError)", url)
         except: # Catch everything else
             self.remove(file_path)
+            if retries>0:
+                snoing.logger.detail("Download error: %s" % e)
+                self.download_file(url, username, password, token, file_name, retries-1)
             raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
     def untar_file(self, file_name, target_path, strip=0):

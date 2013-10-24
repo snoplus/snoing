@@ -195,14 +195,11 @@ class System(object):
             remote_file.close()
         except urllib2.URLError, e: # Server not available
             self.remove(file_path)
-            if retries>0:
-                snoing.logger.detail("Download error (URLError): %s" % e)
-                self.download_file(url, username, password, token, file_name, retries-1)
             raise snoing_exceptions.SystemException("Download error (URLError)", url)
         except: # Catch everything else
             self.remove(file_path)
             if retries>0:
-                snoing.logger.detail("Download error: %s" % e)
+                snoing.logger.detail("Download error, retry")
                 self.download_file(url, username, password, token, file_name, retries-1)
             raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)

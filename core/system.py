@@ -200,10 +200,11 @@ class System(object):
             self.remove(file_path)
             if retries>0:
                 self._logger.detail("Download error, retry")
-                self.download_file(url, username, password, token, file_name, retries-1)
+                download_size = self.download_file(url, username, password, token, file_name, retries-1)                
             else:
                 raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
+        return download_size
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
         self._logger.command("untar " + file_name)

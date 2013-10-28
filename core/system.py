@@ -170,7 +170,7 @@ class System(object):
         self._logger.command(command + ">>" + file_name)
         output = self.execute_command("/bin/bash", args=[file_name], verbose=verbose)
         self.remove(file_name)
-    def download_file(self, url, username=None, password=None, token=None, file_name=None):
+    def download_file(self, url, username=None, password=None, token=None, file_name=None, retries=0):
         """ Download the file at url, using either username+password or token authentication if 
         supplied and needed. The optional file_name parameter will save the url to a file named 
         file_name.
@@ -195,11 +195,16 @@ class System(object):
             remote_file.close()
         except urllib2.URLError, e: # Server not available
             self.remove(file_path)
-            raise snoing_exceptions.SystemException("Download error", url)
+            raise snoing_exceptions.SystemException("Download error (URLError)", url)
         except: # Catch everything else
             self.remove(file_path)
-            raise snoing_exceptions.SystemException("Download error", url)
+            if retries>0:
+                self._logger.detail("Download error, retry")
+                download_size = self.download_file(url, username, password, token, file_name, retries-1)                
+            else:
+                raise snoing_exceptions.SystemException("Download error", url)
         self._logger.detail("Downloaded %i bytes\n" % download_size)
+        return download_size
     def untar_file(self, file_name, target_path, strip=0):
         """ Untar file_name to target_path striping the first strip folders."""
         self._logger.command("untar " + file_name)
@@ -239,24 +244,14 @@ class System(object):
     # Functions that search the system for things
     def find_library(self, library):
         """ Search the system for a library, return its location if found otherwise return None."""
-        if self._os_type==System.Mac:
-            try:
-                output = self.execute_command("which", [library])
-            except:
-                return None
+        try:
+            location = self.execute_command("which", [library])[0]
+        except:
+            return None        
+        if location == "\n" or location == "":
+            return None
         else:
-            output = self.execute_command("whereis", [library])
-        location = output.split(':')
-        if len(location)==1:
-            if location[0] == "\n" or location[0] == "":
-                return None
-            else:
-                return location[0]
-        else:
-            if location[1] == "\n" or location[1] == "":
-                return None
-            else:
-                return location[1]
+            return location
     def library_exists(self, library, path):
         """ Check that the library exists in the path, will check correct extensions."""
         return os.path.exists(os.path.join(path, library + ".a")) or \

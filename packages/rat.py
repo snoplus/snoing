@@ -25,7 +25,7 @@ class Rat(localpackage.LocalPackage):
         self._geant_dep = geant_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["python", ["python-dev", "python-dev-2.4"],
+        dependencies = ["python", ["python-dev", "python-dev-2.4", "python-dev-2.6"],
                         self._geant_dep, self._scons_dep, self._root_dep]
         dependencies.extend(self._get_dependencies())
         return dependencies
@@ -91,12 +91,12 @@ class RatRelease(Rat):
         elif self._token is not None:
             self._system.download_file(
                 "https://api.github.com/repos/snoplus/rat/tarball/" + self._download_name, 
-                token = self._token, file_name = self._tar_name)
+                token = self._token, file_name = self._tar_name, retries = 3)
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
                 "https://github.com/snoplus/rat/tarball/" + self._download_name, self._username,
-                password, file_name = self._tar_name)
+                password, file_name = self._tar_name, retries = 3)
     def _install(self):
         """ Release installs must untar first."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)

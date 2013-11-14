@@ -22,7 +22,7 @@ class Geant4Post5(localpackage.LocalPackage):
         self._xerces_dep = xerces_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["make", "g++", "gcc", "cmake", self._xerces_dep]
+        dependencies = ["make", "g++", "gcc", "cmake-2.8.12", self._xerces_dep]
         if self._system.get_install_mode() == installmode.Graphical:
             dependencies.extend(["Xm", "Xt", "opengl", "Xmu", "Xi"])
         return dependencies
@@ -60,8 +60,8 @@ class Geant4Post5(localpackage.LocalPackage):
                    'G4VIS_BUILD_OPENGLXM_DRIVER' : "1", 'G4VIS_BUILD_DAWN_DRIVER' : "1" }
         cmake_opts.extend([source_path])
         cmake_command = "cmake"
-        if self._dependency_paths["cmake"] is not None: # Special cmake installed
-            cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
+        if self._dependency_paths["cmake-2.8.12"] is not None: # Special cmake installed
+            cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake-2.8.12"]
         self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), env, config_type="geant4")
         self._system.execute_command("make", [], self.get_install_path(), env)
         self._system.execute_command("make", ['install'], self.get_install_path(), env)
@@ -77,7 +77,7 @@ class Geant495(localpackage.LocalPackage):
         self._clhep_dep = clhep_dep
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        dependencies = ["make", "g++", "gcc", "cmake", self._xerces_dep, self._clhep_dep]
+        dependencies = ["make", "g++", "gcc", "cmake-2.8.8", self._xerces_dep, self._clhep_dep]
         if self._system.get_install_mode() == installmode.Graphical:
             dependencies.extend(["Xm", "Xt", "opengl", "Xmu", "Xi"])
         return dependencies
@@ -119,8 +119,8 @@ class Geant495(localpackage.LocalPackage):
                    'G4VIS_BUILD_OPENGLXM_DRIVER' : "1", 'G4VIS_BUILD_DAWN_DRIVER' : "1" }
         cmake_opts.extend([source_path])
         cmake_command = "cmake"
-        if self._dependency_paths["cmake"] is not None: # Special cmake installed
-            cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake"]
+        if self._dependency_paths["cmake-2.8.8"] is not None: # Special cmake installed
+            cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake-2.8.8"]
         self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), env, config_type="geant4")
         self._system.execute_command("make", [], self.get_install_path(), env)
         self._system.execute_command("make", ['install'], self.get_install_path(), env)

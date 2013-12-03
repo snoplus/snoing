@@ -7,6 +7,7 @@
 # RAT-3 adds avalanche, xerces and zeromq extra
 # RAT-4 slightly changes the geant dependency
 # RAT-4.2 removes zmq & avalanche dependencies
+# RAT-4.5 removes xerces and clhep dependency
 #
 # Author P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
@@ -14,11 +15,11 @@
 import os
 import rat
 
-class RatRelease4Post3(rat.RatRelease):
+class RatRelease4Post4(rat.RatRelease):
     """ Base installer for rat relase 4.4.0 onwards."""
     def __init__(self, name, system, root_dep, tar_name):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease4Post3, self).__init__(name, system, root_dep, "geant4.9.6.p02", "scons-2.1.0",
+        super(RatRelease4Post4, self).__init__(name, system, root_dep, "geant4.9.6.p02", "scons-2.1.0",
                                                tar_name)
         self._curl_dep = "curl-7.26.0"
         self._bzip_dep = "bzip2-1.0.6"

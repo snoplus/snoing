@@ -58,6 +58,8 @@ class Geant4Post5(localpackage.LocalPackage):
                                "-DGEANT4_USE_RAYTRACER_X11=ON" ])
             env = {'G4VIS_BUILD_VRML_DRIVER' : "1", 'G4VIS_BUILD_OPENGLX_DRIVER' : "1", 
                    'G4VIS_BUILD_OPENGLXM_DRIVER' : "1", 'G4VIS_BUILD_DAWN_DRIVER' : "1" }
+        if self._system.get_install_mode() == installmode.Grid:
+            cmake_opts.extend(["-DGEANT4_USE_SYSTEM_EXPAT=OFF"])
         cmake_opts.extend([source_path])
         cmake_command = "cmake"
         if self._dependency_paths["cmake-2.8.12"] is not None: # Special cmake installed

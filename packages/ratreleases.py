@@ -7,7 +7,7 @@
 # RAT-3 adds avalanche, xerces and zeromq extra
 # RAT-4 slightly changes the geant dependency
 # RAT-4.2 removes zmq & avalanche dependencies
-# RAT-4.5 removes xerces and clhep dependency
+# RAT-4.5 removes xercesc and clhep dependency
 #
 # Author P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.

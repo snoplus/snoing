@@ -94,6 +94,7 @@ if __name__ == "__main__":
     elif options.grid:
         install_mode = installmode.Grid
     elif options.graphical:
+        logger.error("The graphical mode `-g` is obsolete, please reinstall your software without it.")
         install_mode = installmode.Graphical
     else:
         install_mode = installmode.Normal
@@ -138,7 +139,7 @@ if __name__ == "__main__":
             if options.grid == False: # Default local package
                 package_name = "rat-dev"
             else: # Default grid package
-                package_name = "rat-3"
+                package_name = "rat-4.5.0"
             if len(args) != 0:
                 package_name = args[0]
             if options.query: # Wish to query the package

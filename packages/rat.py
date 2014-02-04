@@ -8,7 +8,7 @@
 #        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency to RatReleasePost3
 #        P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : Second revision use env file builder, 
 #                                                        refactored versions
-# Author P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+#        P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import localpackage
 import os

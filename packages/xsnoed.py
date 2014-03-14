@@ -85,8 +85,8 @@ class XsnoedDevelopment(Xsnoed):
     """ Base xsnoed installer for xsnoed-dev."""
     def __init__(self, name, system):
         """ Initialise xsnoed with the tar_name."""
-        super(XsnoedDevelopment, self).__init__(name, system, "root-5.34.11", "geant4.9.6.p02", 
-                                             "rat-4.5.0", "rattools-4.5.0")
+        super(XsnoedDevelopment, self).__init__(name, system, "root-5.34.17", "geant4.9.6.p02", 
+                                                "rat-4.5.0", "rattools-4.5.0")
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return os.path.exists(self.get_install_path())

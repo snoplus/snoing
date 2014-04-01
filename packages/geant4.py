@@ -53,9 +53,11 @@ class Geant4Post5(localpackage.LocalPackage):
         # Now set the environment, if needed
         env = {}
         if self._system.get_install_mode() == installmode.Graphical:
-            cmake_opts.extend(["-DGEANT4_USE_XM=ON", "-DGEANT4_USE_OPENGL_X11=ON", 
+            cmake_opts.extend(["-DGEANT4_USE_XM=ON", 
+                               "-DGEANT4_USE_OPENGL_X11=ON", 
                                "-DXERCESC_ROOT_DIR=%s" % self._dependency_paths[self._xerces_dep], 
-                               "-DGEANT4_USE_RAYTRACER_X11=ON" ])
+                               "-DGEANT4_USE_RAYTRACER_X11=ON", 
+                               "-DGEANT4_USE_GDML=ON"])
             env = {'G4VIS_BUILD_VRML_DRIVER' : "1", 'G4VIS_BUILD_OPENGLX_DRIVER' : "1", 
                    'G4VIS_BUILD_OPENGLXM_DRIVER' : "1", 'G4VIS_BUILD_DAWN_DRIVER' : "1" }
         if self._system.get_install_mode() == installmode.Grid:

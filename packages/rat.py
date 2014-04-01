@@ -8,7 +8,7 @@
 #        O Wasalski - 05/06/2012 <wasalski@berkeley.edu> : Added curl dependency to RatReleasePost3
 #        P G Jones - 21/06/2012 <p.g.jones@qmul.ac.uk> : Second revision use env file builder, 
 #                                                        refactored versions
-# Author P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+#        P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import localpackage
 import os
@@ -110,7 +110,7 @@ class RatDevelopment(Rat):
     """ Base rat installer for rat-dev."""
     def __init__(self, name, system):
         """ Initialise rat with the tar_name."""
-        super(RatDevelopment, self).__init__(name, system, "root-5.34.11", "geant4.9.6.p02", "scons-2.1.0")
+        super(RatDevelopment, self).__init__(name, system, "root-5.34.18", "geant4.9.6.p02", "scons-2.1.0")
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return ["curl-7.26.0", "bzip2-1.0.6"]

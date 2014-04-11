@@ -70,7 +70,7 @@ class XsnoedRelease(Xsnoed):
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/xsnoed/tarball/" + self._download_name, self._username,
+                "https://github.com/snoplus/xsnoed/archive/%s.tar.gz" % self._download_name, self._username,
                 password, file_name = self._tar_name, retries = 3)
     def _install(self):
         """ Release installs must untar first."""

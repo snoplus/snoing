@@ -21,7 +21,7 @@ class Cmake(conditionalpackage.ConditionalPackage):
         return []
     def _is_system_installed(self):
         """ Check if installed on the system, will require at least version 2.8.1."""
-        if self._system.find_library(self._name) is not None: # A version of cmake exists
+        if self._system.find_library("cmake") is not None: # A version of cmake exists
             version_string = self._system.execute_command("cmake", ["--version"]).split()[2]
             version_numbers = version_string.split(".")
             # Check cmake 2.8.1 or above is installed

@@ -9,6 +9,16 @@
 ####################################################################################################
 import scons
 
+class SCONS234(scons.Scons):
+    """ Scons 2.3.4, install package."""
+    def __init__(self, system):
+        """ Initiliase the scons 2.3.4 package."""
+        super(SCONS234, self).__init__("scons-2.3.4", system, "scons-2.3.4.tar.gz")
+    def _download(self):
+        """ Derived classes should override this to download the package."""
+        self._system.download_file(
+            "http://downloads.sourceforge.net/project/scons/scons/2.3.4/scons-2.3.4.tar.gz")
+
 class SCONS210(scons.Scons):
     """ Scons 2.1.0, install package."""
     def __init__(self, system):

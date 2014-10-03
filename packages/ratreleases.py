@@ -15,6 +15,29 @@
 import os
 import rat
 
+class RatRelease5(rat.RatRelease):
+    """ Base installer for rat relase 5.0.0 onwards."""
+    def __init__(self, name, system, root_dep, tar_name):
+        """ Initlaise, take extra dependencies."""
+        super(RatRelease5, self).__init__(name, system, root_dep, "geant4.10.0.p02", "scons-2.1.0",
+                                          tar_name)
+        self._curl_dep = "curl-7.26.0"
+        self._bzip_dep = "bzip2-1.0.6"
+    def _get_dependencies(self):
+        """ Return the extra dependencies."""
+        return [self._curl_dep, self._bzip_dep]
+    def _write_env_file(self):
+        """ Diff geant env file and no need to patch rat."""
+        self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
+        self._env_file.append_path(os.path.join(self._dependency_paths[self._geant_dep], "bin"))
+        if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
+            self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
+        if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
+            self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
+                                                          "lib"))
+
 class RatRelease4Post4(rat.RatRelease):
     """ Base installer for rat relase 4.4.0 onwards."""
     def __init__(self, name, system, root_dep, tar_name):

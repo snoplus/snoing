@@ -26,11 +26,12 @@ class XercesC(conditionallibrarypackage.ConditionalLibraryPackage):
         """ Check if xercesc installed."""
         return self._system.library_exists("libxerces-c", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
-        """ Download the 3.1.1 version."""
-        self._system.download_file("http://apache.sunsite.ualberta.ca//xerces/c/3/sources/" + self._tar_name)
-        #self._system.download_file("http://mirror.catn.com/pub/apache//xerces/c/3/sources/" + self._tar_name)
+        """ Download the 3.1.x version."""
+        download_name = "http://archive.apache.org/dist/xerces/c/3/sources/" + self._tar_name
+        print download_name
+        self._system.download_file("http://archive.apache.org/dist/xerces/c/3/sources/" + self._tar_name)        
     def _install(self):
-        """ Install the 3.1.1 version."""
+        """ Install the 3.1.x version."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self._tar_name, source_path, 1)
         self._system.execute_command("./configure", cwd=source_path)

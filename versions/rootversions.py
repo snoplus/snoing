@@ -12,6 +12,18 @@
 ####################################################################################################
 import root
 
+class ROOT60304(root.Root):
+    """ Root 6.03.04, install package."""
+    def __init__(self, system):
+        """ Initiliase the root 6.03.08 package."""
+        super(ROOT60304, self).__init__("root-6.03.04", system, "root_v6.03.04.source.tar.gz")
+
+class ROOT53430(root.Root):
+    """ Root 5.34.30, install package."""
+    def __init__(self, system):
+        """ Initiliase the root 5.34.30 package."""
+        super(ROOT53430, self).__init__("root-5.34.30", system, "root_v5.34.30.source.tar.gz")
+
 class ROOT53421(root.Root):
     """ Root 5.34.21, install package."""
     def __init__(self, system):

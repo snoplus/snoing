@@ -25,25 +25,25 @@ class RAT503(ratreleases.RatRelease5):
     """ Rat release-5.0.3, install package."""
     def __init__(self, system):
         """ Initiliase the rat 5.0.3 package."""
-        super(RAT503, self).__init__("rat-5.0.3", system, "root-5.34.21", "5.0.3")
+        super(RAT503, self).__init__("rat-5.0.3", system, "root-5.34.30", "5.0.3")
 
 class RAT502(ratreleases.RatRelease5):
     """ Rat release-5.0.2, install package."""
     def __init__(self, system):
         """ Initiliase the rat 5.0.2 package."""
-        super(RAT502, self).__init__("rat-5.0.2", system, "root-5.34.21", "5.0.2")
+        super(RAT502, self).__init__("rat-5.0.2", system, "root-5.34.30", "5.0.2")
 
 class RAT501(ratreleases.RatRelease5):
     """ Rat release-5.0.1, install package."""
     def __init__(self, system):
         """ Initiliase the rat 5.0.1 package."""
-        super(RAT501, self).__init__("rat-5.0.1", system, "root-5.34.21", "5.0.1")
+        super(RAT501, self).__init__("rat-5.0.1", system, "root-5.34.30", "5.0.1")
 
 class RAT50(ratreleases.RatRelease5):
     """ Rat release-5.0.0, install package."""
     def __init__(self, system):
         """ Initiliase the rat 5.0.0 package."""
-        super(RAT50, self).__init__("rat-5.0.0", system, "root-5.34.21", "5.0.0")
+        super(RAT50, self).__init__("rat-5.0.0", system, "root-5.34.30", "5.0.0")
 
 class RAT46(ratreleases.RatRelease4Post4):
     """ Rat release-4.6.0, install package."""

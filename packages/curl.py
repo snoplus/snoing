@@ -40,3 +40,5 @@ class Curl(conditionallibrarypackage.ConditionalLibraryPackage):
                                        cwd=source_path, config_type="curl")
         self._system.execute_command("make", cwd=source_path)
         self._system.execute_command("make", ["install"], cwd=source_path)
+        if self._system.get_install_mode() == installmode.Grid:
+            shutil.rmtree(source_path)

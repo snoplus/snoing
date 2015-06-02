@@ -151,6 +151,9 @@ class PackageManager(object):
                 raise snoing_exceptions.PackageException(("Package install mode is incompatible with the "
                                                           "system"),
                                                          package.get_name())
+    def install_dependencies(self, package_name):
+        """ Install the dependencies (if required)"""
+        self._install_dependencies(self._packages[package_name])
     def _install_dependencies(self, package):
         """ Install the dependencies (if required)."""
         dependency_paths = {} # Dictionary of dependency paths

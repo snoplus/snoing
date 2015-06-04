@@ -8,6 +8,7 @@
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import conditionallibrarypackage
+import installmode
 import os
 
 class XercesC(conditionallibrarypackage.ConditionalLibraryPackage):

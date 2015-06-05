@@ -20,13 +20,14 @@ class Root(localpackage.LocalPackage):
         """ Initialise the root package."""
         super(Root, self).__init__(name, system)
         self._tar_name = tar_name
+        self._fftw_version = '3.3.4'
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
         if self._system.get_install_mode() == installmode.Grid:
-            return ["make", "g++", "gcc", "ld", "python", 
+            return ["make", "g++", "gcc", "ld", "python", 'fftw-%s' % self._fftw_version,
                     ["python-dev", "python-dev-2.4", "python-dev-2.6"]]
         else:
-            return ["make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", 
+            return ["make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python", 'fftw-%s' % self._fftw_version,
                     ["python-dev", "python-dev-2.4", "python-dev-2.6"]]
     def _is_downloaded(self):
         """ Check the tar ball has been downloaded."""
@@ -45,8 +46,12 @@ class Root(localpackage.LocalPackage):
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)
         if self._system.get_install_mode() == installmode.Grid:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore',
-                    '--disable-castor', '--disable-rfio', '--disable-x11']
+                    '--disable-castor', '--disable-rfio', '--disable-x11',
+                    '--with-fftw3-incdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
+                    '--with-fftw3-libdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'lib')]
         else:
-            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore','--enable-gdml']
+            args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore','--enable-gdml',
+                    '--with-fftw3-incdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
+                    '--with-fftw3-libdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'lib')]
         self._system.configure_command(args=args, cwd=self.get_install_path(),config_type='root')
         self._system.execute_command('make', cwd=self.get_install_path())

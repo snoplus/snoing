@@ -35,7 +35,7 @@ class Fftw(conditionallibrarypackage.ConditionalLibraryPackage):
         """ Install fftw."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self._tar_name, source_path, 1)
-        self._system.execute_command("./configure", cwd=source_path)
+        self._system.execute_command("./configure", ['--with-pic'], cwd=source_path)
         self._system.execute_command("make", cwd=source_path)
         self._system.execute_command("make", ["install", "prefix=%s" % self.get_install_path()], cwd=source_path)
         if self._system.get_install_mode() == installmode.Grid:

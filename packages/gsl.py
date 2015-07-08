@@ -10,6 +10,7 @@
 import conditionallibrarypackage
 import installmode
 import os
+import shutil
 
 class Gsl(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Base gsl installer package. """

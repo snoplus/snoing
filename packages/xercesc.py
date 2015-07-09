@@ -10,6 +10,7 @@
 import conditionallibrarypackage
 import installmode
 import os
+import shutil
 
 class XercesC(conditionallibrarypackage.ConditionalLibraryPackage):
     """ XercesC install package."""

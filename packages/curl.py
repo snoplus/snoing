@@ -11,6 +11,7 @@
 import conditionallibrarypackage
 import installmode
 import os
+import shutil
 
 class Curl(conditionallibrarypackage.ConditionalLibraryPackage):
     """ Base curl installer package. """

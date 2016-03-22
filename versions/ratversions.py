@@ -21,6 +21,12 @@ class RATDev(rat.RatDevelopment):
         """ Initiliase the rat dev package."""
         super(RATDev, self).__init__("rat-dev", system)
 
+class RAT531(ratreleases.RatRelease5):
+    """ Rat release-5.3.1, install package."""
+    def __init__(self, system):
+        """ Initiliase the rat 5.3.1 package."""
+        super(RAT531, self).__init__("rat-5.3.1", system, "root-5.34.31", "5.3.1")
+
 class RAT530(ratreleases.RatRelease5):
     """ Rat release-5.3.0, install package."""
     def __init__(self, system):

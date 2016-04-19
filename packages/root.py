@@ -22,11 +22,14 @@ class Root(localpackage.LocalPackage):
         self._tar_name = tar_name
         self._fftw_version = '3.3.4'
         self._gsl_version = '1.16'
+        self._xrootd_version = '4.3.0'
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
         if self._system.get_install_mode() == installmode.Grid:
-            return ["make", "g++", "gcc", "ld", "python", 'fftw-%s' % self._fftw_version,
+            return ["make", "g++", "gcc", "ld", "python",
+                    'fftw-%s' % self._fftw_version,
                     'gsl-%s' % self._gsl_version,
+                    'xrootd-%s' % self._xrootd_version,
                     ["python-dev", "python-dev-2.4", "python-dev-2.6"]]
         else:
             return ["make", "g++", "gcc", "ld", "X11", "Xpm", "Xft", "Xext", "python",
@@ -53,7 +56,9 @@ class Root(localpackage.LocalPackage):
                     '--with-fftw3-incdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
                     '--with-fftw3-libdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'lib'),
                     '--with-gsl-incdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'include'),
-                    '--with-gsl-libdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'lib')]
+                    '--with-gsl-libdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'lib'),
+                    '--with-xrootd-incdir=%s' % os.path.join(self._system.get_install_path(), 'xrootd-%s' % self._xrootd_version, 'include'),
+                    '--with-xrootd-libdir=%s' % os.path.join(self._system.get_install_path(), 'xrootd-%s' % self._xrootd_version, 'lib')]
         else:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore','--enable-gdml',
                     '--with-fftw3-incdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
@@ -61,4 +66,5 @@ class Root(localpackage.LocalPackage):
                     '--with-gsl-incdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'include'),
                     '--with-gsl-libdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'lib')]
         self._system.configure_command(args=args, cwd=self.get_install_path(),config_type='root')
+        exit
         self._system.execute_command('make', cwd=self.get_install_path())

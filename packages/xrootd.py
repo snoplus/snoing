@@ -54,7 +54,8 @@ class XRootD(localpackage.LocalPackage):
         cmake_command = "cmake"
         if self._dependency_paths["cmake-2.8.12"] is not None:
             cmake_command = "%s/bin/cmake" % self._dependency_paths["cmake-2.8.12"]
-        self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(), config_type="xrootd")
+        self._system.configure_command(cmake_command, cmake_opts, self.get_install_path(),
+                                       config_type="xrootd")
         self._system.execute_command("make", [], self.get_install_path())
         self._system.execute_command("make", ["install"], self.get_install_path())
         shutil.rmtree(source_path)

@@ -120,7 +120,7 @@ class System(object):
         if config_type in self._arguments:
             args.extend(self._arguments[config_type])
         else:
-            self._logger.error('config type %s does not exit!'%(config_type))
+            self._logger.warn('config type %s does not exist!'%(config_type))
         self.execute_command(command, args, cwd, env, verbose)
     def execute_command(self, command, args=[], cwd=None, env={}, verbose=False):
         """ Execute the command with args, extra environment env in the path cwd."""

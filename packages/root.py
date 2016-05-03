@@ -57,8 +57,8 @@ class Root(localpackage.LocalPackage):
                     '--with-fftw3-libdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'lib'),
                     '--with-gsl-incdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'include'),
                     '--with-gsl-libdir=%s' % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version, 'lib'),
-                    '--with-xrootd-incdir=%s' % os.path.join(self._system.get_install_path(), 'xrootd-%s' % self._xrootd_version, 'include'),
-                    '--with-xrootd-libdir=%s' % os.path.join(self._system.get_install_path(), 'xrootd-%s' % self._xrootd_version, 'lib')]
+                    '--disable-gfal',
+                    '--with-xrootd=%s' % os.path.join(self._system.get_install_path(), 'xrootd-%s' % self._xrootd_version)]
         else:
             args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore','--enable-gdml',
                     '--with-fftw3-incdir=%s' % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),

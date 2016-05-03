@@ -46,7 +46,7 @@ class Root(localpackage.LocalPackage):
             return os.path.exists(os.path.join(self.get_install_path(), "bin/root"))
     def _download(self):
         """ Download from cern."""
-        self._system.download_file("ftp://root.cern.ch/root/" + self._tar_name)
+        self._system.download_file("https://root.cern.ch/download/" + self._tar_name)
     def _install(self):
         """ Install root."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)

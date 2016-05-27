@@ -131,9 +131,9 @@ class RatDevelopment(Rat):
         if self._dependency_paths["bzip2-1.0.6"] is not None: # Conditional Package
             self._env_file.add_environment("BZIPROOT", self._dependency_paths["bzip2-1.0.6"])
             self._env_file.append_library_path(os.path.join(self._dependency_paths["bzip2-1.0.6"], "lib"))
-        if self._dependency_paths[self._postgres_dep] is not None: # Conditional Package
-            self._env_file.append_path(os.path.join(self._dependency_paths[self._postgres_dep], "bin"))
-            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._postgres_dep], "lib"))
+        if self._dependency_paths['postgresql-9.5.2'] is not None: # Conditional Package
+            self._env_file.append_path(os.path.join(self._dependency_paths['postgresql-9.5.2'], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths['postgresql-9.5.2'], "lib"))
     def _update(self):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         command_text = "#!/bin/bash\nsource %s\ncd %s\nscons -c" \

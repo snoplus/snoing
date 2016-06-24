@@ -9,6 +9,7 @@
 ####################################################################################################
 import sys
 try:
+    a= 1
     import packagemanager
 except ImportError:
     print "Error: Source the snoing environment file."
@@ -154,7 +155,7 @@ if __name__ == "__main__":
             elif options.remove or options.force_remove: # Wish to remove the package
                 package_manager.remove_package( package_name, options.force_remove )
             elif options.dependency: # Wish to install only the dependencies
-                package_manager.install_dependencies( package_name )
+                package_manager.install_package_dependencies( package_name )
             elif options.progress: # Wish to update the package
                 package_manager.update_package( package_name )
             else: # Wish to install the package

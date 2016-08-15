@@ -31,13 +31,13 @@ class RAT601(ratreleases.RatRelease6):
     """ Rat release-6.0.1, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.0.1 package."""
-        super(RAT601, self).__init__("rat-6.0.1", system, "root-5.34.34", "6.0.1")
+        super(RAT601, self).__init__("rat-6.0.1", system, "root-5.34.34", "6.0.1", postgres=True)
 
 class RAT600(ratreleases.RatRelease6):
     """ Rat release-6.0.0, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.0.0 package."""
-        super(RAT600, self).__init__("rat-6.0.0", system, "root-5.34.34", "RAT-6.0.0-alpha")
+        super(RAT600, self).__init__("rat-6.0.0", system, "root-5.34.34", "RAT-6.0.0-alpha", postgres=True)
 
 class RAT532(ratreleases.RatRelease5):
     """ Rat release-5.3.2, install package."""

@@ -48,6 +48,8 @@ if __name__ == "__main__":
                       default=defaults["install_path"])
     parser.add_option("-v", "--verbose", action="store_true", help="Verbose Install?", 
                       default=False)
+    parser.add_option("-l", "--list", action="store_true",
+                      help="List packages, without installing anything.")
     parser.add_option("-a", "--all", action="store_true", help="All packages?")
     parser.add_option("-k", "--clean", action="store_true", help="Clean temporary files.")
     parser.add_option("--curl-arguments", "--Ac", type="string", help=optparse.SUPPRESS_HELP)
@@ -127,7 +129,9 @@ if __name__ == "__main__":
     package_manager.authenticate(options.username, options.token)
     # Default action is to assume installing, check for other actions
     try:
-        if options.all: # Wish to act on all packages
+        if options.list:
+            pass
+        elif options.all: # Wish to act on all packages
             if options.query: # Nothing todo, done automatically
                 pass
             elif options.remove: # Wish to remove all packages

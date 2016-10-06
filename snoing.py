@@ -42,43 +42,45 @@ if __name__ == "__main__":
         defaults = {"cache_path" : "cache", "install_path" : "install"}
     # First build the options and parse the calling command
     parser = optparse.OptionParser(usage = "usage: %prog [options] [package]", version="%prog 2.0")
-    parser.add_option("-c", type="string", dest="cache_path", help="Cache path.", 
+    parser.add_option("-c", "--cache-path", type="string", help="Cache path.", 
                       default=defaults["cache_path"])
-    parser.add_option("-i", type="string", dest="install_path", help="Install path.", 
+    parser.add_option("-i", "--install-path", type="string", help="Install path.", 
                       default=defaults["install_path"])
-    parser.add_option("-v", action="store_true", dest="verbose", help="Verbose Install?", 
+    parser.add_option("-v", "--verbose", action="store_true", help="Verbose Install?", 
                       default=False)
-    parser.add_option("-a", action="store_true", dest="all", help="All packages?")
-    parser.add_option("-k", action="store_true", dest="clean", help="Clean temporary files.")
-    parser.add_option("--Ac", type="string", dest="curl_arguments", help=optparse.SUPPRESS_HELP)
-    parser.add_option("--Ar", type="string", dest="root_arguments", help=optparse.SUPPRESS_HELP)
-    parser.add_option("--Ag", type="string", dest="geant4_arguments", help=optparse.SUPPRESS_HELP)
-    parser.add_option("--Ax", type="string", dest="xrootd_arguments", help=optparse.SUPPRESS_HELP)
+    parser.add_option("-l", "--list", action="store_true",
+                      help="List packages, without installing anything.")
+    parser.add_option("-a", "--all", action="store_true", help="All packages?")
+    parser.add_option("-k", "--clean", action="store_true", help="Clean temporary files.")
+    parser.add_option("--curl-arguments", "--Ac", type="string", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--root-arguments", "--Ar", type="string", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--geant4-arguments", "--Ag", type="string", help=optparse.SUPPRESS_HELP)
+    parser.add_option("--xrootd-arguments", "--Ax", type="string", help=optparse.SUPPRESS_HELP)
 
     installerGroup = optparse.OptionGroup(parser, "Optional Install modes", 
                                           ("Default snoing action is to install non graphically, i.e."
                                            " no viewer. This can be changed with the -g option."))
-    installerGroup.add_option("-g", action="store_true", dest="graphical", help="Graphical install?", 
+    installerGroup.add_option("-g", "--graphical", action="store_true", help="Graphical install?", 
                               default=False)
-    installerGroup.add_option("-x", action="store_true", dest="grid", help="Grid install (NO X11)?", 
+    installerGroup.add_option("-x", "--grid", action="store_true", help="Grid install (NO X11)?", 
                               default=False)
     parser.add_option_group(installerGroup)
 
     actionGroup = optparse.OptionGroup(parser, "Optional Actions", 
                                        ("Default snoing action is to install the specified package,"
                                         " which defaults to rat-dev."))
-    actionGroup.add_option("-q", action="store_true", dest="query", help="Query Package Status?")
-    actionGroup.add_option("-r", action="store_true", dest="remove", help="Remove the package?")
-    actionGroup.add_option("-R", action="store_true", dest="force_remove", help=optparse.SUPPRESS_HELP, 
+    actionGroup.add_option("-q", "--query", action="store_true", help="Query Package Status?")
+    actionGroup.add_option("-r", "--remove", action="store_true", help="Remove the package?")
+    actionGroup.add_option("-R", "--force-remove", action="store_true", help=optparse.SUPPRESS_HELP, 
                            default=False)
-    actionGroup.add_option("-d", action="store_true", dest="dependency", help="Install dependencies only?")
-    actionGroup.add_option("-p", action="store_true", dest="progress", help="Progress/update the package?")
+    actionGroup.add_option("-d", "--dependency", action="store_true", help="Install dependencies only?")
+    actionGroup.add_option("-p", "--progress", "--update", action="store_true", help="Progress/update the package?")
     parser.add_option_group(actionGroup)
 
     githubGroup = optparse.OptionGroup(parser, "Github authentication Options", 
                                        "Supply a username or a github token, not both.")
-    githubGroup.add_option("-u", type="string", dest="username", help="Github username")
-    githubGroup.add_option("-t", type="string", dest="token", help="Github token")
+    githubGroup.add_option("-u", "--username", type="string", help="Github username")
+    githubGroup.add_option("-t", "--token", type="string", help="Github token")
     parser.add_option_group(githubGroup)
     (options, args) = parser.parse_args()
     # Dump the new defaults
@@ -127,7 +129,9 @@ if __name__ == "__main__":
     package_manager.authenticate(options.username, options.token)
     # Default action is to assume installing, check for other actions
     try:
-        if options.all: # Wish to act on all packages
+        if options.list:
+            pass
+        elif options.all: # Wish to act on all packages
             if options.query: # Nothing todo, done automatically
                 pass
             elif options.remove: # Wish to remove all packages

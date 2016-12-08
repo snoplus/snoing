@@ -13,13 +13,21 @@
 ####################################################################################################
 import rat
 import ratreleases
-import os
+
 
 class RATDev(rat.RatDevelopment):
     """ Rat dev install package."""
     def __init__(self, system):
         """ Initiliase the rat dev package."""
         super(RATDev, self).__init__("rat-dev", system)
+
+
+class RAT620(ratreleases.RatRelease6):
+    """ Rat release-6.2.0, install package."""
+    def __init__(self, system):
+        """ Initiliase the rat 6.2.0 package."""
+        super(RAT620, self).__init__("rat-6.2.0", system, "root-5.34.34", "6.2.0")
+
 
 class RAT612(ratreleases.RatRelease6):
     """ Rat release-6.1.2, install package."""

@@ -25,41 +25,41 @@ class RAT623(ratreleases.RatRelease6):
     """ Rat release-6.2.3, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.2.3 package."""
-        super(RAT623, self).__init__("rat-6.2.3", system, "root-5.34.34", "6.2.3")
+        super(RAT623, self).__init__("rat-6.2.3", system, "root-5.34.36", "6.2.3")
 
 class RAT622(ratreleases.RatRelease6):
     """ Rat release-6.2.2, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.2.2 package."""
-        super(RAT622, self).__init__("rat-6.2.2", system, "root-5.34.34", "6.2.2")
+        super(RAT622, self).__init__("rat-6.2.2", system, "root-5.34.36", "6.2.2")
 
 
 class RAT621(ratreleases.RatRelease6):
     """ Rat release-6.2.1, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.2.1 package."""
-        super(RAT621, self).__init__("rat-6.2.1", system, "root-5.34.34", "6.2.1")
+        super(RAT621, self).__init__("rat-6.2.1", system, "root-5.34.36", "6.2.1")
 
 
 class RAT620(ratreleases.RatRelease6):
     """ Rat release-6.2.0, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.2.0 package."""
-        super(RAT620, self).__init__("rat-6.2.0", system, "root-5.34.34", "6.2.0")
+        super(RAT620, self).__init__("rat-6.2.0", system, "root-5.34.36", "6.2.0")
 
 
 class RAT612(ratreleases.RatRelease6):
     """ Rat release-6.1.2, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.1.2 package."""
-        super(RAT612, self).__init__("rat-6.1.2", system, "root-5.34.34", "6.1.2")
+        super(RAT612, self).__init__("rat-6.1.2", system, "root-5.34.36", "6.1.2")
 
 
 class RAT611(ratreleases.RatRelease6):
     """ Rat release-6.1.1, install package."""
     def __init__(self, system):
         """ Initiliase the rat 6.1.1 package."""
-        super(RAT611, self).__init__("rat-6.1.1", system, "root-5.34.34", "6.1.1")
+        super(RAT611, self).__init__("rat-6.1.1", system, "root-5.34.36", "6.1.1")
 
 
 class RAT610(ratreleases.RatRelease6):

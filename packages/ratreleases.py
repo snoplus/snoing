@@ -19,7 +19,7 @@ class RatRelease6(rat.RatRelease):
     """ Base installer for rat relase 6.0.0 onwards."""
     def __init__(self, name, system, root_dep, tar_name, postgres=False):
         """ Initlaise, take extra dependencies."""
-        super(RatRelease6, self).__init__(name, system, root_dep, "geant4.10.0.p02", "scons-2.1.0",
+        super(RatRelease6, self).__init__(name, system, root_dep, "geant4.10.0.p02", "scons-2.3.4",
                                           tar_name)
         self._curl_dep = "curl-7.26.0"
         self._bzip_dep = "bzip2-1.0.6"

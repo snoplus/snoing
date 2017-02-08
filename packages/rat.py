@@ -135,6 +135,7 @@ class RatDevelopment(Rat):
         """ Special updater for rat-dev, delete env file write a new then git pull and scons."""
         command_text = "#!/bin/bash\nsource %s\ncd %s\nscons -c" \
             % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
+        self._system.execute_complex_command(command_text, verbose=True)
         self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name))
         self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
         super(RatDevelopment, self).write_env_file()

@@ -12,6 +12,12 @@
 ####################################################################################################
 import root
 
+class ROOT5Dev(root.RootDevelopment):
+    """ ROOT 5 Development, install package."""
+    def __init__(self, system):
+        """ Initiliase the ROOT 5 development package."""
+        super(ROOT5Dev, self).__init__("root-5-dev", system)
+
 class ROOT60304(root.Root):
     """ Root 6.03.04, install package."""
     def __init__(self, system):

@@ -11,6 +11,7 @@
 #        P G Jones - 23/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 import localpackage
+import types
 import os
 import getpass
 import envfilebuilder
@@ -56,13 +57,15 @@ class Rat(localpackage.LocalPackage):
     def write_env_file(self):
         """ Adds general parts and then writes the env file."""
         self._env_file = envfilebuilder.EnvFileBuilder("#rat environment\n")
-        self._env_file.add_environment("ROOTSYS", self._dependency_paths[self._root_dep])
+        if isinstance(self._root_dep, types.ListType):
+            root_dep_path = self._dependency_paths[self._root_dep[0]]
+        else:
+            root_dep_path = self._dependency_paths[self._root_dep]
+        self._env_file.add_environment("ROOTSYS", root_dep_path)
         self._env_file.add_environment("RAT_SCONS", self._dependency_paths[self._scons_dep])
-        self._env_file.append_path(os.path.join(self._dependency_paths[self._root_dep], "bin"))
-        self._env_file.append_python_path(os.path.join(self._dependency_paths[self._root_dep], 
-                                                       "lib"))
-        self._env_file.append_library_path(os.path.join(self._dependency_paths[self._root_dep], 
-                                                        "lib"))
+        self._env_file.append_path(os.path.join(root_dep_path, "bin"))
+        self._env_file.append_python_path(os.path.join(root_dep_path, "lib"))
+        self._env_file.append_library_path(os.path.join(root_dep_path, "lib"))
         self._env_file.add_post_source(self.get_install_path(), "env")
         self._write_env_file()
         self._env_file.write(self._system.get_install_path(), "env_%s" % self._name)
@@ -110,7 +113,7 @@ class RatDevelopment(Rat):
     """ Base rat installer for rat-dev."""
     def __init__(self, name, system):
         """ Initialise rat with the tar_name."""
-        super(RatDevelopment, self).__init__(name, system, "root-5.34.36", "geant4.10.0.p02", "scons-2.3.4")
+        super(RatDevelopment, self).__init__(name, system, ["root-5-dev", "root-5.34.36"], "geant4.10.0.p02", "scons-2.3.4")
     def _get_dependencies(self):
         """ Return the extra dependencies."""
         return ["curl-7.26.0", "bzip2-1.0.6"]

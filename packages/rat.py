@@ -131,7 +131,7 @@ class RatDevelopment(Rat):
 
     def __init__(self, name, system):
         """Initialise rat with the tar_name."""
-        super(RatDevelopment, self).__init__(name, system, ['root-5-dev', 'root-5.34.36'], 'geant4.10.0.p02', 'scons-2.3.4')
+        super(RatDevelopment, self).__init__(name, system, ['root-5.34.36', 'root-5-dev'], 'geant4.10.0.p02', 'scons-2.3.4')
 
     def _get_dependencies(self):
         """Return the extra dependencies."""
@@ -166,7 +166,7 @@ class RatDevelopment(Rat):
         self._system.execute_complex_command(command_text, verbose=True)
         self._system.remove(os.path.join(self._system.get_install_path(), 'env_%s.sh' % self._name))
         self._system.remove(os.path.join(self._system.get_install_path(), 'env_%s.csh' % self._name))
-        super(RatDevelopment, self).write_env_file()
+        self.write_env_file()
         command_text = ("#!/bin/bash\nsource %s\ncd %s\ngit pull\n./configure\n"
             % (os.path.join(self._system.get_install_path(), 'env_%s.sh' % self._name), self.get_install_path()))
         self._system.execute_complex_command(command_text, verbose=True)

@@ -21,6 +21,18 @@ class RatTools6130(rattools.RatToolsRelease):
         super(RatTools6130, self).__init__("rattools-6.13.0", system, "root-5.34.36", "rat-6.13.0", "6.13.0")
 
 
+class RatTools650OSX(rattools.RatToolsRelease):
+    def __init__(self, system):
+        """ Initialise an arbitrary snaphot version."""
+        super(RatTools650OSX, self).__init__("rattools-6.5.0-OSX", system, "root-5.34.36", "rat-6.5.0-OSX", "6.5.0")
+
+
+class RatTools650(rattools.RatToolsRelease):
+    def __init__(self, system):
+        """ Initialise an arbitrary snaphot version."""
+        super(RatTools650, self).__init__("rattools-6.5.0", system, "root-5.34.36", "rat-6.5.0", "6.5.0")
+
+
 class RatTools643(rattools.RatToolsRelease):
     def __init__(self, system):
         """ Initialise an arbitrary snaphot version."""

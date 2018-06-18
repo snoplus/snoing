@@ -48,7 +48,7 @@ class Geant4Post5(LocalPackage):
     def _download(self):
         """Derived classes should override this to download the package."""
         self._system.download_file(
-            'http://geant4.web.cern.ch/geant4/support/source/' + self._tar_name)
+            'http://cern.ch/geant4-data/releases/' + self._tar_name)
 
     def _install(self):
         """Install geant4, using cmake."""
@@ -115,7 +115,7 @@ class Geant495(LocalPackage):
     def _download(self):
         """Derived classes should override this to download the package."""
         self._system.download_file(
-            'http://geant4.web.cern.ch/geant4/support/source/' + self._tar_name)
+            'http://cern.ch/geant4-data/releases/' + self._tar_name)
 
     def _install(self):
         """Install geant4, using cmake."""
@@ -198,9 +198,9 @@ class Geant4Pre5(LocalPackage):
     def _download(self):
         """Derived classes should override this to download the package."""
         self._system.download_file(
-            'http://geant4.web.cern.ch/geant4/support/source/' + self._tar_name)
+            'http://cern.ch/geant4-data/releases/' + self._tar_name)
         for tar in self._data_tars:
-            self._system.download_file('http://geant4.web.cern.ch/geant4/support/source/' + tar)
+            self._system.download_file('http://cern.ch/geant4-data/releases/' + tar)
 
     def _install(self):
         """Derived classes should override this to install the package, should install only when

@@ -9,18 +9,18 @@
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 ####################################################################################################
 
-from commandpackage import CommandPackage
-from librarypackage import LocalPackage
+import commandpackage
+import librarypackage
 
 
-class Make(CommandPackage):
+class Make(commandpackage.CommandPackage):
     """Package for the make command."""
     def __init__(self, system):
         """Initialise the package, set the name."""
         super(Make, self).__init__('make', system, 'Install the "make" package on this system')
 
 
-class Gpp(CommandPackage):
+class Gpp(commandpackage.CommandPackage):
     """Package for the g++ command."""
     def __init__(self, system):
         """Initialise the package, set the name."""
@@ -28,7 +28,7 @@ class Gpp(CommandPackage):
                                   'Install a g++ compiler on this system (build-essential on linux)')
 
 
-class GCC(CommandPackage):
+class GCC(commandpackage.CommandPackage):
     """Package for the gcc command."""
     def __init__(self, system):
         """Initialise the package, set the name."""
@@ -36,35 +36,35 @@ class GCC(CommandPackage):
                                   'Install a gcc compiler on this system (build-essential on linux)')
 
 
-class Ld(CommandPackage):
+class Ld(commandpackage.CommandPackage):
     """Package for the ld command."""
     def __init__(self, system):
         """Initialise the package, set the name."""
         super(Ld, self).__init__('ld', system, 'Install the ld tool on this system.')
 
 
-class X11(LibraryPackage):
+class X11(librarypackage.LibraryPackage):
     """Package for the x11-dev library."""
     def __init__(self, system):
         super(X11, self).__init__('X11', system, 'Install X11-dev on this system.',
                                   'X11', ['X11/Xlib.h'])
 
 
-class Xpm(LibraryPackage):
+class Xpm(librarypackage.LibraryPackage):
     """Package for the xpm-dev library."""
     def __init__(self, system):
         super(Xpm, self).__init__('Xpm', system, 'Install Xpm-dev on this system.',
                                   'Xpm', ['X11/xpm.h'])
 
 
-class Xft(LibraryPackage):
+class Xft(librarypackage.LibraryPackage):
     """Package for the xft-dev library."""
     def __init__(self, system):
         super(Xft, self).__init__('Xft', system, 'Install Xft-dev on this system.', 'Xft')
         #'X11/Xft/Xft.h')
 
 
-class Xext(LibraryPackage):
+class Xext(librarypackage.LibraryPackage):
     """Package for the xext-dev library."""
     def __init__(self, system):
         super(Xext, self).__init__('Xext', system, 'Install the X11 extensions dev on this system.',

@@ -11,7 +11,7 @@
 # Author P G Jones - 02/07/2013 <p.g.jones@qmul.ac.uk> : Added 5.34.08
 ####################################################################################################
 
-from root import Root, RootDevelopment
+from root import Root, RootWithConfigure, RootDevelopment
 
 
 class ROOT5Dev(RootDevelopment):
@@ -91,14 +91,14 @@ class ROOT53204(Root):
         super(ROOT53204, self).__init__('root-5.32.04', system, 'root_v5.32.04.source.tar.gz')
 
 
-class ROOT52800(Root):
+class ROOT52800(RootWithConfigure):
     """Root 5.28.00, install package."""
     def __init__(self, system):
         """Initiliase the root 5.32.00 package."""
         super(ROOT52800, self).__init__('root-5.28.00', system, 'root_v5.28.00h.source.tar.gz')
 
 
-class ROOT52400(Root):
+class ROOT52400(RootWithConfigure):
     """Root 5.24.00, install package."""
     def __init__(self, system):
         """Initiliase the root 5.32.00 package."""

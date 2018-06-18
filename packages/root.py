@@ -25,7 +25,7 @@ class Root(LocalPackage):
     def __init__(self, name, system, tar_name):
         """Initialise the root package."""
         super(Root, self).__init__(name, system)
-        self._src_dir = os.path.join(self.get_install_path(), '_src')
+        self._src_path = self.get_install_path() + '_source'
         self._tar_name = tar_name
         self._fftw_version = '3.3.4'
         self._gsl_version = '1.16'
@@ -75,16 +75,21 @@ class Root(LocalPackage):
 
     def _install_setup(self):
         """Extract the files to install."""
-        self._system.untar_file(self._tar_name, self._src_dir(), 1)
+        self._system.untar_file(self._tar_name, self._src_path, 1)
 
     def _install(self):
         """Install root."""
         self._install_setup()
-        self._system._arguments['root'].append(self._src_dir)  # ensure path is at the very end
+        self._system.build_path(self.get_install_path())
+
+        self._system._arguments['root'].append(self._src_path)  # ensure path is at the very end
         self._system.configure_command(
             command='cmake', args=self._configuration_args(),
-            cwd=self._src_dir, config_type='root')
-        self._system.execute_command('make', args=[self._src_dir], cwd=self.get_install_path())
+            cwd=self.get_install_path(), config_type='root')
+        self._system.execute_command('make', cwd=self.get_install_path())
+
+        if self._system.get_install_mode() == installmode.Grid:
+            shutil.rmtree(self._src_path)
 
 
 class RootWithConfigure(Root):
@@ -102,7 +107,7 @@ class RootWithConfigure(Root):
     def _configuration_args(self):
         """Return configuration arguments."""
 
-        args = ['--enable-minuit2', '--enable-roofit',  '--enable-python', '--enable-mathmore',
+        args = ['--enable-minuit2', '--enable-roofit', '--enable-python', '--enable-mathmore',
                 '--with-fftw3-incdir=%s' \
                     % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
                 '--with-fftw3-libdir=%s' \
@@ -153,7 +158,7 @@ class RootDevelopment(Root):
             single_branch = '--single-branch'
 
         self._system.execute_command('git', ['clone', '-b', 'v5-34-00-patches', single_branch,
-                                             'http://root.cern.ch/git/root.git', self.get_install_path()],
+                                             'http://root.cern.ch/git/root.git', self._src_path],
                                      verbose=True)
 
     def _install_setup(self):
@@ -163,6 +168,6 @@ class RootDevelopment(Root):
     def _update(self):
         """Update ROOT 5 development."""
         command_text = '#!/bin/bash\ncd %s\ngit checkout v5-34-00-patches\ngit fetch\ngit reset --hard FETCHHEAD' \
-                % self.get_install_path()
+                % self._src_path
         self._system.execute_complex_command(command_text, verbose=True)
         self.install()

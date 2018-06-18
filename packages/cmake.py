@@ -13,6 +13,7 @@ from distutils.version import StrictVersion
 import re
 import os
 
+
 class Cmake(ConditionalPackage):
     """Cmake install package."""
 

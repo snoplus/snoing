@@ -9,7 +9,7 @@
 ####################################################################################################
 
 from conditionalpackage import ConditionalPackage
-from distutils.version import StrictVersion
+from distutils.version import LooseVersion
 import re
 import os
 
@@ -32,8 +32,8 @@ class Cmake(ConditionalPackage):
             return False
         version = self._system.execute_command('cmake', ['--version'])
         version = re.search(r'(\d+\.*)+', version).group()
-        version = StrictVersion(version)
-        return StrictVersion('2.8.1') <= version
+        version = LooseVersion(version)
+        return LooseVersion('2.8.1') <= version
 
     def _is_downloaded(self):
         """Check if tar file exists."""

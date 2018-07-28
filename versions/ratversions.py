@@ -27,7 +27,7 @@ class RAT6152(ratreleases.RatRelease6):
     """Rat release-6.15.2, install package."""
     def __init__(self, system):
         """Initiliase the rat 6.15.2 package."""
-        super(RAT6151, self).__init__('rat-6.15.2', system, 'root-5.34.36', '6.15.2')
+        super(RAT6152, self).__init__('rat-6.15.2', system, 'root-5.34.36', '6.15.2')
 
 
 class RAT6151(ratreleases.RatRelease6):

@@ -7,6 +7,7 @@
 # Author P G Jones - 13/05/2012 <p.g.jones@qmul.ac.uk> : First revision
 # Author P G Jones - 13/06/2012 <p.g.jones@qmul.ac.uk> : Added extra root libraries
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+# Author K E Gilje - 10/09/2018 <gilje@gmail.com> : renaming libraries to CentOS version.
 ####################################################################################################
 
 import commandpackage
@@ -53,19 +54,19 @@ class X11(librarypackage.LibraryPackage):
 class Xpm(librarypackage.LibraryPackage):
     """Package for the xpm-dev library."""
     def __init__(self, system):
-        super(Xpm, self).__init__('Xpm', system, 'Install Xpm-dev on this system.',
+        super(Xpm, self).__init__('Xpm', system, 'Install libXpm-devel on this system.',
                                   'Xpm', ['X11/xpm.h'])
 
 
 class Xft(librarypackage.LibraryPackage):
     """Package for the xft-dev library."""
     def __init__(self, system):
-        super(Xft, self).__init__('Xft', system, 'Install Xft-dev on this system.', 'Xft')
+        super(Xft, self).__init__('Xft', system, 'Install libXft-devel on this system.', 'Xft')
         #'X11/Xft/Xft.h')
 
 
 class Xext(librarypackage.LibraryPackage):
     """Package for the xext-dev library."""
     def __init__(self, system):
-        super(Xext, self).__init__('Xext', system, 'Install the X11 extensions dev on this system.',
+        super(Xext, self).__init__('Xext', system, 'Install the X11 extensions (libXext-devel) on this system.',
                                    'Xext', ['X11/extensions/shape.h'])

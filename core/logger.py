@@ -28,7 +28,7 @@ class Logger(object):
         if not os.path.exists(self._install_file):
             file_ = open(self._install_file, "w")
             file_.write(("## SNOING\nThis is a snoing install directory. Please alter only with"
-                         "snoing at %s") % __file__)
+                         "snoing at %s \n") % __file__)
             file_.close()
     def end(self):
         """ Stop logging, cleanup resources."""

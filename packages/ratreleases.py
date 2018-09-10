@@ -23,14 +23,15 @@ class RatRelease6(rat.RatRelease):
                                           tar_name)
         self._curl_dep = "curl-7.26.0"
         self._bzip_dep = "bzip2-1.0.6"
+        self._gsl_dep = "gsl-1.16"
         self._postgres_dep = "postgresql-9.5.2"
         self._require_postgres = postgres
     def _get_dependencies(self):
         """ Return the extra dependencies."""        
         if self._require_postgres is True:
-            return [self._curl_dep, self._bzip_dep, self._postgres_dep]
+            return [self._curl_dep, self._bzip_dep, self._gsl_dep, self._postgres_dep]
         else:
-            return [self._curl_dep, self._bzip_dep]            
+            return [self._curl_dep, self._bzip_dep, self._gsl_dep]
     def _write_env_file(self):
         """ Diff geant env file and no need to patch rat."""
         self._env_file.add_source(self._dependency_paths[self._geant_dep], "bin/geant4")
@@ -42,6 +43,9 @@ class RatRelease6(rat.RatRelease):
             self._env_file.add_environment("BZIPROOT", self._dependency_paths[self._bzip_dep])
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._bzip_dep], 
                                                           "lib"))
+        if self._dependency_paths[self._gsl_dep] is not None: # Conditional Package
+            self._env_file.append_path(os.path.join(self._dependency_paths[self._gsl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._gsl_dep], "lib"))
         if self._require_postgres is True and self._dependency_paths[self._postgres_dep] is not None: # Conditional Package
             self._env_file.append_path(os.path.join(self._dependency_paths[self._postgres_dep], "bin"))
             self._env_file.append_library_path(os.path.join(self._dependency_paths[self._postgres_dep], "lib"))

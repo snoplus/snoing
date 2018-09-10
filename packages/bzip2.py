@@ -7,6 +7,7 @@
 # Author O Wasalski - 13/06/2012 <wasalski@berkeley.edu> : First revision, new file
 # Author P G Jones - 23/06/2012 <p.g.jones@qmul.ac.uk> : Refactor of Package Structure 
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
+# Author K E Gilje - 10/09/2018 <gilje@ualberta.ca> : Update bzip2 location.
 ####################################################################################################
 import conditionallibrarypackage
 import os
@@ -29,7 +30,7 @@ class Bzip2(conditionallibrarypackage.ConditionalLibraryPackage):
             self._system.library_exists("libbz2", os.path.join(self.get_install_path(), "lib"))
     def _download(self):
         """ Download the tar file."""
-        self._system.download_file("http://www.bzip.org/1.0.6/" + self._tar_name)
+        self._system.download_file("http://gentoo.mirrors.tera-byte.com/distfiles/" + self._tar_name)
     def _install( self ):
         """ Install bzip2."""
         self._system.untar_file(self._tar_name, self.get_install_path(), 1)

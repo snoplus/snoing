@@ -5,6 +5,7 @@
 # Installers for xsnoed
 #
 # Author P G Jones - 2014-02-03 <p.g.jones@qmul.ac.uk> : First revision
+# Author K E Gilje - 2018-09-10 <gilje@ualberta.ca> : Explicitly add dependencies and handle local bzip2.
 ####################################################################################################
 import localpackage
 import os

@@ -14,7 +14,7 @@ import os
 class Xm(systempackage.SystemPackage):
     """ Package for the Open Motif/Xm library."""
     def __init__(self, system):
-        super(Xm, self).__init__("Xm", system, "Install Xm-dev (OpenMotif) on this system.")
+        super(Xm, self).__init__("Xm", system, "Install Xm-dev (OpenMotif or motif-devel) on this system.")
     def check_state(self):
         """ Check the Xm state, slightly more involved on macs."""
         if self._system.get_os_type() == system.System.Mac:

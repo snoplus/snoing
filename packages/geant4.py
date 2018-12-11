@@ -29,6 +29,8 @@ class Geant4Post5(LocalPackage):
         dependencies = ['make', 'g++', 'gcc', 'cmake-2.8.12', self._xerces_dep]
         if self._system.get_install_mode() == installmode.Graphical:
             dependencies.extend(['Xm', 'Xt', 'opengl', 'Xmu', 'Xi'])
+        if self._system.get_install_mode() != installmode.Grid:
+            dependencies.extend(['expat'])
         return dependencies
 
     def _is_downloaded(self):

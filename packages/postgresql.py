@@ -63,7 +63,8 @@ class PostgreSQL(conditionallibrarypackage.ConditionalLibraryPackage):
         """ Just install the client libraries"""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self.get_tar_name(), source_path, 1)
-        self._system.configure_command(args=["prefix=%s" % self.get_install_path()], cwd=source_path)
+        self._system.configure_command(args=["prefix=%s" % self.get_install_path(), "--without-readline"],
+                                       cwd=source_path)
         self._system.execute_command("make", [], source_path)
         self._system.execute_command("make", ["-C", "src/bin", "install"], source_path)
         self._system.execute_command("make", ["-C", "src/include", "install"], source_path)

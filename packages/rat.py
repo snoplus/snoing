@@ -135,7 +135,7 @@ class RatDevelopment(Rat):
 
     def _get_dependencies(self):
         """Return the extra dependencies."""
-        return ['curl-7.26.0', 'bzip2-1.0.6']
+        return ['curl-7.26.0', 'gsl-1.16', 'bzip2-1.0.6']
 
     def _is_downloaded(self):
         """Check if tarball has been downloaded."""
@@ -143,7 +143,7 @@ class RatDevelopment(Rat):
 
     def _download(self):
         """Git clone rat-dev."""
-        self._system.execute_command('git', ['clone', 'git@github.com:snoplus/rat.git', self.get_install_path()], 
+        self._system.execute_command('git', ['clone', 'https://github.com/snoplus/rat.git', self.get_install_path()], 
                                      verbose=True)
 
     def _write_env_file(self):
@@ -155,6 +155,9 @@ class RatDevelopment(Rat):
         if self._dependency_paths['curl-7.26.0'] is not None:
             self._env_file.append_path(os.path.join(self._dependency_paths['curl-7.26.0'], 'bin'))
             self._env_file.append_library_path(os.path.join(self._dependency_paths['curl-7.26.0'], 'lib'))
+        if self._dependency_paths['gsl-1.16'] is not None:
+            self._env_file.append_path(os.path.join(self._dependency_paths['gsl-1.16'], 'bin'))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths['gsl-1.16'], 'lib'))
         if self._dependency_paths['bzip2-1.0.6'] is not None:
             self._env_file.add_environment('BZIPROOT', self._dependency_paths['bzip2-1.0.6'])
             self._env_file.append_library_path(os.path.join(self._dependency_paths['bzip2-1.0.6'], 'lib'))

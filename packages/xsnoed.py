@@ -5,6 +5,7 @@
 # Installers for xsnoed
 #
 # Author P G Jones - 2014-02-03 <p.g.jones@qmul.ac.uk> : First revision
+# Author K E Gilje - 2018-09-10 <gilje@ualberta.ca> : Explicitly add dependencies and handle local bzip2.
 ####################################################################################################
 import localpackage
 import os
@@ -20,9 +21,14 @@ class Xsnoed(localpackage.LocalPackage):
         self._geant_dep = geant_dep
         self._rat_dep = rat_dep
         self._rattools_dep = rattools_dep
+        self._curl_dep  = "curl-7.26.0"
+        self._disp_dep = "disp"
+        self._motif_dep = "Xm"
+        self._bzip_dep = "bzip2-1.0.6"
     def get_dependencies(self):
         """ Return the dependency names as a list of names."""
-        return [self._root_dep, self._geant_dep, self._rat_dep, self._rattools_dep, "Xm"]
+        return [self._root_dep, self._geant_dep, self._rat_dep, self._rattools_dep,
+                self._curl_dep, self._disp_dep, self._motif_dep, self._bzip_dep]
     def _is_installed(self):
         """ Xsnoed releases and dev share a common install check."""
         # Check xsnoed
@@ -33,8 +39,13 @@ class Xsnoed(localpackage.LocalPackage):
         self.write_env_file()
         # Write the command file and source it...
         command_text = """#!/bin/bash\nsource %s\ncd %s\nmake""" % \
-            (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), 
-             self.get_install_path())
+                       (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), 
+                        self.get_install_path())
+        # Explicitly add BZIP2 to the library path here if BZIP2 was installed locally
+        if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
+            command_text = """#!/bin/bash\nsource %s\ncd %s\nmake LDFLAGS='-L%s'""" % \
+                           (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name),
+                            self.get_install_path(), self._dependency_paths[self._bzip_dep])
         self._system.execute_complex_command(command_text)
     def _remove(self):
         """ Delete the env files as well."""
@@ -47,6 +58,14 @@ class Xsnoed(localpackage.LocalPackage):
         self._env_file.add_source(os.path.join(self._dependency_paths[self._geant_dep], "bin"), "geant4")
         self._env_file.add_source(self._dependency_paths[self._rat_dep], "env")
         self._env_file.add_source(os.path.join(self._dependency_paths[self._rattools_dep], "ratzdab"), "env")
+        self._env_file.add_source(os.path.join(self._dependency_paths[self._disp_dep]), "env")
+        if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
+            self._env_file.add_environment('BZIPROOT', self._dependency_paths[self._bzip_dep])
+            self._env_file.append_library_path(self._dependency_paths[self._bzip_dep])
+        if self._dependency_paths[self._curl_dep] is not None: # Conditional Package
+            self._env_file.append_path(os.path.join(self._dependency_paths[self._curl_dep], "bin"))
+            self._env_file.append_library_path(os.path.join(self._dependency_paths[self._curl_dep], "lib"))
+        #print self._system.get_install_path()
         self._env_file.write(self._system.get_install_path(), "env_%s" % self._name)
 
 class XsnoedRelease(Xsnoed):
@@ -70,7 +89,7 @@ class XsnoedRelease(Xsnoed):
         else:
             password = getpass.getpass("github password:")
             self._system.download_file(
-                "https://github.com/snoplus/xsnoed/archive/%s.tar.gz" % self._download_name, self._username,
+                "https://github.com/snoplus/xsnoed/tarball/" + self._download_name, self._username,
                 password, file_name = self._tar_name, retries = 3)
     def _install(self):
         """ Release installs must untar first."""
@@ -85,14 +104,15 @@ class XsnoedDevelopment(Xsnoed):
     """ Base xsnoed installer for xsnoed-dev."""
     def __init__(self, name, system):
         """ Initialise xsnoed with the tar_name."""
-        super(XsnoedDevelopment, self).__init__(name, system, "root-5.34.21", "geant4.10.0.p02", 
+        super(XsnoedDevelopment, self).__init__(name, system, "root-5.34.36", "geant4.10.0.p02", 
                                                 "rat-dev", "rattools-dev")
     def _is_downloaded(self):
         """ Check if tarball has been downloaded."""
         return os.path.exists(self.get_install_path())
     def _download(self):
         """ Git clone xsnoed-dev."""
-        self._system.execute_command("git", ["clone", "git@github.com:snoplus/xsnoed.git", self.get_install_path()], 
+        self._system.execute_command("git", ["clone", "https://github.com/snoplus/xsnoed.git", 
+                                             self.get_install_path()], 
                                      verbose=True)
     def _update(self):
         """ Special updater for xsnoed-dev, delete env file write a new then git pull and scons."""
@@ -102,5 +122,10 @@ class XsnoedDevelopment(Xsnoed):
         self._system.remove(os.path.join(self._system.get_install_path(), "env_%s.csh" % self._name))
         super(XsnoedDevelopment, self).write_env_file()
         command_text = "#!/bin/bash\nsource %s\ncd %s\nmake\n" \
-            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name), self.get_install_path())
+            % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name),
+               self.get_install_path())
+        if self._dependency_paths[self._bzip_dep] is not None: # Conditional Package
+            command_text = "#!/bin/bash\nsource %s\ncd %s\nmake LDFLAGS='-L%s'\n" \
+                           % (os.path.join(self._system.get_install_path(), "env_%s.sh" % self._name),
+                              self.get_install_path(), self._dependency_paths[self._bzip_dep])
         self._system.execute_complex_command(command_text, verbose=True)

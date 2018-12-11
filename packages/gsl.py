@@ -6,6 +6,7 @@
 #
 # Author:
 #  - 2015-06-05 M Mottram <m.mottram@qmul.ac.uk> first instance
+# Author K E Gilje 2018-09-10 <gilje@ualberta.ca> : Fixing the prefix of gsl to point to the right location.
 ####################################################################################################
 import conditionallibrarypackage
 import installmode
@@ -36,8 +37,8 @@ class Gsl(conditionallibrarypackage.ConditionalLibraryPackage):
         """ Install gsl."""
         source_path = os.path.join(self._system.get_install_path(), "%s-source" % self._name)
         self._system.untar_file(self._tar_name, source_path, 1)
-        self._system.execute_command("./configure", ["--with-pic"], cwd=source_path)
+        self._system.execute_command("./configure", ["--with-pic", "--prefix=%s" % self.get_install_path()], cwd=source_path)
         self._system.execute_command("make", cwd=source_path)
-        self._system.execute_command("make", ["install", "prefix=%s" % self.get_install_path()], cwd=source_path)
+        self._system.execute_command("make", ["install"], cwd=source_path)
         if self._system.get_install_mode() == installmode.Grid:
             shutil.rmtree(source_path)

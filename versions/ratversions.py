@@ -23,6 +23,20 @@ class RATDev(rat.RatDevelopment):
         super(RATDev, self).__init__('rat-dev', system)
 
 
+class RAT6164(ratreleases.RatRelease6):
+    """Rat release-6.16.4, install package."""
+    def __init__(self, system):
+        """Initiliase the rat 6.16.4 package."""
+        super(RAT6164, self).__init__('rat-6.16.4', system, 'root-5.34.36', '6.16.4')
+
+
+class RAT6163(ratreleases.RatRelease6):
+    """Rat release-6.16.3, install package."""
+    def __init__(self, system):
+        """Initiliase the rat 6.16.3 package."""
+        super(RAT6163, self).__init__('rat-6.16.3', system, 'root-5.34.36', '6.16.3')
+
+
 class RAT6162(ratreleases.RatRelease6):
     """Rat release-6.16.2, install package."""
     def __init__(self, system):

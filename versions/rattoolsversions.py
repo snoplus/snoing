@@ -16,6 +16,12 @@ class RatToolsDev(rattools.RatToolsDevelopment):
         super(RatToolsDev, self).__init__('rattools-dev', system, 'root-5.34.36')
 
 
+class RatTools6166(rattools.RatToolsRelease):
+    def __init__(self, system):
+        """Initialise an arbitrary snapshot version."""
+        super(RatTools6166, self).__init__('rattools-6.16.6', system, 'root-5.34.36', 'rat-6.16.6', '6.16.6')
+
+
 class RatTools6165(rattools.RatToolsRelease):
     def __init__(self, system):
         """Initialise an arbitrary snapshot version."""

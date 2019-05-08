@@ -9,6 +9,7 @@
 #        O Wasalski - 13/06/2012 <wasalski@berkeley.edu> : Building python module
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 # Author K E Gilje - 10/09/2018 <gilje@ualberta.ca> : Allow use of local version of cmake.
+# Author K E Gilje - 08/05/2019 <gilje@ualberta.ca> : Update cmake version for Root6.
 ####################################################################################################
 
 from distutils.version import StrictVersion

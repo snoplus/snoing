@@ -9,6 +9,7 @@
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 #        M Mottram - 20/10/2012 <m.mottram@sussex.ac.uk> : Added 5.34.02
 # Author P G Jones - 02/07/2013 <p.g.jones@qmul.ac.uk> : Added 5.34.08
+# Author K E gilje - 08/05/2019 <gilje@ualberta.ca> : Added Root 6.16/00
 ####################################################################################################
 
 import root
@@ -19,6 +20,13 @@ class ROOT5Dev(root.RootDevelopment):
     def __init__(self, system):
         """Initiliase the ROOT 5 development package."""
         super(ROOT5Dev, self).__init__('root-5-dev', system)
+
+
+class ROOT61600(root.RootPost60608):
+    """Root 6.16.00, install package."""
+    def __init__(self, system):
+        """Initiliase the root 6.16.00 package."""
+        super(ROOT61600, self).__init__('root-6.16.00', system, 'root_v6.16.00.source.tar.gz') 
 
 
 class ROOT60304(root.Root):

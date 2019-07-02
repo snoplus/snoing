@@ -9,6 +9,7 @@
 #        O Wasalski - 13/06/2012 <wasalski@berkeley.edu> : Building python module
 # Author P G Jones - 22/09/2012 <p.g.jones@qmul.ac.uk> : Major refactor of snoing.
 # Author K E Gilje - 10/09/2018 <gilje@ualberta.ca> : Allow use of local version of cmake.
+# Author K E Gilje - 08/05/2019 <gilje@ualberta.ca> : Update cmake version for Root6.
 ####################################################################################################
 
 from distutils.version import StrictVersion
@@ -66,6 +67,10 @@ class Root(LocalPackage):
                 '-Dfortran:BOOL=OFF',
                 '-Dfftw3:BOOL=ON', '-DFFTW_DIR:PATH=%s' \
                     % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version),
+                '-DFFTW_INCLUDE_DIR=%s' \
+                    % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'include'),
+                '-DFFTW_LIBRARY=%s' \
+                    % os.path.join(self._system.get_install_path(), 'fftw-%s' % self._fftw_version, 'lib/libfftw3.a'),
                 '-Dgsl_shared:BOOL=ON', '-DGSL_DIR:PATH=%s' \
                     % os.path.join(self._system.get_install_path(), 'gsl-%s' % self._gsl_version)]
 
@@ -91,6 +96,43 @@ class Root(LocalPackage):
                 location = self._system.execute_command("which",  ["cmake"])
             except:
                 os.environ["PATH"] += os.pathsep + "%s/bin" % self._dependency_paths['cmake-2.8.12']
+
+        # Run the cmake command
+        self._system.configure_command(
+            command='cmake', args=self._configuration_args(),
+            cwd=self.get_install_path(), config_type='root')
+        self._system.execute_command('make', cwd=self.get_install_path())
+
+        if self._system.get_install_mode() == installmode.Grid:
+            shutil.rmtree(self._src_path)
+
+
+class RootPost60608(Root):
+    """Install root versions after 6.06/08 which need a newer version of CMAKE."""
+    def get_dependencies(self):
+        """Return the dependency names as a list of names."""
+        
+        deps = ['make', 'g++', 'gcc', 'ld', 'cmake-3.14.3',
+                'fftw-%s' % self._fftw_version,
+                'gsl-%s' % self._gsl_version,
+                'python', ['python-dev', 'python-dev-2.4', 'python-dev-2.6']]
+
+        if self._system.get_install_mode() == installmode.Grid:
+            return deps + ['xrootd-%s' % self._xrootd_version]
+        return deps + ['X11', 'Xpm', 'Xft', 'Xext']
+
+    def _install(self):
+        """Install root."""
+        self._install_setup()
+        self._system.build_path(self.get_install_path())
+        self._system._arguments['root'].append(self._src_path)  # ensure path is at the very end
+
+        # Check if cmake was installed locally, if so, add to path
+        if self._dependency_paths['cmake-3.14.3'] is not None: # Special cmake installed
+            try:
+                location = self._system.execute_command("which",  ["cmake"])
+            except:
+                os.environ["PATH"] += os.pathsep + "%s/bin" % self._dependency_paths['cmake-3.14.3']
 
         # Run the cmake command
         self._system.configure_command(

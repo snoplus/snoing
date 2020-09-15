@@ -1,4 +1,11 @@
-# snoing
+# snoing (DEPRECATED)
+
+## SNOING IS NO LONGER SUPPORTED, AND HAS BEEN ARCHIVED. THE NEW RECOMMENDED WAY TO INSTALL SNO+ TOOLS IS THROUGH DOCKER CONTAINERS. IF YOU CHOOSE TO CONTINUE USING SNOING, YOU DO SO AT YOUR OWN RISK WITH LITTLE SUPPORT FROM OTHERS
+- For building and running RAT, please see the [rat-container](https://github.com/snoplus/rat-container)
+- For setting up a detector shift environment, please see the [remote-shift-container](https://github.com/snoplus/remote-shift-container)
+
+---
+
 ### snocave installation method for SNO+. Sno packages fall from the web (sky), i.e. snoing.
 ```
 Usage: snoing.py [options] [package]
